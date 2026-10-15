@@ -1,0 +1,12 @@
+﻿{
+  "name": "Pack Brume Test",
+  "slug": "pack-brume-test",
+  "description": "Pack de test pour Lunelle",
+  "price": 4500.00,
+  "items": [
+    {
+      "product_id": "4a0919b9-919b-40cc-af03-770a50783d6f",
+      "quantity": 2
+    }
+  ]
+}
