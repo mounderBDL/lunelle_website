@@ -36,3 +36,9 @@ app:
   admin:
     email: ${ADMIN_EMAIL}
     password: ${ADMIN_PASSWORD}
+  jwt:
+    secret: ${JWT_SECRET}
+    ttl-hours: 12
+  cookie:
+    name: lunelle_admin
+    secure: false   # must be true in production (HTTPS)
