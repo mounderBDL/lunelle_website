@@ -24,6 +24,9 @@ public class ProductService {
     private final CategoryRepository categories;
     private final VariantRepository variants;
     private final StockService stock;
+    private static final int MAX_IMAGES = 8;
+
+    private final ProductImageRepository imageRepo;
 
     // ───────────── storefront ─────────────
 
@@ -184,6 +187,54 @@ public class ProductService {
         }
         p.getVariants().remove(v);
         products.flush(); // surfaces "still used in a pack" now, as a 409
+        return adminDto(p);
+    }
+
+        // ───────────── admin: images ─────────────
+
+    public record RemovedImage(String publicId, AdminProductDto product) {
+    }
+
+    @Transactional
+    public AdminProductDto attachImage(UUID productId, String url, String publicId) {
+        Product p = find(productId);
+        if (p.getImages().size() >= MAX_IMAGES) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "A product can have at most " + MAX_IMAGES + " images");
+        }
+        int next = p.getImages().stream().mapToInt(ProductImage::getSortOrder).max().orElse(-1) + 1;
+        ProductImage image = new ProductImage();
+        image.setProduct(p);
+        image.setUrl(url);
+        image.setPublicId(publicId);
+        image.setSortOrder(next);
+        p.getImages().add(image);
+        products.saveAndFlush(p);
+        return adminDto(p);
+    }
+
+    @Transactional
+    public RemovedImage detachImage(UUID imageId) {
+        ProductImage image = imageRepo.findById(imageId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown image"));
+        Product p = image.getProduct();
+        String publicId = image.getPublicId();
+        p.getImages().remove(image);
+        products.flush();
+        return new RemovedImage(publicId, adminDto(p));
+    }
+
+    @Transactional
+    public AdminProductDto reorderImages(UUID productId, List<UUID> orderedIds) {
+        Product p = find(productId);
+        Map<UUID, ProductImage> byId = p.getImages().stream()
+                .collect(Collectors.toMap(ProductImage::getId, Function.identity()));
+        if (orderedIds.size() != byId.size() || !byId.keySet().equals(new HashSet<>(orderedIds))) {
+            throw bad("The list must contain exactly this product's images, each one once");
+        }
+        for (int i = 0; i < orderedIds.size(); i++) {
+            byId.get(orderedIds.get(i)).setSortOrder(i);
+        }
         return adminDto(p);
     }
 

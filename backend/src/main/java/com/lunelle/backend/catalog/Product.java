@@ -92,4 +92,9 @@ public class Product {
     @OrderBy("sortOrder ASC, label ASC")
     @BatchSize(size = 100)
     private List<ProductVariant> variants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder ASC")
+    @BatchSize(size = 100)
+    private List<ProductImage> images = new ArrayList<>();
 }

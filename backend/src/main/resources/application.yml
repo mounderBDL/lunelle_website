@@ -15,6 +15,10 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 6MB
+      max-request-size: 7MB
 
 server:
   port: 8080
@@ -42,3 +46,7 @@ app:
   cookie:
     name: lunelle_admin
     secure: false   # must be true in production (HTTPS)
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}

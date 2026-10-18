@@ -103,11 +103,12 @@ public final class CatalogDtos {
     }
 
     public record AdminProductDto(
-            UUID id, String slug, UUID categoryId, LocalizedName categoryName,
-            LocalizedName name, LocalizedText description, LocalizedText scentNotes,
-            String badge, boolean active, boolean featured, int sortOrder, boolean archived,
-            DiscountDto discount, boolean inStock, List<AdminVariantDto> variants, Instant createdAt) {
-    }
+                UUID id, String slug, UUID categoryId, LocalizedName categoryName,
+                LocalizedName name, LocalizedText description, LocalizedText scentNotes,
+                String badge, boolean active, boolean featured, int sortOrder, boolean archived,
+                DiscountDto discount, boolean inStock, List<AdminVariantDto> variants,
+                List<ImageDto> images, Instant createdAt) {
+        }
 
     // ───── storefront ─────
     public record PublicVariantDto(UUID id, String label, int price, int finalPrice, boolean inStock) {
@@ -116,7 +117,8 @@ public final class CatalogDtos {
     public record PublicProductDto(
             UUID id, String slug, String categorySlug, LocalizedName name,
             LocalizedText description, LocalizedText scentNotes, String badge,
-            boolean featured, boolean onSale, boolean inStock, List<PublicVariantDto> variants) {
+            boolean featured, boolean onSale, boolean inStock, List<PublicVariantDto> variants,
+            List<ImageDto> images) {
     }
 
     // ───── stock ─────
@@ -132,5 +134,14 @@ public final class CatalogDtos {
     public record StockMovementDto(
             UUID id, int delta, int stockAfter, StockReason reason,
             UUID orderId, String note, Instant createdAt) {
+    }
+
+    public record ImageDto(UUID id, String url) {
+    }
+
+    public record ReorderImagesRequest(@NotEmpty List<UUID> imageIds) {
+    }
+
+    public record UploadDto(String url, String publicId) {
     }
 }

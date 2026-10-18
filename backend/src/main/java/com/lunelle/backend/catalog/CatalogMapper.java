@@ -2,10 +2,18 @@ package com.lunelle.backend.catalog;
 
 import com.lunelle.backend.catalog.CatalogDtos.*;
 
+import java.util.Comparator;
 import java.time.Instant;
 import java.util.List;
 
 final class CatalogMapper {
+
+    static List<ImageDto> images(Product p) {
+    return p.getImages().stream()
+        .sorted(Comparator.comparingInt(ProductImage::getSortOrder))
+        .map(i -> new ImageDto(i.getId(), i.getUrl()))
+        .toList();
+    }
 
     private CatalogMapper() {
     }
@@ -49,7 +57,7 @@ final class CatalogMapper {
                 p.getBadge(), p.isActive(), p.isFeatured(), p.getSortOrder(),
                 p.getArchivedAt() != null, discount,
                 variants.stream().anyMatch(v -> v.active() && v.inStock()),
-                variants, p.getCreatedAt());
+                variants, images(p), p.getCreatedAt());
     }
 
     static PublicProductDto publicProduct(Product p, Category c, Instant now) {
@@ -64,6 +72,6 @@ final class CatalogMapper {
                 name(p.getNameEn(), p.getNameFr()),
                 text(p.getDescriptionEn(), p.getDescriptionFr()),
                 text(p.getScentNotesEn(), p.getScentNotesFr()),
-                p.getBadge(), p.isFeatured(), onSale, inStock, variants);
+                p.getBadge(), p.isFeatured(), onSale, inStock, variants, images(p));
     }
 }
