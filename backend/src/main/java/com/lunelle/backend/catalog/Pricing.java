@@ -28,4 +28,17 @@ public final class Pricing {
         };
         return (int) Math.max(0, basePrice - discount);
     }
+
+    /** What one pack costs the business, or null when any component has no cost price yet. */
+    public static Integer packCost(Pack pack) {
+        long total = 0;
+        for (PackItem item : pack.getItems()) {
+            Integer cost = item.getVariant().getCostPrice();
+            if (cost == null) {
+                return null;
+            }
+            total += (long) cost * item.getQuantity();
+        }
+        return (int) total;
+    }
 }

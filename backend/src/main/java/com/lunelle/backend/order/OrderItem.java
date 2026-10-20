@@ -69,6 +69,9 @@ public class OrderItem {
     @Column(name = "customization_notes")
     private String customizationNotes;
 
+    @Column(name = "unit_cost")
+    private Integer unitCost; // cost per unit at the time of sale (null if unknown); admin-only
+
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 50)
     private List<OrderItemComponent> components = new ArrayList<>();

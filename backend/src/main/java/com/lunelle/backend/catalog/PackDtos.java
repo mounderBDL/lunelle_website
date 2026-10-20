@@ -36,8 +36,8 @@ public final class PackDtos {
 
     public record AdminPackDto(
             UUID id, String slug, LocalizedName name, LocalizedText description, String imageUrl,
-            int price, int individualTotal, int saving, boolean active, boolean archived,
-            int sortOrder, int availableUnits, boolean inStock,
+            int price, int individualTotal, int saving, Integer cost, Integer margin,
+            boolean active, boolean archived, int sortOrder, int availableUnits, boolean inStock,
             List<AdminPackItemDto> items, Instant createdAt) {
     }
 

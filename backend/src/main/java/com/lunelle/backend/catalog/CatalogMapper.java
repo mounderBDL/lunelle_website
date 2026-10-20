@@ -38,9 +38,11 @@ final class CatalogMapper {
     }
 
     static AdminVariantDto adminVariant(Product p, ProductVariant v, Instant now) {
-        return new AdminVariantDto(v.getId(), v.getLabel(), v.getSku(), v.getPrice(),
-                Pricing.finalPrice(p, v.getPrice(), now), v.getStock(), v.getStock() > 0,
-                v.isActive(), v.getSortOrder());
+        int finalPrice = Pricing.finalPrice(p, v.getPrice(), now);
+        Integer cost = v.getCostPrice();
+        return new AdminVariantDto(v.getId(), v.getLabel(), v.getSku(), v.getPrice(), finalPrice,
+                cost, cost == null ? null : finalPrice - cost,
+                v.getStock(), v.getStock() > 0, v.isActive(), v.getSortOrder());
     }
 
     static AdminProductDto adminProduct(Product p, Category c, Instant now) {

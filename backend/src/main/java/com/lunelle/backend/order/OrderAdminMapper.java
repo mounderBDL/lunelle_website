@@ -32,8 +32,8 @@ final class OrderAdminMapper {
                         .thenComparing(i -> i.getVariantLabel() == null ? "" : i.getVariantLabel()))
                 .map(i -> new AdminOrderItemDto(
                         i.getId(), i.getType(), new LocalizedName(i.getNameEn(), i.getNameFr()),
-                        i.getVariantLabel(), i.getOriginalUnitPrice(), i.getUnitPrice(), i.getQuantity(),
-                        i.getLineTotal(), i.isRequiresFollowUp(), i.getCustomizationNotes(),
+                        i.getVariantLabel(), i.getOriginalUnitPrice(), i.getUnitPrice(), i.getUnitCost(),
+                        i.getQuantity(), i.getLineTotal(), i.isRequiresFollowUp(), i.getCustomizationNotes(),
                         i.getComponents().stream()
                                 .map(c -> new ComponentDto(
                                         new LocalizedName(c.getNameEn(), c.getNameFr()),
@@ -44,6 +44,14 @@ final class OrderAdminMapper {
                 .map(h -> new HistoryDto(h.getFromStatus(), h.getToStatus(), h.getNote(),
                         h.getAdminId(), h.getCreatedAt()))
                 .toList();
+
+        // order cost and profit are only known when every line has a cost
+        boolean allCosted = o.getItems().stream().allMatch(i -> i.getUnitCost() != null);
+        Integer cost = allCosted
+                ? o.getItems().stream().mapToInt(i -> i.getUnitCost() * i.getQuantity()).sum()
+                : null;
+        Integer profit = cost == null ? null : o.getSubtotal() - cost;
+
         return new OrderDetailDto(
                 o.getId(), o.getCode(), o.getStatus(),
                 o.getCreatedAt(), o.getConfirmedAt(), o.getShippedAt(), o.getDeliveredAt(), o.getCancelledAt(),
@@ -51,7 +59,7 @@ final class OrderAdminMapper {
                 o.getDeliveryMethod(), o.getWilayaId(), o.getWilayaName(),
                 o.getCommuneId(), o.getCommuneName(), o.getAddress(),
                 o.getDeliveryFee(), o.getHandoverPlace(), o.getHandoverAt(), o.getTrackingNumber(),
-                o.getSubtotal(), o.getTotal(), o.getAdminNote(),
+                o.getSubtotal(), o.getTotal(), cost, profit, o.getAdminNote(),
                 o.getStatus() == OrderStatus.NEW, needsDetails(o), OrderWorkflow.allowed(o),
                 items, hist);
     }

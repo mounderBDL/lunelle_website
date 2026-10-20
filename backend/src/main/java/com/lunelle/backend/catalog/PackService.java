@@ -230,10 +230,12 @@ public class PackService {
                             v.getStock(), componentOk(v) && v.getStock() >= i.getQuantity());
                 })
                 .toList();
+        Integer cost = Pricing.packCost(p);
         return new AdminPackDto(p.getId(), p.getSlug(),
                 CatalogMapper.name(p.getNameEn(), p.getNameFr()),
                 CatalogMapper.text(p.getDescriptionEn(), p.getDescriptionFr()),
                 p.getImageUrl(), p.getPrice(), individual, Math.max(0, individual - p.getPrice()),
+                cost, cost == null ? null : p.getPrice() - cost,
                 p.isActive(), p.getArchivedAt() != null, p.getSortOrder(),
                 units, units > 0, items, p.getCreatedAt());
     }

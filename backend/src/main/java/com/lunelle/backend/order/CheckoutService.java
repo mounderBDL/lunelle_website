@@ -159,6 +159,7 @@ public class CheckoutService {
         private String categoryNameEn;
         private String categoryNameFr;
         private String imageUrl;
+        private Integer unitCost;
         private int originalUnitPrice;
         private int unitPrice;
         private boolean requiresFollowUp;
@@ -205,6 +206,7 @@ public class CheckoutService {
         item.setCategoryNameFr(l.getCategoryNameFr());
         item.setOriginalUnitPrice(l.getOriginalUnitPrice());
         item.setUnitPrice(l.getUnitPrice());
+        item.setUnitCost(l.getUnitCost());
         item.setQuantity(l.getQuantity());
         item.setLineTotal((int) l.lineTotal());
         item.setRequiresFollowUp(l.isRequiresFollowUp());
@@ -244,6 +246,7 @@ public class CheckoutService {
         l.setCategoryNameEn(c.getNameEn());
         l.setCategoryNameFr(c.getNameFr());
         l.setImageUrl(firstImage(p));
+        l.setUnitCost(v.getCostPrice());
         l.setOriginalUnitPrice(v.getPrice());
         l.setUnitPrice(Pricing.finalPrice(p, v.getPrice(), now));
         l.setRequiresFollowUp(c.isRequiresFollowUp());
@@ -268,6 +271,7 @@ public class CheckoutService {
         l.setNameEn(pk.getNameEn());
         l.setNameFr(pk.getNameFr());
         l.setImageUrl(pk.getImageUrl());
+        l.setUnitCost(Pricing.packCost(pk));
         l.setOriginalUnitPrice(pk.getPrice()); // packs are never discounted
         l.setUnitPrice(pk.getPrice());
 

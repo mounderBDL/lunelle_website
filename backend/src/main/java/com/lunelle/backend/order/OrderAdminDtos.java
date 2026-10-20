@@ -30,7 +30,7 @@ public final class OrderAdminDtos {
 
     public record AdminOrderItemDto(
             UUID id, OrderItemType type, LocalizedName name, String variantLabel,
-            int originalUnitPrice, int unitPrice, int quantity, int lineTotal,
+            int originalUnitPrice, int unitPrice, Integer unitCost, int quantity, int lineTotal,
             boolean requiresFollowUp, String customizationNotes, List<ComponentDto> components) {
     }
 
@@ -45,7 +45,7 @@ public final class OrderAdminDtos {
             DeliveryMethod deliveryMethod, Integer wilayaId, String wilayaName,
             Integer communeId, String communeName, String address,
             int deliveryFee, String handoverPlace, Instant handoverAt, String trackingNumber,
-            int subtotal, int total, String adminNote,
+            int subtotal, int total, Integer cost, Integer profit, String adminNote,
             boolean editable, boolean needsDetails, List<OrderStatus> allowedStatuses,
             List<AdminOrderItemDto> items, List<HistoryDto> history) {
     }

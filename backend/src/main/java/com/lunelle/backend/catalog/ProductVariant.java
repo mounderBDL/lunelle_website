@@ -46,4 +46,7 @@ public class ProductVariant {
 
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
+
+    @Column(name = "cost_price")
+    private Integer costPrice; // what the size costs the business; admin-only, never sent to the storefront
 }

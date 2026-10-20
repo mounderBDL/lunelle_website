@@ -47,6 +47,7 @@ public final class CatalogDtos {
             @NotBlank @Size(max = 50) String label,
             @Size(max = 60) String sku,
             @NotNull @Min(0) @Max(10_000_000) Integer price,
+            @NotNull @Min(0) @Max(10_000_000) Integer costPrice,
             @NotNull @Min(0) @Max(100_000) Integer initialStock,
             @NotNull Boolean active,
             @NotNull Integer sortOrder) {
@@ -56,6 +57,7 @@ public final class CatalogDtos {
             @NotBlank @Size(max = 50) String label,
             @Size(max = 60) String sku,
             @NotNull @Min(0) @Max(10_000_000) Integer price,
+            @NotNull @Min(0) @Max(10_000_000) Integer costPrice,
             @NotNull Boolean active,
             @NotNull Integer sortOrder) {
     }
@@ -99,6 +101,7 @@ public final class CatalogDtos {
 
     public record AdminVariantDto(
             UUID id, String label, String sku, int price, int finalPrice,
+            Integer costPrice, Integer margin,
             int stock, boolean inStock, boolean active, int sortOrder) {
     }
 

@@ -84,7 +84,7 @@ public class ProductService {
         for (CreateVariantRequest vr : r.variants()) {
             ProductVariant v = new ProductVariant();
             v.setProduct(p);
-            applyVariant(v, vr.label(), vr.sku(), vr.price(), vr.active(), vr.sortOrder());
+            applyVariant(v, vr.label(), vr.sku(), vr.price(), vr.costPrice(),vr.active(), vr.sortOrder());
             v.setStock(vr.initialStock()); // only allowed here, at creation
             p.getVariants().add(v);
         }
@@ -157,7 +157,7 @@ public class ProductService {
         }
         ProductVariant v = new ProductVariant();
         v.setProduct(p);
-        applyVariant(v, r.label(), r.sku(), r.price(), r.active(), r.sortOrder());
+        applyVariant(v, r.label(), r.sku(), r.price(),r.costPrice() ,r.active(), r.sortOrder());
         v.setStock(r.initialStock());
         p.getVariants().add(v);
         products.saveAndFlush(p);
@@ -173,7 +173,7 @@ public class ProductService {
         if (labelTaken(p, r.label(), v.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This product already has a size named " + r.label());
         }
-        applyVariant(v, r.label(), r.sku(), r.price(), r.active(), r.sortOrder());
+        applyVariant(v, r.label(), r.sku(), r.price(), r.costPrice(), r.active(), r.sortOrder());
         return adminDto(p);
     }
 
@@ -293,10 +293,12 @@ public class ProductService {
         p.setSortOrder(sortOrder);
     }
 
-    private void applyVariant(ProductVariant v, String label, String sku, int price, boolean active, int sortOrder) {
+    private void applyVariant(ProductVariant v, String label, String sku, int price, int costPrice,
+                              boolean active, int sortOrder) {
         v.setLabel(label.trim());
         v.setSku(TextUtil.blankToNull(sku));
         v.setPrice(price);
+        v.setCostPrice(costPrice);
         v.setActive(active);
         v.setSortOrder(sortOrder);
     }
