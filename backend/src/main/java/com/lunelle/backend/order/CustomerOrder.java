@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -113,5 +114,6 @@ public class CustomerOrder {
     private Instant cancelledAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 50)
     private List<OrderItem> items = new ArrayList<>();
 }

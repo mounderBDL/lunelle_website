@@ -1,0 +1,76 @@
+package com.lunelle.backend.order;
+
+import com.lunelle.backend.delivery.DeliveryMethod;
+import com.lunelle.backend.order.OrderAdminDtos.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.UUID;
+
+@Tag(name = "Orders (admin)")
+@RestController
+@RequestMapping("/api/admin/orders")
+@RequiredArgsConstructor
+public class AdminOrderController {
+
+    private final OrderAdminService service;
+
+    @GetMapping
+    public PageDto<OrderListItemDto> list(
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) Integer wilayaId,
+            @RequestParam(required = false) DeliveryMethod deliveryMethod,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "false") boolean needsDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return service.list(status, q, wilayaId, deliveryMethod, from, to, needsDetails, page, size);
+    }
+
+    /** Order counts per status (for the tabs / "new orders" badge). */
+    @GetMapping("/counts")
+    public Map<OrderStatus, Long> counts() {
+        return service.counts();
+    }
+
+    @GetMapping("/{id}")
+    public OrderDetailDto get(@PathVariable UUID id) {
+        return service.get(id);
+    }
+
+    /** Only while the order is NEW. Send the complete list of items the order should contain. */
+    @PutMapping("/{id}")
+    public OrderDetailDto edit(@PathVariable UUID id, @Valid @RequestBody EditOrderRequest request,
+                               @AuthenticationPrincipal Jwt jwt) {
+        return service.edit(id, request, adminId(jwt));
+    }
+
+    @PostMapping("/{id}/status")
+    public OrderDetailDto changeStatus(@PathVariable UUID id, @Valid @RequestBody ChangeStatusRequest request,
+                                       @AuthenticationPrincipal Jwt jwt) {
+        return service.changeStatus(id, request, adminId(jwt));
+    }
+
+    @PutMapping("/{id}/details")
+    public OrderDetailDto details(@PathVariable UUID id, @Valid @RequestBody UpdateDetailsRequest request) {
+        return service.updateDetails(id, request);
+    }
+
+    @PutMapping("/items/{itemId}/notes")
+    public OrderDetailDto itemNotes(@PathVariable UUID itemId, @Valid @RequestBody ItemNotesRequest request) {
+        return service.setItemNotes(itemId, request.notes());
+    }
+
+    private static UUID adminId(Jwt jwt) {
+        return UUID.fromString(jwt.getSubject());
+    }
+}

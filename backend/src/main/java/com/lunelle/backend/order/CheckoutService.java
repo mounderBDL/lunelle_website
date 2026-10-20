@@ -19,7 +19,6 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,44 +105,11 @@ public class CheckoutService {
         order.setSubtotal(cart.subtotal());
         order.setTotal(cart.subtotal() + fee);
 
-        // TreeMap = stock rows are always touched in the same order, so concurrent orders can't deadlock
-        Map<UUID, Integer> stockNeeds = new TreeMap<>();
         for (PricedLine l : cart.lines()) {
-            OrderItem item = new OrderItem();
-            item.setOrder(order);
-            item.setType(l.getType());
-            item.setNameEn(l.getNameEn());
-            item.setNameFr(l.getNameFr());
-            item.setVariantLabel(l.getVariantLabel());
-            item.setCategoryNameEn(l.getCategoryNameEn());
-            item.setCategoryNameFr(l.getCategoryNameFr());
-            item.setOriginalUnitPrice(l.getOriginalUnitPrice());
-            item.setUnitPrice(l.getUnitPrice());
-            item.setQuantity(l.getQuantity());
-            item.setLineTotal((int) l.lineTotal());
-            item.setRequiresFollowUp(l.isRequiresFollowUp());
-
-            if (l.getType() == OrderItemType.VARIANT) {
-                item.setVariantId(l.getId());
-                stockNeeds.merge(l.getId(), l.getQuantity(), Integer::sum);
-            } else {
-                item.setPackId(l.getId());
-                for (PackItem pi : l.getPack().getItems()) {
-                    ProductVariant v = pi.getVariant();
-                    Product prod = v.getProduct();
-                    OrderItemComponent comp = new OrderItemComponent();
-                    comp.setOrderItem(item);
-                    comp.setVariantId(v.getId());
-                    comp.setNameEn(prod.getNameEn());
-                    comp.setNameFr(prod.getNameFr());
-                    comp.setVariantLabel(v.getLabel());
-                    comp.setQuantity(pi.getQuantity());
-                    item.getComponents().add(comp);
-                    stockNeeds.merge(v.getId(), pi.getQuantity() * l.getQuantity(), Integer::sum);
-                }
-            }
-            order.getItems().add(item);
+            order.getItems().add(buildItem(order, l));
         }
+        // sorted by variant id: stock rows are always touched in the same order, so concurrent orders can't deadlock
+        Map<UUID, Integer> stockNeeds = OrderStock.needs(order);
 
         orders.saveAndFlush(order);
         UUID orderId = order.getId();
@@ -173,17 +139,17 @@ public class CheckoutService {
         return new PlacedOrderDto(token, summary);
     }
 
-    // ───────────── pricing ─────────────
+    // ───────────── pricing (also used by the admin order editor) ─────────────
 
     private record LineKey(OrderItemType type, UUID id) {
     }
 
-    private record PricedCart(List<PricedLine> lines, int subtotal) {
+    record PricedCart(List<PricedLine> lines, int subtotal) {
     }
 
     @Getter
     @Setter
-    private static class PricedLine {
+    static class PricedLine {
         private OrderItemType type;
         private UUID id;
         private int quantity;
@@ -204,7 +170,7 @@ public class CheckoutService {
         }
     }
 
-    private PricedCart price(List<CartLineRequest> requested, Instant now) {
+    PricedCart price(List<CartLineRequest> requested, Instant now) {
         Map<LineKey, Integer> merged = new LinkedHashMap<>();
         for (CartLineRequest l : requested) {
             merged.merge(new LineKey(l.type(), l.id()), l.quantity(), Integer::sum);
@@ -225,6 +191,42 @@ public class CheckoutService {
             throw bad("This order is too large to place online. Please contact us.");
         }
         return new PricedCart(priced, (int) subtotal);
+    }
+
+    /** Builds the order line (snapshots, and the pack components that will leave stock). */
+    OrderItem buildItem(CustomerOrder order, PricedLine l) {
+        OrderItem item = new OrderItem();
+        item.setOrder(order);
+        item.setType(l.getType());
+        item.setNameEn(l.getNameEn());
+        item.setNameFr(l.getNameFr());
+        item.setVariantLabel(l.getVariantLabel());
+        item.setCategoryNameEn(l.getCategoryNameEn());
+        item.setCategoryNameFr(l.getCategoryNameFr());
+        item.setOriginalUnitPrice(l.getOriginalUnitPrice());
+        item.setUnitPrice(l.getUnitPrice());
+        item.setQuantity(l.getQuantity());
+        item.setLineTotal((int) l.lineTotal());
+        item.setRequiresFollowUp(l.isRequiresFollowUp());
+
+        if (l.getType() == OrderItemType.VARIANT) {
+            item.setVariantId(l.getId());
+        } else {
+            item.setPackId(l.getId());
+            for (PackItem pi : l.getPack().getItems()) {
+                ProductVariant v = pi.getVariant();
+                Product prod = v.getProduct();
+                OrderItemComponent comp = new OrderItemComponent();
+                comp.setOrderItem(item);
+                comp.setVariantId(v.getId());
+                comp.setNameEn(prod.getNameEn());
+                comp.setNameFr(prod.getNameFr());
+                comp.setVariantLabel(v.getLabel());
+                comp.setQuantity(pi.getQuantity());
+                item.getComponents().add(comp);
+            }
+        }
+        return item;
     }
 
     private PricedLine variantLine(UUID id, int qty, Instant now) {
@@ -306,11 +308,11 @@ public class CheckoutService {
 
     // ───────────── delivery destination ─────────────
 
-    private record Destination(Integer wilayaId, String wilayaName, Integer communeId,
-                               String communeName, String address) {
+    record Destination(Integer wilayaId, String wilayaName, Integer communeId,
+                       String communeName, String address) {
     }
 
-    private Destination destination(DeliveryMethod method, Integer wilayaId, Integer communeId, String address) {
+    Destination destination(DeliveryMethod method, Integer wilayaId, Integer communeId, String address) {
         if (method == DeliveryMethod.HAND_TO_HAND) {
             return new Destination(null, null, null, null, null);
         }

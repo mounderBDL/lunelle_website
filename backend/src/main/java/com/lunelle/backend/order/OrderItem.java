@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "order_item")
 @Getter
@@ -68,5 +70,6 @@ public class OrderItem {
     private String customizationNotes;
 
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 50)
     private List<OrderItemComponent> components = new ArrayList<>();
 }
