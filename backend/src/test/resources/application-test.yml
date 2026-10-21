@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lunelle_test
+
+app:
+  telegram:
+    bot-token: ""   # tests must never message anyone

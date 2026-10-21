@@ -33,4 +33,7 @@ public class AdminUser {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
+
+    @Column(name = "password_changed_at")
+    private Instant passwordChangedAt;
 }

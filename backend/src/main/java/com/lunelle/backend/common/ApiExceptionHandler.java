@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +19,13 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    /** Our own, intentional errors (stock, rules, not found...): always {"message": "..."}. */
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> status(ResponseStatusException e) {
+        String message = e.getReason() != null ? e.getReason() : "Request failed";
+        return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", message));
+    }
 
     /** Duplicate value, or deleting something still referenced (e.g. a size inside a pack). */
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -56,10 +64,9 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("message", "Validation failed", "errors", errors));
     }
 
-    /** The body is not valid JSON, or a value has the wrong type (e.g. text where a number is expected). */
+    /** The body is not valid JSON, or a value has the wrong type (e.g. a malformed UUID). */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> unreadable(HttpMessageNotReadableException e) {
-        // technical detail stays in the console, not in the response
         log.warn("Unreadable request body: {}", e.getMostSpecificCause().getMessage());
         return ResponseEntity.badRequest()
                 .body(Map.of("message", "The request body is not valid JSON, or a value has the wrong type"));

@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    show-sql: false
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  shutdown: graceful
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+app:
+  cookie:
+    secure: true   # cookies only travel over HTTPS
+
+logging:
+  level:
+    root: INFO
+    org.hibernate: WARN

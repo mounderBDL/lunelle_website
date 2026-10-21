@@ -24,22 +24,27 @@ public class DataSeeder implements ApplicationRunner {
     private final SettingRepository settings;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.admin.email}")
+    @Value("${app.admin.email:}")
     private String adminEmail;
 
-    @Value("${app.admin.password}")
+    @Value("${app.admin.password:}")
     private String adminPassword;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (!admins.existsByEmail(adminEmail)) {
-            AdminUser admin = new AdminUser();
-            admin.setEmail(adminEmail);
-            admin.setPasswordHash(passwordEncoder.encode(adminPassword));
-            admin.setName("Admin");
-            admins.save(admin);
-            log.info("Admin account created for {}", adminEmail);
+        // The admin is created only when NO admin exists. Later changes go through the app, not .env.
+        if (admins.count() == 0) {
+            if (adminEmail.isBlank() || adminPassword.isBlank()) {
+                log.warn("No admin account exists. Set ADMIN_EMAIL and ADMIN_PASSWORD for the first start.");
+            } else {
+                AdminUser admin = new AdminUser();
+                admin.setEmail(adminEmail.trim());
+                admin.setPasswordHash(passwordEncoder.encode(adminPassword));
+                admin.setName("Admin");
+                admins.save(admin);
+                log.info("Admin account created for {}", adminEmail);
+            }
         }
 
         Map<String, String> defaults = Map.of(
