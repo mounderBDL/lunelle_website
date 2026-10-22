@@ -307,7 +307,7 @@ public class CheckoutService {
     private static QuoteLineDto toQuoteLine(PricedLine l) {
         return new QuoteLineDto(l.getType(), l.getId(), new LocalizedName(l.getNameEn(), l.getNameFr()),
                 l.getVariantLabel(), l.getImageUrl(), l.getOriginalUnitPrice(), l.getUnitPrice(),
-                l.getQuantity(), (int) l.lineTotal(), l.getProblem());
+                l.getQuantity(), (int) l.lineTotal(), l.isRequiresFollowUp(), l.getProblem());
     }
 
     // ───────────── delivery destination ─────────────

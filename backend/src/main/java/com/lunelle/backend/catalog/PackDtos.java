@@ -22,7 +22,7 @@ public final class PackDtos {
     public record PackRequest(
             @NotNull @Valid LocalizedName name,
             @Valid LocalizedText description,
-            @Size(max = 500) String imageUrl,
+            @Size(max = 500) @Pattern(regexp = "^(https?://\\S+)?$", message = "must be a valid http(s) address, or empty") String imageUrl,
             @NotNull @Min(1) @Max(10_000_000) Integer price,
             @NotNull Boolean active,
             @NotNull Integer sortOrder,

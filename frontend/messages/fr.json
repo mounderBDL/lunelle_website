@@ -1,0 +1,77 @@
+{
+  "common": {
+    "home": "Accueil",
+    "errorTitle": "Un problème est survenu",
+    "errorText": "Veuillez réessayer dans un instant.",
+    "tryAgain": "Réessayer",
+    "notFoundTitle": "Page introuvable",
+    "notFoundText": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil"
+  },
+  "nav": { "packs": "Packs", "cart": "Panier", "menu": "Menu" },
+  "home": {
+    "heroEyebrow": "Brumes · Muscs · Parfums",
+    "heroTitle": "La poésie du parfum",
+    "heroText": "Des fragrances douces et romantiques, faites pour rester dans les mémoires. Découvrez nos brumes, muscs, parfums et créations personnalisées.",
+    "shop": "Découvrir la collection",
+    "packsCta": "Voir nos packs",
+    "collections": "Nos collections",
+    "favourites": "Nos coups de cœur",
+    "packs": "Packs",
+    "packsText": "Des sélections qui coûtent moins cher que l'achat de chaque pièce séparément.",
+    "empty": "Notre collection est en préparation. Revenez bientôt."
+  },
+  "product": {
+    "from": "À partir de",
+    "outOfStock": "Épuisé",
+    "sale": "Promo",
+    "save": "Économisez {amount}",
+    "pack": "Pack",
+    "size": "Contenance",
+    "quantity": "Quantité",
+    "increase": "Augmenter la quantité",
+    "decrease": "Diminuer la quantité",
+    "addToCart": "Ajouter au panier",
+    "added": "Ajouté à votre panier",
+    "viewCart": "Voir le panier",
+    "personalized": "Ceci est une création personnalisée. Après votre commande, nous vous appellerons pour confirmer vos détails.",
+    "notes": "Notes olfactives",
+    "description": "Description"
+  },
+  "category": { "empty": "Cette collection ne contient pas encore de produits." },
+  "packs": {
+    "title": "Packs",
+    "subtitle": "Des sélections qui coûtent moins cher que l'achat de chaque pièce séparément.",
+    "empty": "Aucun pack n'est disponible pour le moment.",
+    "contains": "Contenu du pack",
+    "separately": "Prix à l'unité",
+    "packPrice": "Prix du pack",
+    "save": "Vous économisez {amount}"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide.",
+    "continue": "Continuer mes achats",
+    "remove": "Retirer",
+    "subtotal": "Sous-total",
+    "deliveryNote": "Les frais de livraison sont calculés à l'étape suivante.",
+    "checkout": "Passer la commande",
+    "unavailable": "Cet article n'est plus disponible. Veuillez le retirer.",
+    "notEnough": "Stock insuffisant pour cette quantité. Veuillez la réduire.",
+    "fixIssues": "Veuillez corriger les articles signalés ci-dessus pour continuer.",
+    "loadError": "Nous n'avons pas pu mettre à jour votre panier.",
+    "retry": "Réessayer",
+    "pack": "Pack",
+    "personalized": "Votre panier contient une création personnalisée. Après votre commande, nous vous appellerons pour confirmer vos détails.",
+    "increase": "Augmenter la quantité",
+    "decrease": "Diminuer la quantité"
+  },
+  "footer": {
+    "tagline": "La poésie du parfum",
+    "help": "Aide",
+    "track": "Suivre ma commande",
+    "contact": "Contact",
+    "follow": "Suivez-nous sur Instagram",
+    "rights": "Tous droits réservés."
+  }
+}

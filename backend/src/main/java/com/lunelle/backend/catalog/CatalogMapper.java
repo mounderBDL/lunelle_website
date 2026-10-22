@@ -34,7 +34,7 @@ final class CatalogMapper {
 
     static PublicCategoryDto publicCategory(Category c) {
         return new PublicCategoryDto(c.getId(), c.getSlug(), name(c.getNameEn(), c.getNameFr()),
-                text(c.getDescriptionEn(), c.getDescriptionFr()), c.getImageUrl());
+                text(c.getDescriptionEn(), c.getDescriptionFr()), c.getImageUrl(), c.isRequiresFollowUp());
     }
 
     static AdminVariantDto adminVariant(Product p, ProductVariant v, Instant now) {
@@ -74,6 +74,7 @@ final class CatalogMapper {
                 name(p.getNameEn(), p.getNameFr()),
                 text(p.getDescriptionEn(), p.getDescriptionFr()),
                 text(p.getScentNotesEn(), p.getScentNotesFr()),
-                p.getBadge(), p.isFeatured(), onSale, inStock, variants, images(p));
+                p.getBadge(), p.isFeatured(), onSale, inStock, c.isRequiresFollowUp(),
+                variants, images(p));
     }
 }
