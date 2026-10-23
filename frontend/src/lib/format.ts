@@ -20,3 +20,16 @@ export function imageUrlOrNull(url: string | null | undefined): string | null {
   if (!url) return null;
   return url.startsWith("https://") || url.startsWith("http://") || url.startsWith("/") ? url : null;
 }
+
+/** Date and time in Algeria's time zone, in the visitor's language. */
+export function formatDateTime(value: string | number | null | undefined, locale: string): string {
+  if (value === null || value === undefined) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : "en-GB", {
+    dateStyle: "full",
+    timeStyle: "short",
+    timeZone: "Africa/Algiers",
+  }).format(date);
+}
+

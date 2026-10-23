@@ -9,32 +9,46 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderQueryService {
 
     private final CustomerOrderRepository orders;
+    private final LookupAttemptService attempts;
 
+    /** The private link given at checkout: whoever holds the token sees the whole order. */
     @Transactional(readOnly = true)
     public OrderSummaryDto byToken(String token) {
         return orders.findByPublicToken(token)
-                .map(OrderMapper::summary)
+                .map(o -> OrderMapper.summary(o))
                 .orElseThrow(OrderQueryService::notFound);
     }
 
-    /** Customer lookup: the order code plus the phone number used at checkout. */
+    /** Customer lookup: order code + phone number. Rate-limited; the street address is never returned. */
     @Transactional(readOnly = true)
     public OrderSummaryDto lookup(String code, String phone) {
-        String normalized;
+        String normalizedCode = code.trim().toUpperCase(Locale.ROOT);
+        String normalizedPhone = null;
         try {
-            normalized = PhoneUtil.normalize(phone);
-        } catch (ResponseStatusException e) {
-            throw notFound(); // same answer whatever is wrong: nothing to enumerate
+            normalizedPhone = PhoneUtil.normalize(phone);
+        } catch (ResponseStatusException ignored) {
+            // an invalid number is simply a failed attempt (same answer as a wrong one)
         }
-        return orders.findByCodeAndPhone(code.trim().toUpperCase(Locale.ROOT), normalized)
-                .map(OrderMapper::summary)
-                .orElseThrow(OrderQueryService::notFound);
+        String[] keys = normalizedPhone == null
+                ? new String[]{"code:" + normalizedCode}
+                : new String[]{"code:" + normalizedCode, "phone:" + normalizedPhone};
+        attempts.assertAllowed(keys);
+
+        Optional<CustomerOrder> found = normalizedPhone == null
+                ? Optional.empty()
+                : orders.findByCodeAndPhone(normalizedCode, normalizedPhone);
+        if (found.isEmpty()) {
+            attempts.recordFailure(keys);
+            throw notFound();
+        }
+        return OrderMapper.summary(found.get(), false);
     }
 
     private static ResponseStatusException notFound() {

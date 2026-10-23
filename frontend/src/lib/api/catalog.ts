@@ -1,5 +1,12 @@
 import { apiGet, apiGetOrNull } from "./server";
-import type { PublicCategory, PublicPack, PublicProduct, PublicSettings } from "./types";
+import type {
+  DeliveryWilaya,
+  OrderSummary,
+  PublicCategory,
+  PublicPack,
+  PublicProduct,
+  PublicSettings,
+} from "./types";
 
 type ProductQuery = { category?: string; featured?: boolean };
 
@@ -21,6 +28,12 @@ export const loadProduct = (slug: string) =>
 export const loadPacks = () => apiGet<PublicPack[]>("/api/packs");
 
 export const loadPack = (slug: string) => apiGetOrNull<PublicPack>(`/api/packs/${encodeURIComponent(slug)}`);
+
+export const loadDeliveryWilayas = () => apiGet<DeliveryWilaya[]>("/api/delivery/wilayas");
+
+/** Never cached: the status of an order changes. */
+export const loadOrder = (token: string) =>
+  apiGetOrNull<OrderSummary>(`/api/orders/${encodeURIComponent(token)}`, 0);
 
 // ───── safe versions: used by the header, footer and home page, which must never crash ─────
 

@@ -12,7 +12,13 @@ final class OrderMapper {
     private OrderMapper() {
     }
 
+    /** The full view (used with the private confirmation link). */
     static OrderSummaryDto summary(CustomerOrder o) {
+        return summary(o, true);
+    }
+
+    /** includeAddress = false hides the street address (used by the code + phone lookup). */
+    static OrderSummaryDto summary(CustomerOrder o, boolean includeAddress) {
         List<OrderLineDto> lines = o.getItems().stream()
                 .sorted(Comparator.comparing(OrderItem::getNameEn)
                         .thenComparing(i -> i.getVariantLabel() == null ? "" : i.getVariantLabel()))
@@ -30,7 +36,8 @@ final class OrderMapper {
         return new OrderSummaryDto(
                 o.getCode(), o.getStatus(), o.getCreatedAt(), o.getCustomerName(),
                 PhoneUtil.mask(o.getPhone()), o.getDeliveryMethod(), o.getWilayaName(),
-                o.getCommuneName(), o.getAddress(), o.getHandoverPlace(), o.getHandoverAt(),
+                o.getCommuneName(), includeAddress ? o.getAddress() : null,
+                o.getHandoverPlace(), o.getHandoverAt(),
                 o.getTrackingNumber(), lines, o.getSubtotal(), o.getDeliveryFee(), o.getTotal());
     }
 }

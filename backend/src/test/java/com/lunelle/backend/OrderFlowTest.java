@@ -19,6 +19,9 @@ import com.lunelle.backend.order.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.lunelle.backend.order.OrderQueryService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -252,4 +255,20 @@ class OrderFlowTest extends IntegrationTestBase {
                 .satisfies(t -> assertHttp(t, 400));
         assertThat(count("orders")).isEqualTo(1);
     }
+
+    @Autowired
+    private OrderQueryService orderQueries;
+
+    @Test
+    void lookupNeverRevealsTheStreetAddressButThePrivateLinkDoes() {
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
+        int commune = communeOf(16, 0);
+        PlacedOrderDto placed = checkout.place(new CheckoutRequest("Test Client", "0551111111", "fr",
+                DeliveryMethod.HOME, 16, commune, "12 rue des Tests", null, List.of(variantLine(v, 1)), null));
+
+        assertThat(orderQueries.byToken(placed.publicToken()).address()).isEqualTo("12 rue des Tests");
+        assertThat(orderQueries.lookup(placed.order().code(), "+213 551 11 11 11").address()).isNull();
+        assertThatThrownBy(() -> orderQueries.lookup(placed.order().code(), "0552222222"))
+                .satisfies(t -> assertHttp(t, 404));
+    }    
 }

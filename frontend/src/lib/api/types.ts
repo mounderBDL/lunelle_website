@@ -80,3 +80,54 @@ export type QuoteDto = {
   total: number | null;
   ok: boolean;
 };
+
+// ───── delivery ─────
+
+export type DeliveryMethod = "HAND_TO_HAND" | "HOME" | "STOP_DESK";
+
+export type RateInfo = { fee: number; available: boolean };
+
+export type DeliveryWilaya = {
+  id: number;
+  name: string;
+  active: boolean;
+  home: RateInfo;
+  stopDesk: RateInfo; // available is false when the wilaya has no Yalidine office
+  officeCount: number;
+};
+
+export type Commune = { id: number; name: string };
+
+// ───── orders ─────
+
+export type OrderStatus = "NEW" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "NO_ANSWER" | "RETURNED";
+
+export type OrderLine = {
+  type: "VARIANT" | "PACK";
+  name: Localized;
+  variantLabel: string | null;
+  originalUnitPrice: number;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+  components: { name: Localized; variantLabel: string; quantity: number }[];
+};
+
+export type OrderSummary = {
+  code: string;
+  status: OrderStatus;
+  createdAt: string;
+  customerName: string;
+  phoneMasked: string;
+  deliveryMethod: DeliveryMethod;
+  wilayaName: string | null;
+  communeName: string | null;
+  address: string | null; // null in the code + phone lookup
+  handoverPlace: string | null;
+  handoverAt: string | null;
+  trackingNumber: string | null;
+  items: OrderLine[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+};
