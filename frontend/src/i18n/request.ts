@@ -5,8 +5,9 @@ import { DEFAULT_LOCALE, LOCALE_COOKIE, isLocale } from "./config";
 export default getRequestConfig(async () => {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
   const locale = isLocale(value) ? value : DEFAULT_LOCALE;
-  return {
-    locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
-  };
+  const [shop, admin] = await Promise.all([
+    import(`../../messages/${locale}.json`),
+    import(`../../messages/admin.${locale}.json`),
+  ]);
+  return { locale, messages: { ...shop.default, admin: admin.default } };
 });

@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -21,20 +18,14 @@ const sans = Jost({
 
 export const metadata: Metadata = {
   title: { default: "Lunelle | The poetry of scent", template: "%s | Lunelle" },
-  description: "Mists, musks, perfumes. The poetry of scent.",
+  description: "Mists, musks and perfumes. The poetry of scent.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
+  const locale = await getLocale();
   return (
     <html lang={locale} className={`${display.variable} ${sans.variable}`}>
-      <body className="flex min-h-screen flex-col">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-        </NextIntlClientProvider>
-      </body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

@@ -9,6 +9,18 @@
   --color-cocoa: #3d2f2c;
   --color-gold: #b8924a;
   --color-sage: #8a9a78;
+
+  /* soft status colors, used by the admin */
+  --color-lavender: #e8e2f3;
+  --color-lavender-dark: #5f5380;
+  --color-sage-soft: #e3ebdc;
+  --color-sage-dark: #4f6341;
+  --color-amber-soft: #f6e8c9;
+  --color-amber-dark: #8a6420;
+  --color-terracotta-soft: #f3ddd2;
+  --color-terracotta-dark: #9b4a2f;
+  --color-stone-soft: #ebe6e1;
+  --color-stone-dark: #6b5f5a;
 }
 
 @theme inline {
@@ -35,5 +47,9 @@
   }
   ::selection {
     background: var(--color-blush);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-rose-dark);
+    outline-offset: 2px;
   }
 }
