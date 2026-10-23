@@ -29,18 +29,16 @@ public final class CatalogDtos {
             @Valid LocalizedText description,
             @Size(max = 500) @Pattern(regexp = "^(https?://\\S+)?$", message = "must be a valid http(s) address, or empty") String imageUrl,
             @NotNull Integer sortOrder,
-            @NotNull Boolean active,
-            @NotNull Boolean requiresFollowUp) {
+            @NotNull Boolean active) {
     }
 
     public record CategoryDto(
             UUID id, String slug, LocalizedName name, LocalizedText description,
-            String imageUrl, int sortOrder, boolean active, boolean requiresFollowUp) {
+            String imageUrl, int sortOrder, boolean active) {
     }
 
     public record PublicCategoryDto(
-            UUID id, String slug, LocalizedName name, LocalizedText description, String imageUrl,
-            boolean requiresFollowUp) {
+            UUID id, String slug, LocalizedName name, LocalizedText description, String imageUrl) {
     }
 
     // ───── variants ─────
@@ -121,7 +119,7 @@ public final class CatalogDtos {
     public record PublicProductDto(
             UUID id, String slug, String categorySlug, LocalizedName name,
             LocalizedText description, LocalizedText scentNotes, String badge,
-            boolean featured, boolean onSale, boolean inStock, boolean personalized,
+            boolean featured, boolean onSale, boolean inStock,
             List<PublicVariantDto> variants, List<ImageDto> images) {
     }
 

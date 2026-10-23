@@ -25,13 +25,13 @@ public final class OrderAdminDtos {
     public record OrderListItemDto(
             UUID id, String code, OrderStatus status, Instant createdAt, String customerName, String phone,
             DeliveryMethod deliveryMethod, String wilayaName, String communeName,
-            int itemCount, int total, boolean needsDetails) {
+            int itemCount, int total) {
     }
 
     public record AdminOrderItemDto(
             UUID id, OrderItemType type, LocalizedName name, String variantLabel,
             int originalUnitPrice, int unitPrice, Integer unitCost, int quantity, int lineTotal,
-            boolean requiresFollowUp, String customizationNotes, List<ComponentDto> components) {
+            List<ComponentDto> components) {
     }
 
     public record HistoryDto(
@@ -46,7 +46,7 @@ public final class OrderAdminDtos {
             Integer communeId, String communeName, String address,
             int deliveryFee, String handoverPlace, Instant handoverAt, String trackingNumber,
             int subtotal, int total, Integer cost, Integer profit, String adminNote,
-            boolean editable, boolean needsDetails, List<OrderStatus> allowedStatuses,
+            boolean editable, List<OrderStatus> allowedStatuses,
             List<AdminOrderItemDto> items, List<HistoryDto> history) {
     }
 
@@ -74,8 +74,5 @@ public final class OrderAdminDtos {
             @Size(max = 300) String handoverPlace,
             Instant handoverAt,
             @Size(max = 60) String trackingNumber) {
-    }
-
-    public record ItemNotesRequest(@Size(max = 1000) String notes) {
     }
 }

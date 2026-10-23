@@ -12,7 +12,7 @@
   "home": {
     "heroEyebrow": "Brumes · Muscs · Parfums",
     "heroTitle": "La poésie du parfum",
-    "heroText": "Des fragrances douces et romantiques, faites pour rester dans les mémoires. Découvrez nos brumes, muscs, parfums et créations personnalisées.",
+    "heroText": "Des fragrances douces et romantiques, faites pour rester dans les mémoires. Découvrez nos brumes, muscs, parfums.",
     "shop": "Découvrir la collection",
     "packsCta": "Voir nos packs",
     "collections": "Nos collections",
@@ -34,7 +34,6 @@
     "addToCart": "Ajouter au panier",
     "added": "Ajouté à votre panier",
     "viewCart": "Voir le panier",
-    "personalized": "Ceci est une création personnalisée. Après votre commande, nous vous appellerons pour confirmer vos détails.",
     "notes": "Notes olfactives",
     "description": "Description"
   },
@@ -62,7 +61,6 @@
     "loadError": "Nous n'avons pas pu mettre à jour votre panier.",
     "retry": "Réessayer",
     "pack": "Pack",
-    "personalized": "Votre panier contient une création personnalisée. Après votre commande, nous vous appellerons pour confirmer vos détails.",
     "increase": "Augmenter la quantité",
     "decrease": "Diminuer la quantité"
   },

@@ -67,6 +67,5 @@ public class CategoryService {
         c.setImageUrl(TextUtil.blankToNull(r.imageUrl()));
         c.setSortOrder(r.sortOrder());
         c.setActive(r.active());
-        c.setRequiresFollowUp(r.requiresFollowUp());
     }
 }

@@ -24,32 +24,38 @@ public class DeliveryService {
     private record RateKey(int wilayaId, DeliveryMethod method) {
     }
 
-    /** Wilayas shown at checkout: active only, with both rates. */
+    /**
+     * Wilayas shown at checkout: active only. The office option is only available
+     * where at least one commune has a Yalidine office.
+     */
     @Transactional(readOnly = true)
     public List<WilayaDeliveryDto> listForCheckout() {
         Map<RateKey, DeliveryRate> byKey = rateMap();
+        Map<Integer, Integer> offices = officeCounts();
         return wilayas.findByActiveTrueOrderByIdAsc().stream()
-                .map(w -> toDto(w, byKey))
+                .map(w -> toDto(w, byKey, offices, true))
                 .toList();
     }
 
-    /** Admin grid: every wilaya, active or not. */
+    /** Admin grid: every wilaya, active or not, with the real rate settings. */
     @Transactional(readOnly = true)
     public List<WilayaDeliveryDto> listForAdmin() {
         Map<RateKey, DeliveryRate> byKey = rateMap();
+        Map<Integer, Integer> offices = officeCounts();
         return wilayas.findAllByOrderByIdAsc().stream()
-                .map(w -> toDto(w, byKey))
+                .map(w -> toDto(w, byKey, offices, false))
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<CommuneDto> communesOf(int wilayaId) {
+    public List<CommuneDto> communesOf(int wilayaId, boolean officeOnly) {
         Wilaya wilaya = wilayas.findById(wilayaId)
                 .filter(Wilaya::isActive)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown wilaya"));
-        return communes.findByWilayaIdAndActiveTrueOrderByNameAsc(wilaya.getId()).stream()
-                .map(c -> new CommuneDto(c.getId(), c.getName()))
-                .toList();
+        List<Commune> list = officeOnly
+                ? communes.findByWilayaIdAndActiveTrueAndHasOfficeTrueOrderByNameAsc(wilaya.getId())
+                : communes.findByWilayaIdAndActiveTrueOrderByNameAsc(wilaya.getId());
+        return list.stream().map(c -> new CommuneDto(c.getId(), c.getName())).toList();
     }
 
     /** Bulk update from the admin grid. Wilayas not in the list are left untouched. */
@@ -71,8 +77,8 @@ public class DeliveryService {
     }
 
     /**
-     * Delivery fee for an order. Used by checkout (next sessions).
-     * Hand-to-hand is always free; HOME / STOP_DESK must be available for that wilaya.
+     * Delivery fee for an order. Hand-to-hand is always free; HOME / STOP_DESK must be available
+     * for that wilaya. (Whether the commune has an office is checked by checkout.)
      */
     @Transactional(readOnly = true)
     public int feeFor(int wilayaId, DeliveryMethod method) {
@@ -110,13 +116,28 @@ public class DeliveryService {
         return map;
     }
 
-    private WilayaDeliveryDto toDto(Wilaya w, Map<RateKey, DeliveryRate> byKey) {
+    private Map<Integer, Integer> officeCounts() {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Object[] row : communes.countOfficesByWilaya()) {
+            map.put((Integer) row[0], ((Long) row[1]).intValue());
+        }
+        return map;
+    }
+
+    private WilayaDeliveryDto toDto(Wilaya w, Map<RateKey, DeliveryRate> byKey,
+                                    Map<Integer, Integer> offices, boolean forCheckout) {
+        int officeCount = offices.getOrDefault(w.getId(), 0);
+        RateDto stopDesk = toRateDto(byKey.get(new RateKey(w.getId(), DeliveryMethod.STOP_DESK)));
+        if (forCheckout && officeCount == 0) {
+            stopDesk = new RateDto(stopDesk.fee(), false); // no office anywhere in this wilaya
+        }
         return new WilayaDeliveryDto(
                 w.getId(),
                 w.getName(),
                 w.isActive(),
                 toRateDto(byKey.get(new RateKey(w.getId(), DeliveryMethod.HOME))),
-                toRateDto(byKey.get(new RateKey(w.getId(), DeliveryMethod.STOP_DESK))));
+                stopDesk,
+                officeCount);
     }
 
     private RateDto toRateDto(DeliveryRate r) {

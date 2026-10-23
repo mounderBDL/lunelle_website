@@ -54,13 +54,14 @@ abstract class IntegrationTestBase {
                 + "orders, pack_item, pack, product_image, product_variant, product, category, blocked_phone CASCADE")
                 .update();
         jdbc.sql("ALTER SEQUENCE order_code_seq RESTART WITH 1").update();
+        jdbc.sql("update commune set has_office = false").update();
     }
 
     // ───── fixtures ─────
 
-    protected UUID newCategory(boolean requiresFollowUp) {
+    protected UUID newCategory() {
         return categories.create(new CategoryRequest(
-                new LocalizedName("Category", "Categorie"), null, null, 0, true, requiresFollowUp)).id();
+                new LocalizedName("Category", "Categorie"), null, null, 0, true)).id();
     }
 
     /** A product with a single size "100 ml". */
@@ -102,5 +103,19 @@ abstract class IntegrationTestBase {
     protected String statusOf(UUID orderId) {
         return jdbc.sql("select status from orders where id = :id").param("id", orderId)
                 .query(String.class).single();
+    }
+    protected int communeOf(int wilayaId, int index) {
+        return jdbc.sql("select id from commune where wilaya_id = :w and is_active order by id limit 1 offset :i")
+                .param("w", wilayaId).param("i", index).query(Integer.class).single();
+    }
+
+    protected boolean isOffice(int communeId) {
+        return jdbc.sql("select has_office from commune where id = :id")
+                .param("id", communeId).query(Boolean.class).single();
+    }
+
+    protected long countOffices(int wilayaId) {
+        return jdbc.sql("select count(*) from commune where wilaya_id = :w and has_office")
+                .param("w", wilayaId).query(Long.class).single();
     }
 }

@@ -63,12 +63,6 @@ public class OrderItem {
     @Column(name = "line_total", nullable = false)
     private int lineTotal;
 
-    @Column(name = "requires_follow_up", nullable = false)
-    private boolean requiresFollowUp;
-
-    @Column(name = "customization_notes")
-    private String customizationNotes;
-
     @Column(name = "unit_cost")
     private Integer unitCost; // cost per unit at the time of sale (null if unknown); admin-only
 

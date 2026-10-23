@@ -162,7 +162,6 @@ public class CheckoutService {
         private Integer unitCost;
         private int originalUnitPrice;
         private int unitPrice;
-        private boolean requiresFollowUp;
         private LineProblem problem;
         private Pack pack;
 
@@ -209,7 +208,6 @@ public class CheckoutService {
         item.setUnitCost(l.getUnitCost());
         item.setQuantity(l.getQuantity());
         item.setLineTotal((int) l.lineTotal());
-        item.setRequiresFollowUp(l.isRequiresFollowUp());
 
         if (l.getType() == OrderItemType.VARIANT) {
             item.setVariantId(l.getId());
@@ -249,7 +247,6 @@ public class CheckoutService {
         l.setUnitCost(v.getCostPrice());
         l.setOriginalUnitPrice(v.getPrice());
         l.setUnitPrice(Pricing.finalPrice(p, v.getPrice(), now));
-        l.setRequiresFollowUp(c.isRequiresFollowUp());
 
         boolean sellable = v.isActive() && p.isActive() && p.getArchivedAt() == null && c.isActive();
         if (!sellable) {
@@ -275,13 +272,6 @@ public class CheckoutService {
         l.setOriginalUnitPrice(pk.getPrice()); // packs are never discounted
         l.setUnitPrice(pk.getPrice());
 
-        boolean followUp = false;
-        for (PackItem pi : pk.getItems()) {
-            Product prod = pi.getVariant().getProduct();
-            followUp |= categories.findById(prod.getCategoryId())
-                    .map(Category::isRequiresFollowUp).orElse(false);
-        }
-        l.setRequiresFollowUp(followUp);
 
         boolean sellable = pk.isActive() && pk.getArchivedAt() == null;
         if (!sellable) {
@@ -307,7 +297,7 @@ public class CheckoutService {
     private static QuoteLineDto toQuoteLine(PricedLine l) {
         return new QuoteLineDto(l.getType(), l.getId(), new LocalizedName(l.getNameEn(), l.getNameFr()),
                 l.getVariantLabel(), l.getImageUrl(), l.getOriginalUnitPrice(), l.getUnitPrice(),
-                l.getQuantity(), (int) l.lineTotal(), l.isRequiresFollowUp(), l.getProblem());
+                l.getQuantity(), (int) l.lineTotal(), l.getProblem());
     }
 
     // ───────────── delivery destination ─────────────
@@ -332,6 +322,9 @@ public class CheckoutService {
                 .filter(c -> c.isActive() && c.getWilayaId().equals(wilaya.getId()))
                 .orElseThrow(() -> bad("Invalid commune for this wilaya"));
         String addr = blankToNull(address);
+        if (method == DeliveryMethod.STOP_DESK && !commune.isHasOffice()) {
+            throw bad("There is no Yalidine office in this commune. Please choose another commune or home delivery.");
+        }        
         if (method == DeliveryMethod.HOME && (addr == null || addr.length() < 5)) {
             throw bad("Please enter your delivery address");
         }

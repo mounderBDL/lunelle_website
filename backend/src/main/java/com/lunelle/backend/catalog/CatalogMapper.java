@@ -29,12 +29,12 @@ final class CatalogMapper {
     static CategoryDto category(Category c) {
         return new CategoryDto(c.getId(), c.getSlug(), name(c.getNameEn(), c.getNameFr()),
                 text(c.getDescriptionEn(), c.getDescriptionFr()), c.getImageUrl(),
-                c.getSortOrder(), c.isActive(), c.isRequiresFollowUp());
+                c.getSortOrder(), c.isActive());
     }
 
     static PublicCategoryDto publicCategory(Category c) {
         return new PublicCategoryDto(c.getId(), c.getSlug(), name(c.getNameEn(), c.getNameFr()),
-                text(c.getDescriptionEn(), c.getDescriptionFr()), c.getImageUrl(), c.isRequiresFollowUp());
+                text(c.getDescriptionEn(), c.getDescriptionFr()), c.getImageUrl());
     }
 
     static AdminVariantDto adminVariant(Product p, ProductVariant v, Instant now) {
@@ -62,7 +62,7 @@ final class CatalogMapper {
                 variants, images(p), p.getCreatedAt());
     }
 
-    static PublicProductDto publicProduct(Product p, Category c, Instant now) {
+        static PublicProductDto publicProduct(Product p, Category c, Instant now) {
         List<PublicVariantDto> variants = p.getVariants().stream()
                 .filter(ProductVariant::isActive)
                 .map(v -> new PublicVariantDto(v.getId(), v.getLabel(), v.getPrice(),
@@ -74,7 +74,6 @@ final class CatalogMapper {
                 name(p.getNameEn(), p.getNameFr()),
                 text(p.getDescriptionEn(), p.getDescriptionFr()),
                 text(p.getScentNotesEn(), p.getScentNotesFr()),
-                p.getBadge(), p.isFeatured(), onSale, inStock, c.isRequiresFollowUp(),
-                variants, images(p));
+                p.getBadge(), p.isFeatured(), onSale, inStock, variants, images(p));
     }
 }

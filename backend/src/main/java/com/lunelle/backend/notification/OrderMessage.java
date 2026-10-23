@@ -33,9 +33,6 @@ final class OrderMessage {
 
         sb.append("\n💰 <b>").append(money(o.total())).append("</b>");
         sb.append(o.deliveryFee() == 0 ? " (free delivery)" : " (delivery " + money(o.deliveryFee()) + ")");
-        if (o.needsDetails()) {
-            sb.append("\n\n⚠️ Personalization details needed: call the customer");
-        }
         if (o.customerNote() != null && !o.customerNote().isBlank()) {
             sb.append("\n📝 ").append(esc(o.customerNote()));
         }

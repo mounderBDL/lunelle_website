@@ -108,7 +108,6 @@ export default function CartView() {
   const loading = !fresh;
   const subtotal = rows.reduce((sum, r) => sum + r.q.unitPrice * r.quantity, 0);
   const hasProblem = rows.some((r) => r.q.problem !== null);
-  const personalized = rows.some((r) => r.q.requiresFollowUp);
   const canCheckout = !loading && !hasProblem;
 
   return (
@@ -176,10 +175,6 @@ export default function CartView() {
           );
         })}
       </ul>
-
-      {personalized && (
-        <p className="mt-6 rounded-xl bg-parchment/70 px-5 py-4 text-sm text-cocoa/80">{t("personalized")}</p>
-      )}
 
       <div className="mt-8 border-t border-rose/20 pt-6">
         <div className="flex items-baseline justify-between">

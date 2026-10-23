@@ -30,10 +30,9 @@ public class AdminOrderController {
             @RequestParam(required = false) DeliveryMethod deliveryMethod,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(defaultValue = "false") boolean needsDetails,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return service.list(status, q, wilayaId, deliveryMethod, from, to, needsDetails, page, size);
+        return service.list(status, q, wilayaId, deliveryMethod, from, to, page, size);
     }
 
     /** Order counts per status (for the tabs / "new orders" badge). */
@@ -63,11 +62,6 @@ public class AdminOrderController {
     @PutMapping("/{id}/details")
     public OrderDetailDto details(@PathVariable UUID id, @Valid @RequestBody UpdateDetailsRequest request) {
         return service.updateDetails(id, request);
-    }
-
-    @PutMapping("/items/{itemId}/notes")
-    public OrderDetailDto itemNotes(@PathVariable UUID itemId, @Valid @RequestBody ItemNotesRequest request) {
-        return service.setItemNotes(itemId, request.notes());
     }
 
     private static UUID adminId(Jwt jwt) {

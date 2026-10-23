@@ -101,7 +101,7 @@ public class CommuneImporter implements ApplicationRunner {
         log.info("Imported {} communes ({} rows skipped)", toSave.size(), skipped);
     }
 
-    private static char detectDelimiter(String header) {
+    static char detectDelimiter(String header) {
         char best = ',';
         long bestCount = -1;
         for (char candidate : new char[]{'\t', ',', ';'}) {
@@ -115,7 +115,7 @@ public class CommuneImporter implements ApplicationRunner {
     }
 
     /** Minimal CSV line parser: supports quoted fields and doubled quotes. */
-    private static List<String> parseLine(String line, char delimiter) {
+    static List<String> parseLine(String line, char delimiter) {
         List<String> out = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inQuotes = false;

@@ -48,8 +48,7 @@ public final class OrderDtos {
     // ───── quote ─────
     public record QuoteLineDto(
             OrderItemType type, UUID id, LocalizedName name, String variantLabel, String imageUrl,
-            int originalUnitPrice, int unitPrice, int quantity, int lineTotal,
-            boolean requiresFollowUp, LineProblem problem) {
+            int originalUnitPrice, int unitPrice, int quantity, int lineTotal, LineProblem problem) {
     }
 
     /** deliveryFee and total are null until the customer has chosen a wilaya (for HOME / STOP_DESK). */

@@ -21,7 +21,7 @@ const sans = Jost({
 
 export const metadata: Metadata = {
   title: { default: "Lunelle | The poetry of scent", template: "%s | Lunelle" },
-  description: "Mists, musks, perfumes and personalized fragrances. The poetry of scent.",
+  description: "Mists, musks, perfumes. The poetry of scent.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

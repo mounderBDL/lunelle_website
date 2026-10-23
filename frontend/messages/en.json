@@ -12,7 +12,7 @@
   "home": {
     "heroEyebrow": "Mists · Musks · Perfumes",
     "heroTitle": "The poetry of scent",
-    "heroText": "Soft, romantic fragrances made to be remembered. Discover our mists, musks, perfumes and personalized creations.",
+    "heroText": "Soft, romantic fragrances made to be remembered. Discover our mists, musks, perfumes.",
     "shop": "Shop the collection",
     "packsCta": "Discover our packs",
     "collections": "Our collections",
@@ -34,7 +34,6 @@
     "addToCart": "Add to cart",
     "added": "Added to your cart",
     "viewCart": "View cart",
-    "personalized": "This is a personalized creation. After your order, we'll call you to confirm your details.",
     "notes": "Scent notes",
     "description": "Description"
   },
@@ -62,7 +61,6 @@
     "loadError": "We couldn't update your cart.",
     "retry": "Try again",
     "pack": "Pack",
-    "personalized": "Your cart contains a personalized creation. After your order, we'll call you to confirm your details.",
     "increase": "Increase quantity",
     "decrease": "Decrease quantity"
   },

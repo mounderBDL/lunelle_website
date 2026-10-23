@@ -6,7 +6,6 @@ export type PublicCategory = {
   name: Localized;
   description: Localized;
   imageUrl: string | null;
-  requiresFollowUp: boolean;
 };
 
 export type ProductImage = { id: string; url: string };
@@ -30,7 +29,6 @@ export type PublicProduct = {
   featured: boolean;
   onSale: boolean;
   inStock: boolean;
-  personalized: boolean;
   variants: PublicVariant[];
   images: ProductImage[];
 };
@@ -72,7 +70,6 @@ export type QuoteLine = {
   unitPrice: number;
   quantity: number;
   lineTotal: number;
-  requiresFollowUp: boolean;
   problem: "UNAVAILABLE" | "OUT_OF_STOCK" | null;
 };
 

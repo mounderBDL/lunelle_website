@@ -41,7 +41,4 @@ public class Category {
 
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
-
-    @Column(name = "requires_follow_up", nullable = false)
-    private boolean requiresFollowUp;
 }

@@ -38,9 +38,14 @@ class OrderFlowTest extends IntegrationTestBase {
                 e -> assertThat(e.getStatusCode().value()).isEqualTo(expected));
     }
 
+    private CheckoutRequest office(String phone, int wilayaId, int communeId, CartLineRequest... lines) {
+        return new CheckoutRequest("Test Client", phone, "fr", DeliveryMethod.STOP_DESK,
+                wilayaId, communeId, null, null, List.of(lines), null);
+    }    
+
     @Test
     void placingAnOrderTakesStockSnapshotsPricesAndLogsTheMovement() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 10));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
 
         PlacedOrderDto placed = checkout.place(handToHand("0551111111", variantLine(v, 3)));
 
@@ -56,7 +61,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void cannotOrderMoreThanTheStockAndNothingIsSaved() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 1));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 1));
 
         assertThatThrownBy(() -> checkout.place(handToHand("0551111111", variantLine(v, 2))))
                 .satisfies(t -> assertHttp(t, 409));
@@ -67,7 +72,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void concurrentOrdersNeverOversell() throws Exception {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 5));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 5));
         int threads = 12;
         ExecutorService pool = Executors.newFixedThreadPool(threads);
         CountDownLatch go = new CountDownLatch(1);
@@ -103,7 +108,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void packOrderTakesStockFromEveryComponentAndSavesThem() {
-        UUID cat = newCategory(false);
+        UUID cat = newCategory();
         UUID a = variantId(newProduct(cat, "A", 1000, 400, 10));
         UUID b = variantId(newProduct(cat, "B", 500, 200, 10));
         AdminPackDto pack = packs.create(new PackRequest(new LocalizedName("Duo", "Duo"), null, null,
@@ -123,7 +128,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void cancellingReturnsTheStockOnlyOnce() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 10));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
         UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 3))).order().code());
         assertThat(stockOf(v)).isEqualTo(7);
 
@@ -137,7 +142,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void reopeningANoAnswerOrderTakesStockAgainAndFailsWhenSoldOut() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 3));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 3));
         UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 3))).order().code());
         assertThat(stockOf(v)).isZero();
 
@@ -154,7 +159,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void aReturnedOrderDoesNotRestoreStockAutomatically() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 10));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
         UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 3))).order().code());
 
         adminOrders.updateDetails(orderId, new UpdateDetailsRequest(null, "Blida", null, null));
@@ -166,25 +171,8 @@ class OrderFlowTest extends IntegrationTestBase {
     }
 
     @Test
-    void personalizedOrdersCannotBeConfirmedWithoutDetails() {
-        UUID v = variantId(newProduct(newCategory(true), "Custom", 5000, 2000, 5));
-        UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 1))).order().code());
-        adminOrders.updateDetails(orderId, new UpdateDetailsRequest(null, "Blida", null, null));
-
-        assertThatThrownBy(() -> adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null))
-                .satisfies(t -> assertHttp(t, 400));
-
-        UUID itemId = jdbc.sql("select id from order_item where order_id = :id").param("id", orderId)
-                .query((rs, n) -> rs.getObject(1, UUID.class)).single();
-        adminOrders.setItemNotes(itemId, "Vanilla base, name: Sara");
-
-        OrderDetailDto confirmed = adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null);
-        assertThat(confirmed.status()).isEqualTo(OrderStatus.CONFIRMED);
-    }
-
-    @Test
     void editingANewOrderKeepsTheOriginalPriceAndAdjustsStock() {
-        AdminProductDto product = newProduct(newCategory(false), "Rose", 1000, 400, 10);
+        AdminProductDto product = newProduct(newCategory(), "Rose", 1000, 400, 10);
         UUID v = variantId(product);
         UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 2))).order().code());
         assertThat(stockOf(v)).isEqualTo(8);
@@ -204,7 +192,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void homeDeliveryChargesTheWilayaFee() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 10));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
         int communeId = jdbc.sql("select id from commune where wilaya_id = 16 order by id limit 1")
                 .query(Integer.class).optional()
                 .orElseGet(() -> jdbc.sql("insert into commune (wilaya_id, name) values (16, 'Test commune') returning id")
@@ -221,7 +209,7 @@ class OrderFlowTest extends IntegrationTestBase {
 
     @Test
     void blockedPhonesAreRefusedAndOneNumberCannotFloodTheShop() {
-        UUID v = variantId(newProduct(newCategory(false), "Rose", 1000, 400, 20));
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 20));
         jdbc.sql("insert into blocked_phone (phone, reason) values ('0555000111', 'test')").update();
 
         assertThatThrownBy(() -> checkout.place(handToHand("+213 555 00 01 11", variantLine(v, 1))))
@@ -232,5 +220,36 @@ class OrderFlowTest extends IntegrationTestBase {
         }
         assertThatThrownBy(() -> checkout.place(handToHand("0552222222", variantLine(v, 1))))
                 .satisfies(t -> assertHttp(t, 429));
+    }
+
+ @Test
+    void handToHandOrdersCannotBeConfirmedWithoutAMeetingPlace() {
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 5));
+        UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 1))).order().code());
+
+        assertThatThrownBy(() -> adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null))
+                .satisfies(t -> assertHttp(t, 400));
+
+        adminOrders.updateDetails(orderId, new UpdateDetailsRequest(null, "Blida, post office", null, null));
+        assertThat(adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null).status())
+                .isEqualTo(OrderStatus.CONFIRMED);
+    }
+
+    @Test
+    void officeDeliveryOnlyAcceptsCommunesWithAnOffice() {
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
+        int withOffice = communeOf(16, 0);
+        int withoutOffice = communeOf(16, 1);
+        jdbc.sql("update commune set has_office = true where id = :id").param("id", withOffice).update();
+        int fee = jdbc.sql("select fee from delivery_rate where wilaya_id = 16 and method = 'STOP_DESK'")
+                .query(Integer.class).single();
+
+        PlacedOrderDto placed = checkout.place(office("0551111111", 16, withOffice, variantLine(v, 1)));
+        assertThat(placed.order().deliveryFee()).isEqualTo(fee);
+        assertThat(placed.order().address()).isNull();
+
+        assertThatThrownBy(() -> checkout.place(office("0552222222", 16, withoutOffice, variantLine(v, 1))))
+                .satisfies(t -> assertHttp(t, 400));
+        assertThat(count("orders")).isEqualTo(1);
     }
 }

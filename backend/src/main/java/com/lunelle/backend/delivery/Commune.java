@@ -27,4 +27,7 @@ public class Commune {
 
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Column(name = "has_office", nullable = false)
+    private boolean hasOffice;
 }

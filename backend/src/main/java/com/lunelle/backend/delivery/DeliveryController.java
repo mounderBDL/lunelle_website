@@ -21,8 +21,10 @@ public class DeliveryController {
         return service.listForCheckout();
     }
 
+    /** officeOnly=true: only the communes that have a Yalidine office (for "office" delivery). */
     @GetMapping("/wilayas/{id}/communes")
-    public List<CommuneDto> communes(@PathVariable int id) {
-        return service.communesOf(id);
+    public List<CommuneDto> communes(@PathVariable int id,
+                                     @RequestParam(defaultValue = "false") boolean officeOnly) {
+        return service.communesOf(id, officeOnly);
     }
 }

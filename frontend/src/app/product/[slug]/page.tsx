@@ -72,10 +72,6 @@ export default async function ProductPage({ params }: Props) {
             <ProductPurchase product={product} />
           </div>
 
-          {product.personalized && (
-            <p className="mt-6 rounded-xl bg-parchment/70 px-5 py-4 text-sm text-cocoa/80">{t("personalized")}</p>
-          )}
-
           {description && (
             <section className="mt-10">
               <h2 className="text-2xl">{t("description")}</h2>

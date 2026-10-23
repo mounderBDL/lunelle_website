@@ -48,7 +48,7 @@ public class OrderAdminService {
     @Transactional(readOnly = true)
     public PageDto<OrderListItemDto> list(OrderStatus status, String q, Integer wilayaId,
                                           DeliveryMethod method, LocalDate from, LocalDate to,
-                                          boolean needsDetails, int page, int size) {
+                                           int page, int size) {
         Specification<CustomerOrder> spec = (root, query, cb) -> {
             List<Predicate> ps = new ArrayList<>();
             if (status != null) {
@@ -85,17 +85,6 @@ public class OrderAdminService {
                     // not a full phone number: the partial match above is enough
                 }
                 ps.add(cb.or(any.toArray(new Predicate[0])));
-            }
-            if (needsDetails) {
-                ps.add(cb.equal(root.get("status"), OrderStatus.NEW));
-                Subquery<UUID> sq = query.subquery(UUID.class);
-                Root<OrderItem> item = sq.from(OrderItem.class);
-                sq.select(item.<UUID>get("id")).where(
-                        cb.equal(item.get("order"), root),
-                        cb.isTrue(item.<Boolean>get("requiresFollowUp")),
-                        cb.or(cb.isNull(item.<String>get("customizationNotes")),
-                                cb.equal(cb.trim(item.<String>get("customizationNotes")), "")));
-                ps.add(cb.exists(sq));
             }
             return cb.and(ps.toArray(new Predicate[0]));
         };
@@ -184,13 +173,6 @@ public class OrderAdminService {
     }
 
     private void validateForConfirmation(CustomerOrder o) {
-        List<String> missing = o.getItems().stream()
-                .filter(i -> i.isRequiresFollowUp() && isBlank(i.getCustomizationNotes()))
-                .map(i -> i.getNameEn() + (i.getVariantLabel() == null ? "" : " (" + i.getVariantLabel() + ")"))
-                .toList();
-        if (!missing.isEmpty()) {
-            throw bad("Add the personalization details before confirming: " + String.join(", ", missing));
-        }
         if (o.getDeliveryMethod() == DeliveryMethod.HAND_TO_HAND && isBlank(o.getHandoverPlace())) {
             throw bad("Set the hand-over place before confirming");
         }
@@ -335,22 +317,6 @@ public class OrderAdminService {
             throw bad("The tracking number cannot be changed at this stage");
         }
         return detail(o.getId());
-    }
-
-    @Transactional
-    public OrderDetailDto setItemNotes(UUID itemId, String notes) {
-        OrderItem item = orderItems.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown order line"));
-        UUID orderId = item.getOrder().getId();
-        CustomerOrder o = lock(orderId);
-        if (o.getStatus() != OrderStatus.NEW) {
-            throw conflict("Personalization details can only be edited while the order is new");
-        }
-        if (!item.isRequiresFollowUp()) {
-            throw bad("This item does not need personalization details");
-        }
-        item.setCustomizationNotes(blankToNull(notes));
-        return detail(orderId);
     }
 
     // ───────────── helpers ─────────────

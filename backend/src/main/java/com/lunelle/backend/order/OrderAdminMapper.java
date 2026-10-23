@@ -12,18 +12,11 @@ final class OrderAdminMapper {
     private OrderAdminMapper() {
     }
 
-    static boolean needsDetails(CustomerOrder o) {
-        return o.getStatus() == OrderStatus.NEW && o.getItems().stream()
-                .anyMatch(i -> i.isRequiresFollowUp()
-                        && (i.getCustomizationNotes() == null || i.getCustomizationNotes().isBlank()));
-    }
-
     static OrderListItemDto listItem(CustomerOrder o) {
         return new OrderListItemDto(
                 o.getId(), o.getCode(), o.getStatus(), o.getCreatedAt(), o.getCustomerName(), o.getPhone(),
                 o.getDeliveryMethod(), o.getWilayaName(), o.getCommuneName(),
-                o.getItems().stream().mapToInt(OrderItem::getQuantity).sum(),
-                o.getTotal(), needsDetails(o));
+                o.getItems().stream().mapToInt(OrderItem::getQuantity).sum(), o.getTotal());
     }
 
     static OrderDetailDto detail(CustomerOrder o, List<OrderStatusHistory> history) {
@@ -33,7 +26,7 @@ final class OrderAdminMapper {
                 .map(i -> new AdminOrderItemDto(
                         i.getId(), i.getType(), new LocalizedName(i.getNameEn(), i.getNameFr()),
                         i.getVariantLabel(), i.getOriginalUnitPrice(), i.getUnitPrice(), i.getUnitCost(),
-                        i.getQuantity(), i.getLineTotal(), i.isRequiresFollowUp(), i.getCustomizationNotes(),
+                        i.getQuantity(), i.getLineTotal(),
                         i.getComponents().stream()
                                 .map(c -> new ComponentDto(
                                         new LocalizedName(c.getNameEn(), c.getNameFr()),
@@ -60,7 +53,7 @@ final class OrderAdminMapper {
                 o.getCommuneId(), o.getCommuneName(), o.getAddress(),
                 o.getDeliveryFee(), o.getHandoverPlace(), o.getHandoverAt(), o.getTrackingNumber(),
                 o.getSubtotal(), o.getTotal(), cost, profit, o.getAdminNote(),
-                o.getStatus() == OrderStatus.NEW, needsDetails(o), OrderWorkflow.allowed(o),
+                o.getStatus() == OrderStatus.NEW, OrderWorkflow.allowed(o),
                 items, hist);
     }
 }
