@@ -113,7 +113,7 @@ export default function OrdersView() {
           onClick={() => update({ status: value })}
           aria-pressed={active}
           className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-            active ? "bg-rose-dark text-white" : "border border-rose/20 bg-white/70 text-cocoa/80 hover:bg-blush"
+            active ? "bg-petal-700 text-white" : "border border-rose/20 bg-white/70 text-cocoa/80 hover:bg-blush"
           }`}
         >
           {label}
@@ -245,7 +245,7 @@ export default function OrdersView() {
             {/* computers: table */}
             <div className="hidden overflow-hidden rounded-3xl border border-rose/15 bg-white/70 shadow-sm md:block">
               <table className="w-full text-left text-sm">
-                <thead className="bg-blush/40 text-xs uppercase tracking-wider text-cocoa/60">
+                <thead className="bg-petal-100/70 text-xs uppercase tracking-wider text-cocoa/60">
                   <tr>
                     <th scope="col" className="px-5 py-3 font-medium">{t("columns.order")}</th>
                     <th scope="col" className="px-5 py-3 font-medium">{t("columns.customer")}</th>
@@ -262,13 +262,13 @@ export default function OrdersView() {
                       <tr
                         key={order.id}
                         onClick={() => router.push(`/admin/orders/${order.id}`)}
-                        className="cursor-pointer transition-colors hover:bg-blush/30"
+                        className="cursor-pointer transition-colors hover:bg-petal-50"
                       >
                         <td className="px-5 py-4">
                           <Link
                             href={`/admin/orders/${order.id}`}
                             onClick={stop}
-                            className="font-display text-xl hover:text-rose-dark"
+                            className="whitespace-nowrap text-lg font-semibold tabular-nums tracking-wide hover:text-petal-700"
                           >
                             {order.code}
                           </Link>
@@ -286,8 +286,8 @@ export default function OrdersView() {
                             {destination(order)}
                           </span>
                         </td>
-                        <td className="px-5 py-4 text-cocoa/70">{t("itemsCount", { count: order.itemCount })}</td>
-                        <td className="px-5 py-4 font-medium">{formatMoney(order.total, locale)}</td>
+                        <td className="whitespace-nowrap px-5 py-4 text-cocoa/70">{t("itemsCount", { count: order.itemCount })}</td>
+                        <td className="whitespace-nowrap px-5 py-4 font-medium tabular-nums">{formatMoney(order.total, locale)}</td>
                         <td className="px-5 py-4">
                           <div className="flex flex-col items-start gap-1.5">
                             <StatusChip status={order.status} />
@@ -313,7 +313,7 @@ export default function OrdersView() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="font-display text-2xl leading-none">{order.code}</p>
+                          <p className="text-xl font-semibold tabular-nums leading-none tracking-wide">{order.code}</p>
                           <p className="mt-1 text-xs text-cocoa/50">{timeAgo(order.createdAt, nowMs, locale)}</p>
                         </div>
                         <StatusChip status={order.status} />

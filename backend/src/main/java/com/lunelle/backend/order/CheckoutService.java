@@ -24,7 +24,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CheckoutService {
 
-    private static final int MAX_QUANTITY_PER_ITEM = 10;
+        private static final int MAX_QUANTITY_PER_ITEM = Pricing.MAX_PER_ITEM;
     private static final long MAX_SUBTOTAL = 50_000_000L;
     private static final int MAX_ORDERS_PER_PHONE_PER_HOUR = 3;
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -163,6 +163,7 @@ public class CheckoutService {
         private int originalUnitPrice;
         private int unitPrice;
         private LineProblem problem;
+        private int available; // how many can still be bought right now (capped at the per-item maximum)
         private Pack pack;
 
         long lineTotal() {
@@ -244,11 +245,12 @@ public class CheckoutService {
         l.setCategoryNameEn(c.getNameEn());
         l.setCategoryNameFr(c.getNameFr());
         l.setImageUrl(firstImage(p));
-        l.setUnitCost(v.getCostPrice());
         l.setOriginalUnitPrice(v.getPrice());
         l.setUnitPrice(Pricing.finalPrice(p, v.getPrice(), now));
+        l.setUnitCost(v.getCostPrice());
 
         boolean sellable = v.isActive() && p.isActive() && p.getArchivedAt() == null && c.isActive();
+        l.setAvailable(sellable ? Math.min(v.getStock(), MAX_QUANTITY_PER_ITEM) : 0);
         if (!sellable) {
             l.setProblem(LineProblem.UNAVAILABLE);
         } else if (v.getStock() < qty) {
@@ -268,15 +270,16 @@ public class CheckoutService {
         l.setNameEn(pk.getNameEn());
         l.setNameFr(pk.getNameFr());
         l.setImageUrl(pk.getImageUrl());
-        l.setUnitCost(Pricing.packCost(pk));
         l.setOriginalUnitPrice(pk.getPrice()); // packs are never discounted
         l.setUnitPrice(pk.getPrice());
-
+        l.setUnitCost(Pricing.packCost(pk));
 
         boolean sellable = pk.isActive() && pk.getArchivedAt() == null;
+        int units = packService.availableUnits(pk);
+        l.setAvailable(sellable ? Math.min(units, MAX_QUANTITY_PER_ITEM) : 0);
         if (!sellable) {
             l.setProblem(LineProblem.UNAVAILABLE);
-        } else if (packService.availableUnits(pk) < qty) {
+        } else if (units < qty) {
             l.setProblem(LineProblem.OUT_OF_STOCK);
         }
         return l;
@@ -297,9 +300,8 @@ public class CheckoutService {
     private static QuoteLineDto toQuoteLine(PricedLine l) {
         return new QuoteLineDto(l.getType(), l.getId(), new LocalizedName(l.getNameEn(), l.getNameFr()),
                 l.getVariantLabel(), l.getImageUrl(), l.getOriginalUnitPrice(), l.getUnitPrice(),
-                l.getQuantity(), (int) l.lineTotal(), l.getProblem());
+                l.getQuantity(), (int) l.lineTotal(), l.getAvailable(), l.getProblem());
     }
-
     // ───────────── delivery destination ─────────────
 
     record Destination(Integer wilayaId, String wilayaName, Integer communeId,

@@ -92,7 +92,7 @@ export default async function PackPage({ params }: Props) {
           {description && <p className="mt-6 whitespace-pre-line text-cocoa/80">{description}</p>}
 
           <div className="mt-8">
-            <PackPurchase packId={pack.id} inStock={pack.inStock} />
+            <PackPurchase packId={pack.id} inStock={pack.inStock} maxQuantity={pack.maxQuantity} />
           </div>
 
           <section className="mt-10">

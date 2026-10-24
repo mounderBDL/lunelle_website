@@ -75,7 +75,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         <button
           type="button"
           onClick={auth.retry}
-          className="rounded-full bg-rose-dark px-8 py-3 text-sm font-medium text-white hover:bg-cocoa"
+          className="rounded-full bg-petal-700 px-8 py-3 text-sm font-medium text-white hover:bg-cocoa"
         >
           {tc("retry")}
         </button>
@@ -173,7 +173,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
       type="button"
       onClick={toggleSound}
       aria-pressed={soundOn}
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-blush/60"
+      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
     >
       {soundOn ? <Bell className="h-5 w-5 text-rose-dark" aria-hidden /> : <BellOff className="h-5 w-5" aria-hidden />}
       {soundOn ? t("soundOn") : t("soundOff")}
@@ -185,7 +185,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
       href="/"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-blush/60"
+      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
     >
       <ExternalLink className="h-5 w-5" aria-hidden />
       {t("viewShop")}
@@ -196,7 +196,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
     <button
       type="button"
       onClick={signOut}
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-blush/60"
+      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
     >
       <LogOut className="h-5 w-5" aria-hidden />
       {t("signOut")}
@@ -204,9 +204,9 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
   );
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(60rem_28rem_at_top_right,var(--color-blush),transparent)]">
+    <div className="min-h-screen bg-[radial-gradient(60rem_28rem_at_top_right,var(--color-petal-100),transparent),radial-gradient(44rem_26rem_at_bottom_left,var(--color-petal-50),transparent)]">
       {/* ── desktop sidebar ── */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-rose/15 bg-white/60 p-4 backdrop-blur lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 no-print hidden w-64 flex-col border-r border-petal-200/60 bg-linear-to-b from-petal-50 via-white/70 to-petal-100/60 p-4 backdrop-blur lg:flex">
         <div className="px-3 pb-6 pt-2">
           <Logo className="h-14" />
           <p className="mt-1 text-xs uppercase tracking-[0.3em] text-rose-dark">{t("studio")}</p>
@@ -222,13 +222,13 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors ${
-                  active ? "bg-blush text-rose-dark shadow-sm" : "text-cocoa/70 hover:bg-blush/60"
+                  active ? "bg-petal-100 text-petal-700 shadow-sm" : "text-cocoa/70 hover:bg-petal-50"
                 }`}
               >
                 <item.icon className="h-5 w-5" aria-hidden />
                 {t(`nav.${item.key}`)}
                 {count > 0 && (
-                  <span className="ml-auto rounded-full bg-rose-dark px-2 py-0.5 text-xs font-semibold text-white">
+                  <span className="ml-auto rounded-full bg-petal-700 px-2 py-0.5 text-xs font-semibold text-white">
                     {count}
                   </span>
                 )}
@@ -251,7 +251,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
       </aside>
 
       {/* ── mobile top bar ── */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-rose/15 bg-cream/90 px-4 backdrop-blur lg:hidden">
+      <header className="no-print sticky top-0 z-30 flex h-14 items-center justify-between border-b border-rose/15 bg-cream/90 px-4 backdrop-blur lg:hidden">
         <Link href="/admin" aria-label="Lunelle Studio" className="flex items-center gap-2">
           <Logo className="h-9" />
           <span className="text-[10px] uppercase tracking-[0.25em] text-rose-dark">{t("studio")}</span>
@@ -259,14 +259,14 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
         <LanguageSwitcher />
       </header>
 
-      <main className="px-4 pb-28 pt-6 sm:px-8 lg:pb-12 lg:pl-72 lg:pr-10 lg:pt-10">
+      <main className="print-reset px-4 pb-28 pt-6 sm:px-8 lg:pb-12 lg:pl-72 lg:pr-10 lg:pt-10">
         <div className="mx-auto max-w-5xl">{children}</div>
       </main>
 
       {/* ── mobile bottom navigation ── */}
       <nav
         aria-label={t("menu")}
-        className="fixed inset-x-0 bottom-0 z-30 flex border-t border-rose/15 bg-cream/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+        className="no-print fixed inset-x-0 bottom-0 z-30 flex border-t border-rose/15 bg-cream/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
         {NAV.map((item) => {
           const active = isActive(item, pathname);
@@ -280,12 +280,12 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
                 active ? "text-rose-dark" : "text-cocoa/60"
               }`}
             >
-              <span className={`rounded-full px-5 py-1 ${active ? "bg-blush" : ""}`}>
+              <span className={`rounded-full px-5 py-1 ${active ? "bg-petal-200" : ""}`}>
                 <item.icon className="h-5 w-5" aria-hidden />
               </span>
               {t(`nav.${item.key}`)}
               {count > 0 && (
-                <span className="absolute right-[22%] top-1 rounded-full bg-rose-dark px-1.5 text-[10px] font-semibold text-white">
+                <span className="absolute right-[22%] top-1 rounded-full bg-petal-700 px-1.5 text-[10px] font-semibold text-white">
                   {count}
                 </span>
               )}
@@ -307,7 +307,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
 
       {/* ── mobile "more" sheet ── */}
       {moreOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label={t("nav.more")}>
+        <div className="no-print fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label={t("nav.more")}>
           <button
             type="button"
             aria-label={t("menu")}

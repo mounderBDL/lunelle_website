@@ -1,0 +1,16 @@
+{
+  "product": {
+    "onlyLeft": "Only {count} left",
+    "limitStock": "Only {count} available.",
+    "limitStockInCart": "Only {count} available, and you already have {inCart} in your cart.",
+    "limitMax": "You can order up to {count} of the same item.",
+    "allInCart": "You already have all {count} available in your cart."
+  },
+  "cart": {
+    "notEnough": "Only {count} available. Please reduce the quantity.",
+    "soldOut": "This item is out of stock. Please remove it.",
+    "setTo": "Set to {count}",
+    "limitStock": "Only {count} available.",
+    "limitMax": "You can order up to {count} of the same item."
+  }
+}

@@ -38,12 +38,48 @@ export function timeAgo(iso: string, nowMs: number, locale: string): string {
   return new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeZone: ZONE }).format(new Date(iso));
 }
 
-/** 320 minutes -> "5h 20m" (English) or "5 h 20 min" (French). */
+/** Short date and time, e.g. "24 Oct, 14:05". */
+export function formatStamp(iso: string | null | undefined, locale: string): string {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-FR" : "en-GB", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: ZONE,
+  }).format(date);
+}
+
+/** 320 minutes -> "5h 20m"; 4300 minutes -> "2d 23h" (French: "5 h 20 min", "2 j 23 h"). */
 export function formatSpan(totalMinutes: number, locale: string): string {
-  const hours = Math.floor(totalMinutes / 60);
+  const fr = locale === "fr";
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
   const minutes = totalMinutes % 60;
-  const h = locale === "fr" ? " h" : "h";
-  const m = locale === "fr" ? " min" : "m";
+  const d = fr ? " j" : "d";
+  const h = fr ? " h" : "h";
+  const m = fr ? " min" : "m";
+  if (days > 0) return hours === 0 ? `${days}${d}` : `${days}${d} ${hours}${h}`;
   if (hours === 0) return `${minutes}${m}`;
   return minutes === 0 ? `${hours}${h}` : `${hours}${h} ${minutes}${m}`;
+}
+
+/**
+ * The value of a datetime-local input ("2026-10-24T13:30") for an instant, in Algeria's time.
+ * Algeria is UTC+1 all year (no daylight saving), so a fixed offset is exact.
+ */
+export function toAlgiersInput(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const ms = Date.parse(iso);
+  if (Number.isNaN(ms)) return "";
+  return new Date(ms + 3_600_000).toISOString().slice(0, 16);
+}
+
+/** The reverse: a datetime-local value (Algeria's time) to an ISO instant, or null if empty/invalid. */
+export function fromAlgiersInput(value: string): string | null {
+  if (!value) return null;
+  const ms = Date.parse(`${value}:00+01:00`);
+  return Number.isNaN(ms) ? null : new Date(ms).toISOString();
 }

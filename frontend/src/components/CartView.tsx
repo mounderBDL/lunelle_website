@@ -36,6 +36,7 @@ export default function CartView() {
 
   const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const [notice, setNotice] = useState<{ id: string; text: string } | null>(null);
   const key = `${attempt}:${JSON.stringify(lines)}`;
 
   useEffect(() => {
@@ -117,11 +118,18 @@ export default function CartView() {
           const name = localized(q.name, locale);
           const image = imageUrlOrNull(q.imageUrl);
           const discounted = q.originalUnitPrice > q.unitPrice;
+          const rowId = `${q.type}-${q.id}`;
+          const cap = Math.min(MAX_PER_ITEM, q.available);
+          const unavailable = q.problem === "UNAVAILABLE";
+          const soldOut = q.problem === "OUT_OF_STOCK" && q.available === 0;
+          const tooMany = q.problem === "OUT_OF_STOCK" && q.available > 0;
+          const blockedText =
+            q.available < MAX_PER_ITEM
+              ? t("limitStock", { count: q.available })
+              : t("limitMax", { count: MAX_PER_ITEM });
+
           return (
-            <li
-              key={`${q.type}-${q.id}`}
-              className="flex gap-4 rounded-2xl border border-rose/20 bg-white/50 p-4 sm:gap-6"
-            >
+            <li key={rowId} className="flex gap-4 rounded-2xl border border-rose/20 bg-white/50 p-4 sm:gap-6">
               <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-blush/60">
                 {image ? (
                   <Image src={image} alt={name} fill sizes="96px" className="object-cover" />
@@ -148,20 +156,50 @@ export default function CartView() {
                   </p>
                 </div>
 
-                {q.problem && (
+                {unavailable && (
                   <p role="alert" className="text-sm text-rose-dark">
-                    {q.problem === "UNAVAILABLE" ? t("unavailable") : t("notEnough")}
+                    {t("unavailable")}
+                  </p>
+                )}
+                {soldOut && (
+                  <p role="alert" className="text-sm text-rose-dark">
+                    {t("soldOut")}
+                  </p>
+                )}
+                {tooMany && (
+                  <p role="alert" className="text-sm text-rose-dark">
+                    {t("notEnough", { count: q.available })}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(q.type, q.id, q.available)}
+                      className="font-medium underline"
+                    >
+                      {t("setTo", { count: q.available })}
+                    </button>
+                  </p>
+                )}
+                {notice?.id === rowId && (
+                  <p role="status" className="text-sm text-amber-dark">
+                    {notice.text}
                   </p>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <QuantityStepper
-                    value={quantity}
-                    max={MAX_PER_ITEM}
-                    onChange={(value) => setQuantity(q.type, q.id, value)}
-                    decreaseLabel={t("decrease")}
-                    increaseLabel={t("increase")}
-                  />
+                  {unavailable || soldOut ? (
+                    <span />
+                  ) : (
+                    <QuantityStepper
+                      value={quantity}
+                      max={cap}
+                      onChange={(value) => {
+                        setNotice(null);
+                        setQuantity(q.type, q.id, value);
+                      }}
+                      onBlocked={() => setNotice({ id: rowId, text: blockedText })}
+                      decreaseLabel={t("decrease")}
+                      increaseLabel={t("increase")}
+                    />
+                  )}
                   <button
                     type="button"
                     onClick={() => remove(q.type, q.id)}

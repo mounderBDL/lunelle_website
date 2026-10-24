@@ -24,7 +24,9 @@ final class OrderAdminMapper {
                 .sorted(Comparator.comparing(OrderItem::getNameEn)
                         .thenComparing(i -> i.getVariantLabel() == null ? "" : i.getVariantLabel()))
                 .map(i -> new AdminOrderItemDto(
-                        i.getId(), i.getType(), new LocalizedName(i.getNameEn(), i.getNameFr()),
+                        i.getId(), i.getType(),
+                        i.getType() == OrderItemType.VARIANT ? i.getVariantId() : i.getPackId(),
+                        new LocalizedName(i.getNameEn(), i.getNameFr()),
                         i.getVariantLabel(), i.getOriginalUnitPrice(), i.getUnitPrice(), i.getUnitCost(),
                         i.getQuantity(), i.getLineTotal(),
                         i.getComponents().stream()

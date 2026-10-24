@@ -1,7 +1,16 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { TrendingDown, TrendingUp, TriangleAlert } from "lucide-react";
+import {
+  PackageCheck,
+  Receipt,
+  Sparkles,
+  TrendingDown,
+  TrendingUp,
+  TriangleAlert,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -19,12 +28,23 @@ const PERIODS = [7, 30, 90] as const;
 type Period = (typeof PERIODS)[number];
 const DAY_MS = 86_400_000;
 
+const TONES = {
+  revenue: { card: "from-petal-100", tile: "bg-petal-200 text-petal-700" },
+  profit: { card: "from-petal-200/70", tile: "bg-petal-300/80 text-petal-700" },
+  delivered: { card: "from-petal-100/70", tile: "bg-petal-100 text-petal-600" },
+  average: { card: "from-petal-50", tile: "bg-petal-200/80 text-petal-600" },
+} as const;
+
 function change(current: number, previous: number): number | null {
   return previous > 0 ? Math.round(((current - previous) / previous) * 100) : null;
 }
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-3xl border border-rose/15 bg-white/70 p-5 shadow-sm sm:p-6 ${className}`}>{children}</div>;
+  return (
+    <div className={`rounded-3xl border border-petal-200/70 bg-white/75 p-5 shadow-sm sm:p-6 ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 function Trend({ value, label }: { value: number | null; label: string }) {
@@ -36,7 +56,7 @@ function Trend({ value, label }: { value: number | null; label: string }) {
   return (
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <span
-        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
           up ? "bg-sage-soft text-sage-dark" : "bg-terracotta-soft text-terracotta-dark"
         }`}
       >
@@ -49,13 +69,33 @@ function Trend({ value, label }: { value: number | null; label: string }) {
   );
 }
 
-function Stat({ label, value, children }: { label: string; value: string; children?: React.ReactNode }) {
+function Stat({
+  label,
+  value,
+  icon: Icon,
+  tone,
+  children,
+}: {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  tone: keyof typeof TONES;
+  children?: React.ReactNode;
+}) {
+  const style = TONES[tone];
   return (
-    <Card>
-      <p className="text-xs uppercase tracking-wider text-cocoa/60">{label}</p>
-      <p className="mt-2 font-display text-4xl">{value}</p>
+    <div
+      className={`rounded-3xl border border-petal-200/70 bg-linear-to-br ${style.card} to-white/80 p-5 shadow-sm sm:p-6`}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-cocoa/60">{label}</p>
+        <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${style.tile}`}>
+          <Icon className="h-[18px] w-[18px]" aria-hidden />
+        </span>
+      </div>
+      <p className="mt-3 text-3xl font-bold tabular-nums tracking-tight sm:text-[2rem]">{value}</p>
       {children && <div className="mt-2 text-sm">{children}</div>}
-    </Card>
+    </div>
   );
 }
 
@@ -133,7 +173,7 @@ export default function HomeDashboard() {
   return (
     <div className="space-y-8">
       {/* ── greeting ── */}
-      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-blush via-parchment/70 to-cream p-6 sm:p-10">
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-petal-200 via-petal-100 to-cream p-6 sm:p-10">
         <Image
           src="/brand/logo.png"
           alt=""
@@ -142,7 +182,7 @@ export default function HomeDashboard() {
           aria-hidden
           className="pointer-events-none absolute -right-6 -top-3 hidden w-64 opacity-25 mix-blend-multiply sm:block"
         />
-        <p className="text-xs uppercase tracking-[0.25em] text-rose-dark">{dateLine}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-petal-700">{dateLine}</p>
         <h1 className="mt-3 text-4xl sm:text-5xl">
           {greeting}
           {name ? `, ${name}` : ""}
@@ -157,14 +197,14 @@ export default function HomeDashboard() {
             <div className="flex items-start justify-between gap-3">
               <h2 className="text-2xl">{t("needsCall")}</h2>
               {newTotal > 0 && (
-                <span className="rounded-full bg-rose-dark px-2.5 py-0.5 text-sm font-semibold text-white">
+                <span className="rounded-full bg-petal-700 px-2.5 py-0.5 text-sm font-semibold tabular-nums text-white">
                   {newTotal}
                 </span>
               )}
             </div>
 
             {overdue > 0 && (
-              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700">
+              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">
                 <TriangleAlert className="h-3.5 w-3.5" aria-hidden />
                 {t("overdueCount", { count: overdue })}
               </p>
@@ -174,7 +214,7 @@ export default function HomeDashboard() {
               {needsCall.isPending ? (
                 <div className="space-y-2" aria-hidden>
                   {[0, 1, 2].map((i) => (
-                    <div key={i} className="h-14 animate-pulse rounded-2xl bg-blush/50" />
+                    <div key={i} className="h-14 animate-pulse rounded-2xl bg-petal-100/70" />
                   ))}
                 </div>
               ) : needsCall.isError ? (
@@ -187,15 +227,15 @@ export default function HomeDashboard() {
                     <li key={order.id}>
                       <Link
                         href={`/admin/orders/${order.id}`}
-                        className="flex items-center justify-between gap-3 rounded-2xl p-2 transition-colors hover:bg-blush/40"
+                        className="block rounded-2xl p-2 transition-colors hover:bg-petal-50"
                       >
-                        <span className="min-w-0">
-                          <span className="block font-display text-lg leading-tight">{order.code}</span>
-                          <span className="block truncate text-sm text-cocoa/70">
-                            {order.customerName} · {formatPhone(order.phone)}
-                          </span>
+                        <span className="flex items-center justify-between gap-3">
+                          <span className="font-semibold tabular-nums tracking-wide">{order.code}</span>
+                          <CallDueBadge createdAt={order.createdAt} nowMs={nowMs} />
                         </span>
-                        <CallDueBadge createdAt={order.createdAt} nowMs={nowMs} />
+                        <span className="mt-0.5 block truncate text-sm text-cocoa/70">
+                          {order.customerName} · {formatPhone(order.phone)}
+                        </span>
                       </Link>
                     </li>
                   ))}
@@ -206,7 +246,7 @@ export default function HomeDashboard() {
             {waiting.length > 0 && (
               <Link
                 href="/admin/orders?status=NEW"
-                className="mt-3 inline-block text-sm font-medium text-rose-dark underline"
+                className="mt-3 inline-block text-sm font-semibold text-petal-700 underline"
               >
                 {t("viewAll")}
               </Link>
@@ -217,7 +257,7 @@ export default function HomeDashboard() {
             <h2 className="text-2xl">{t("lowStock")}</h2>
             <div className="mt-4">
               {lowStock.isPending ? (
-                <div className="h-14 animate-pulse rounded-2xl bg-blush/50" aria-hidden />
+                <div className="h-14 animate-pulse rounded-2xl bg-petal-100/70" aria-hidden />
               ) : lowStock.isError ? (
                 <SectionError onRetry={() => void lowStock.refetch()} />
               ) : low.length === 0 ? (
@@ -227,11 +267,11 @@ export default function HomeDashboard() {
                   {low.slice(0, 5).map((item) => (
                     <li key={item.variantId} className="flex items-center justify-between gap-3 text-sm">
                       <span className="min-w-0 truncate">
-                        <span className="font-medium">{localized(item.productName, locale)}</span>{" "}
+                        <span className="font-semibold">{localized(item.productName, locale)}</span>{" "}
                         <span className="text-cocoa/60">{item.variantLabel}</span>
                       </span>
                       <span
-                        className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                           item.outOfStock
                             ? "bg-terracotta-soft text-terracotta-dark"
                             : "bg-amber-soft text-amber-dark"
@@ -257,10 +297,10 @@ export default function HomeDashboard() {
                 type="button"
                 onClick={() => setDays(p)}
                 aria-pressed={p === days}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   p === days
-                    ? "bg-rose-dark text-white"
-                    : "border border-rose/25 bg-white/70 text-cocoa/70 hover:bg-blush"
+                    ? "bg-petal-700 text-white"
+                    : "border border-petal-300/70 bg-white/70 text-cocoa/70 hover:bg-petal-100"
                 }`}
               >
                 {t("days", { days: p })}
@@ -271,7 +311,7 @@ export default function HomeDashboard() {
           {overview.isPending ? (
             <div className="grid gap-4 sm:grid-cols-2" aria-hidden>
               {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="h-36 animate-pulse rounded-3xl bg-blush/50" />
+                <div key={i} className="h-36 animate-pulse rounded-3xl bg-petal-100/70" />
               ))}
             </div>
           ) : overview.isError || !cur || !prev ? (
@@ -281,16 +321,16 @@ export default function HomeDashboard() {
           ) : (
             <>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Stat label={t("revenue")} value={formatMoney(cur.revenue, locale)}>
+                <Stat label={t("revenue")} value={formatMoney(cur.revenue, locale)} icon={Wallet} tone="revenue">
                   <Trend
                     value={change(cur.revenue, prev.revenue)}
                     label={change(cur.revenue, prev.revenue) === null ? t("noComparison") : t("vsPrevious", { days })}
                   />
                 </Stat>
-                <Stat label={t("profit")} value={formatMoney(cur.profit, locale)}>
+                <Stat label={t("profit")} value={formatMoney(cur.profit, locale)} icon={Sparkles} tone="profit">
                   <p className="text-cocoa/60">{t("profitHint", { percent: cur.marginPercent })}</p>
                 </Stat>
-                <Stat label={t("delivered")} value={String(cur.deliveredOrders)}>
+                <Stat label={t("delivered")} value={String(cur.deliveredOrders)} icon={PackageCheck} tone="delivered">
                   <Trend
                     value={change(cur.deliveredOrders, prev.deliveredOrders)}
                     label={
@@ -300,7 +340,7 @@ export default function HomeDashboard() {
                     }
                   />
                 </Stat>
-                <Stat label={t("average")} value={formatMoney(cur.averageOrderValue, locale)} />
+                <Stat label={t("average")} value={formatMoney(cur.averageOrderValue, locale)} icon={Receipt} tone="average" />
               </div>
 
               {cur.uncostedRevenue > 0 && (
@@ -319,9 +359,9 @@ export default function HomeDashboard() {
                       ["shipped", overview.data.pipeline.shipped, "bg-lavender text-lavender-dark"],
                     ] as const
                   ).map(([key, entry, tone]) => (
-                    <div key={key} className="rounded-2xl bg-cream/80 p-4">
-                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${tone}`}>{t(key)}</span>
-                      <p className="mt-3 font-display text-3xl">{formatMoney(entry.amount, locale)}</p>
+                    <div key={key} className="rounded-2xl bg-petal-50 p-4">
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone}`}>{t(key)}</span>
+                      <p className="mt-3 text-2xl font-bold tabular-nums">{formatMoney(entry.amount, locale)}</p>
                       <p className="text-sm text-cocoa/60">{t("ordersCount", { count: entry.orders })}</p>
                     </div>
                   ))}

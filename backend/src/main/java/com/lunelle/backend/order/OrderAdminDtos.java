@@ -29,7 +29,7 @@ public final class OrderAdminDtos {
     }
 
     public record AdminOrderItemDto(
-            UUID id, OrderItemType type, LocalizedName name, String variantLabel,
+            UUID id, OrderItemType type, UUID refId, LocalizedName name, String variantLabel,
             int originalUnitPrice, int unitPrice, Integer unitCost, int quantity, int lineTotal,
             List<ComponentDto> components) {
     }

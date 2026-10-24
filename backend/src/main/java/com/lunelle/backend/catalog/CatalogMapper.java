@@ -66,7 +66,7 @@ final class CatalogMapper {
         List<PublicVariantDto> variants = p.getVariants().stream()
                 .filter(ProductVariant::isActive)
                 .map(v -> new PublicVariantDto(v.getId(), v.getLabel(), v.getPrice(),
-                        Pricing.finalPrice(p, v.getPrice(), now), v.getStock() > 0))
+                        Pricing.finalPrice(p, v.getPrice(), now), v.getStock() > 0, Math.min(v.getStock(), Pricing.MAX_PER_ITEM)))
                 .toList();
         boolean onSale = variants.stream().anyMatch(v -> v.finalPrice() < v.price());
         boolean inStock = variants.stream().anyMatch(PublicVariantDto::inStock);

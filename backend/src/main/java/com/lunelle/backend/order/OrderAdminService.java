@@ -7,6 +7,8 @@ import com.lunelle.backend.delivery.DeliveryMethod;
 import com.lunelle.backend.delivery.DeliveryService;
 import com.lunelle.backend.order.OrderAdminDtos.*;
 import com.lunelle.backend.order.OrderDtos.CartLineRequest;
+import com.lunelle.backend.catalog.Pricing;
+
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -30,7 +32,7 @@ import java.util.*;
 public class OrderAdminService {
 
     private static final ZoneId ZONE = ZoneId.of("Africa/Algiers");
-    private static final int MAX_QUANTITY_PER_ITEM = 10;
+    private static final int MAX_QUANTITY_PER_ITEM = Pricing.MAX_PER_ITEM;
     private static final long MAX_TOTAL = 50_000_000L;
 
     private final CustomerOrderRepository orders;
@@ -39,6 +41,7 @@ public class OrderAdminService {
     private final CheckoutService checkout;
     private final DeliveryService delivery;
     private final StockService stock;
+    
 
     private record Key(OrderItemType type, UUID id) {
     }

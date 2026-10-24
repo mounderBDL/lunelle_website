@@ -1,5 +1,5 @@
 {
-  "common": { "dismiss": "Dismiss", "retry": "Try again" },
+  "common": { "dismiss": "Dismiss", "retry": "Try again", "close": "Close", "copied": "Copied" },
   "status": {
     "NEW": "New",
     "CONFIRMED": "Confirmed",
@@ -106,7 +106,171 @@
     "previous": "Previous",
     "next": "Next",
     "showing": "{from}–{to} of {total}",
-    "dueIn": "Call due in {time}",
-    "overdue": "Call overdue by {time}"
+    "dueIn": "Call in {time}",
+    "overdue": "Overdue {time}"
+  },
+  "detail": {
+    "back": "All orders",
+    "placed": "Placed {date}",
+    "notFound": "We couldn't find this order.",
+    "loadError": "We couldn't load this order.",
+    "retry": "Try again",
+    "edit": "Edit order",
+    "print": "Print slip",
+    "items": "Items",
+    "pack": "Pack",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "free": "Free",
+    "total": "Total to collect",
+    "cost": "Cost",
+    "profit": "Profit",
+    "noCost": "Some items have no cost price yet, so the profit can't be calculated.",
+    "customer": "Customer",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "copyPhone": "Copy phone number",
+    "prefersFrench": "Prefers French",
+    "prefersEnglish": "Prefers English",
+    "customerNote": "Customer note",
+    "deliveryTitle": "Delivery",
+    "method": { "HAND_TO_HAND": "Hand-to-hand", "HOME": "Home delivery", "STOP_DESK": "Yalidine office" },
+    "destination": "Destination",
+    "address": "Address",
+    "copyAddress": "Copy address",
+    "meetingPlace": "Meeting place",
+    "meetingPlacePlaceholder": "Where will you meet the customer?",
+    "meetingTime": "Meeting date and time",
+    "meetingRequired": "Set the meeting place before confirming this order.",
+    "meetingLocked": "The meeting details can no longer be changed.",
+    "tracking": "Yalidine tracking number",
+    "trackingPlaceholder": "Enter the tracking number",
+    "note": "Private note",
+    "notePlaceholder": "Only you can see this…",
+    "save": "Save",
+    "saving": "Saving…",
+    "timeline": "Timeline",
+    "history": { "placed": "Order placed", "edited": "Order edited" },
+    "actions": {
+      "CONFIRMED": "Confirm order",
+      "SHIPPED": "Mark as shipped",
+      "DELIVERED": "Mark as delivered",
+      "HANDED_OVER": "Mark as handed over",
+      "NO_ANSWER": "No answer",
+      "CANCELLED": "Cancel order",
+      "NEW": "Reopen order",
+      "RETURNED": "Mark as returned"
+    },
+    "dialog": {
+      "note": "Note (optional)",
+      "notePlaceholder": "Add a short note for the timeline…",
+      "tracking": "Yalidine tracking number (optional)",
+      "keep": "Keep as is",
+      "working": "Working…",
+      "CONFIRMED": {
+        "title": "Confirm this order?",
+        "text": "The customer agreed to the order during your call. It moves on to preparation.",
+        "confirm": "Confirm order"
+      },
+      "SHIPPED": {
+        "title": "Hand the parcel to Yalidine",
+        "text": "Enter the Yalidine tracking number so the customer can follow the parcel.",
+        "confirm": "Mark as shipped"
+      },
+      "DELIVERED": {
+        "title": "Mark as delivered?",
+        "text": "The customer received the order and paid. It now counts as revenue.",
+        "confirm": "Mark as delivered"
+      },
+      "DELIVERED_HAND": {
+        "title": "Mark as handed over?",
+        "text": "You handed the order over and received the payment. It now counts as revenue.",
+        "confirm": "Mark as handed over"
+      },
+      "CANCELLED": {
+        "title": "Cancel this order?",
+        "text": "The reserved stock goes back to the shop. This can't be undone.",
+        "confirm": "Cancel order"
+      },
+      "NO_ANSWER": {
+        "title": "Couldn't reach the customer?",
+        "text": "The reserved stock goes back to the shop for now. You can reopen the order when you reach the customer.",
+        "confirm": "Mark as no answer"
+      },
+      "NEW": {
+        "title": "Reopen this order?",
+        "text": "The stock is reserved again. If an item has sold out in the meantime, the order can't be reopened.",
+        "confirm": "Reopen order"
+      },
+      "RETURNED": {
+        "title": "Mark as returned?",
+        "text": "The parcel came back. Stock is not restored automatically: check the bottles first, then add them back to stock yourself.",
+        "confirm": "Mark as returned"
+      }
+    },
+    "toast": { "updated": "Order {code} is now {status}", "saved": "Saved" },
+    "errors": { "generic": "Something went wrong. Please try again." },
+    "slip": {
+      "title": "Order slip",
+      "customer": "Customer",
+      "delivery": "Delivery",
+      "collect": "Amount to collect in cash",
+      "thanks": "Thank you for choosing Lunelle"
+    }
+  },
+  "edit": {
+    "title": "Edit order",
+    "back": "Back to the order",
+    "loadError": "We couldn't load this order.",
+    "retry": "Try again",
+    "notEditable": "Only new orders can be edited. Once an order is confirmed, it is locked.",
+    "customer": "Customer",
+    "name": "Full name",
+    "phone": "Phone number",
+    "delivery": "Delivery",
+    "methods": { "HAND_TO_HAND": "Hand-to-hand", "HOME": "Home delivery", "STOP_DESK": "Yalidine office" },
+    "handHint": "No address needed. The meeting place is set on the order page.",
+    "wilaya": "Wilaya",
+    "selectWilaya": "Select a wilaya",
+    "commune": "Commune",
+    "selectCommune": "Select a commune",
+    "selectOffice": "Select a commune with a Yalidine office",
+    "chooseWilayaFirst": "Choose a wilaya first",
+    "loadingCommunes": "Loading…",
+    "communesError": "We couldn't load the communes.",
+    "noOffice": "no Yalidine office",
+    "unavailable": "not available",
+    "noOfficeInWilaya": "No commune of this wilaya has a Yalidine office. Choose home delivery instead.",
+    "address": "Home address",
+    "note": "Customer note",
+    "items": "Items",
+    "keptPrice": "price kept",
+    "currentPrice": "current price",
+    "removed": "No longer in the shop. It is removed when you save.",
+    "remove": "Remove",
+    "addLabel": "Add an item",
+    "choose": "Choose a product or pack",
+    "products": "Products",
+    "packs": "Packs",
+    "add": "Add",
+    "inStock": "{count} in stock",
+    "outOfStock": "out of stock",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity",
+    "itemsTotal": "Items total",
+    "feeNote": "The delivery fee stays the same if the destination doesn't change, and is recalculated otherwise. The new total is shown after saving.",
+    "stockNote": "Stock is adjusted automatically when you save.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "toast": "Order {code} updated",
+    "errors": {
+      "name": "Please enter the customer's name.",
+      "phone": "Please enter a valid Algerian mobile number.",
+      "wilaya": "Please select a wilaya.",
+      "commune": "Please select a commune.",
+      "address": "Please enter the delivery address.",
+      "items": "An order needs at least one item.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }

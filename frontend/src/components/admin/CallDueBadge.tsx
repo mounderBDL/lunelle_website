@@ -16,10 +16,12 @@ export default function CallDueBadge({ createdAt, nowMs }: { createdAt: string; 
     ? "bg-red-50 text-red-700"
     : remaining < 4 * 60
       ? "bg-amber-soft text-amber-dark"
-      : "bg-parchment/70 text-cocoa/70";
+      : "bg-petal-50 text-cocoa/70";
 
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${tone}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${tone}`}
+    >
       <Phone className="h-3 w-3" aria-hidden />
       {overdue ? t("overdue", { time }) : t("dueIn", { time })}
     </span>

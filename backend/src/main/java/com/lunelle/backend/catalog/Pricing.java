@@ -41,4 +41,7 @@ public final class Pricing {
         }
         return (int) total;
     }
+
+    /** The most units of one item that can be ordered (shop, cart and admin editing share it). */
+    public static final int MAX_PER_ITEM = 10;
 }

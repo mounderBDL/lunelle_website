@@ -1,0 +1,16 @@
+{
+  "product": {
+    "onlyLeft": "Plus que {count, plural, one {# exemplaire} other {# exemplaires}}",
+    "limitStock": "{count, plural, one {Seulement # exemplaire disponible.} other {Seulement # exemplaires disponibles.}}",
+    "limitStockInCart": "{count, plural, one {Seulement # exemplaire disponible} other {Seulement # exemplaires disponibles}}, et vous en avez déjà {inCart} dans votre panier.",
+    "limitMax": "Vous pouvez commander jusqu'à {count} exemplaires du même article.",
+    "allInCart": "Vous avez déjà tous les exemplaires disponibles ({count}) dans votre panier."
+  },
+  "cart": {
+    "notEnough": "{count, plural, one {Seulement # exemplaire disponible.} other {Seulement # exemplaires disponibles.}} Veuillez réduire la quantité.",
+    "soldOut": "Cet article est épuisé. Veuillez le retirer.",
+    "setTo": "Mettre {count}",
+    "limitStock": "{count, plural, one {Seulement # exemplaire disponible.} other {Seulement # exemplaires disponibles.}}",
+    "limitMax": "Vous pouvez commander jusqu'à {count} exemplaires du même article."
+  }
+}

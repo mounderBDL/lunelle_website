@@ -16,6 +16,7 @@ export type PublicVariant = {
   price: number; // base price (the "old" price when on sale)
   finalPrice: number; // price actually charged
   inStock: boolean;
+  maxQuantity: number; // how many can be ordered at most (capped at 10)
 };
 
 export type PublicProduct = {
@@ -51,6 +52,7 @@ export type PublicPack = {
   individualTotal: number;
   saving: number;
   inStock: boolean;
+  maxQuantity: number;
   items: PublicPackItem[];
 };
 
@@ -70,6 +72,7 @@ export type QuoteLine = {
   unitPrice: number;
   quantity: number;
   lineTotal: number;
+  available: number; // how many can still be bought right now (capped at 10)
   problem: "UNAVAILABLE" | "OUT_OF_STOCK" | null;
 };
 

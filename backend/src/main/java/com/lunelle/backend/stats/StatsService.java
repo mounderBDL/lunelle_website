@@ -91,7 +91,7 @@ public class StatsService {
     private PipelineDto pipeline() {
         Map<String, PipelineEntry> map = new HashMap<>();
         jdbc.sql("""
-                        select status, count(*) as c, coalesce(sum(total), 0) as t
+                        select status, count(*) as c, coalesce(sum(subtotal), 0) as t
                         from orders where status in ('CONFIRMED', 'SHIPPED') group by status
                         """)
                 .query((rs, n) -> Map.entry(rs.getString("status"),

@@ -48,7 +48,7 @@ public final class PackDtos {
 
     public record PublicPackDto(
             UUID id, String slug, LocalizedName name, LocalizedText description, String imageUrl,
-            int price, int individualTotal, int saving, boolean inStock,
+            int price, int individualTotal, int saving, boolean inStock, int maxQuantity,
             List<PublicPackItemDto> items) {
     }
 }

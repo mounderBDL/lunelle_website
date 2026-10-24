@@ -113,7 +113,8 @@ public final class CatalogDtos {
         }
 
     // ───── storefront ─────
-    public record PublicVariantDto(UUID id, String label, int price, int finalPrice, boolean inStock) {
+    public record PublicVariantDto(UUID id, String label, int price, int finalPrice, boolean inStock,
+                                   int maxQuantity) {
     }
 
     public record PublicProductDto(

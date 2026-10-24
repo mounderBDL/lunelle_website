@@ -1,5 +1,5 @@
 {
-  "common": { "dismiss": "Fermer", "retry": "Réessayer" },
+  "common": { "dismiss": "Fermer", "retry": "Réessayer", "close": "Fermer", "copied": "Copié" },
   "status": {
     "NEW": "Nouvelle",
     "CONFIRMED": "Confirmée",
@@ -106,7 +106,171 @@
     "previous": "Précédent",
     "next": "Suivant",
     "showing": "{from}–{to} sur {total}",
-    "dueIn": "Appel à passer dans {time}",
-    "overdue": "Appel en retard de {time}"
+    "dueIn": "Appel dans {time}",
+    "overdue": "En retard {time}"
+  },
+  "detail": {
+    "back": "Toutes les commandes",
+    "placed": "Passée le {date}",
+    "notFound": "Nous n'avons pas trouvé cette commande.",
+    "loadError": "Impossible de charger cette commande.",
+    "retry": "Réessayer",
+    "edit": "Modifier la commande",
+    "print": "Imprimer le bon",
+    "items": "Articles",
+    "pack": "Pack",
+    "subtotal": "Sous-total",
+    "delivery": "Livraison",
+    "free": "Gratuite",
+    "total": "Total à encaisser",
+    "cost": "Coût",
+    "profit": "Bénéfice",
+    "noCost": "Certains articles n'ont pas encore de prix de revient : le bénéfice ne peut pas être calculé.",
+    "customer": "Cliente",
+    "call": "Appeler",
+    "whatsapp": "WhatsApp",
+    "copyPhone": "Copier le numéro",
+    "prefersFrench": "Préfère le français",
+    "prefersEnglish": "Préfère l'anglais",
+    "customerNote": "Remarque de la cliente",
+    "deliveryTitle": "Livraison",
+    "method": { "HAND_TO_HAND": "Remise en main propre", "HOME": "Livraison à domicile", "STOP_DESK": "Bureau Yalidine" },
+    "destination": "Destination",
+    "address": "Adresse",
+    "copyAddress": "Copier l'adresse",
+    "meetingPlace": "Lieu de rencontre",
+    "meetingPlacePlaceholder": "Où retrouverez-vous la cliente ?",
+    "meetingTime": "Date et heure de rencontre",
+    "meetingRequired": "Indiquez le lieu de rencontre avant de confirmer cette commande.",
+    "meetingLocked": "Les détails de la rencontre ne peuvent plus être modifiés.",
+    "tracking": "Numéro de suivi Yalidine",
+    "trackingPlaceholder": "Saisissez le numéro de suivi",
+    "note": "Note privée",
+    "notePlaceholder": "Visible uniquement par vous…",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "timeline": "Historique",
+    "history": { "placed": "Commande passée", "edited": "Commande modifiée" },
+    "actions": {
+      "CONFIRMED": "Confirmer la commande",
+      "SHIPPED": "Marquer comme expédiée",
+      "DELIVERED": "Marquer comme livrée",
+      "HANDED_OVER": "Marquer comme remise",
+      "NO_ANSWER": "Sans réponse",
+      "CANCELLED": "Annuler la commande",
+      "NEW": "Rouvrir la commande",
+      "RETURNED": "Marquer comme retournée"
+    },
+    "dialog": {
+      "note": "Note (facultatif)",
+      "notePlaceholder": "Ajoutez une courte note pour l'historique…",
+      "tracking": "Numéro de suivi Yalidine (facultatif)",
+      "keep": "Ne rien changer",
+      "working": "En cours…",
+      "CONFIRMED": {
+        "title": "Confirmer cette commande ?",
+        "text": "La cliente a accepté la commande pendant votre appel. Elle passe en préparation.",
+        "confirm": "Confirmer la commande"
+      },
+      "SHIPPED": {
+        "title": "Remettre le colis à Yalidine",
+        "text": "Saisissez le numéro de suivi Yalidine pour que la cliente puisse suivre son colis.",
+        "confirm": "Marquer comme expédiée"
+      },
+      "DELIVERED": {
+        "title": "Marquer comme livrée ?",
+        "text": "La cliente a reçu la commande et payé. Elle compte désormais dans le chiffre d'affaires.",
+        "confirm": "Marquer comme livrée"
+      },
+      "DELIVERED_HAND": {
+        "title": "Marquer comme remise ?",
+        "text": "Vous avez remis la commande et reçu le paiement. Elle compte désormais dans le chiffre d'affaires.",
+        "confirm": "Marquer comme remise"
+      },
+      "CANCELLED": {
+        "title": "Annuler cette commande ?",
+        "text": "Le stock réservé retourne à la boutique. Cette action est définitive.",
+        "confirm": "Annuler la commande"
+      },
+      "NO_ANSWER": {
+        "title": "Cliente injoignable ?",
+        "text": "Le stock réservé retourne à la boutique pour l'instant. Vous pourrez rouvrir la commande quand vous joindrez la cliente.",
+        "confirm": "Marquer sans réponse"
+      },
+      "NEW": {
+        "title": "Rouvrir cette commande ?",
+        "text": "Le stock est réservé à nouveau. Si un article est épuisé entre-temps, la commande ne peut pas être rouverte.",
+        "confirm": "Rouvrir la commande"
+      },
+      "RETURNED": {
+        "title": "Marquer comme retournée ?",
+        "text": "Le colis est revenu. Le stock n'est pas restauré automatiquement : vérifiez d'abord les flacons, puis remettez-les en stock vous-même.",
+        "confirm": "Marquer comme retournée"
+      }
+    },
+    "toast": { "updated": "La commande {code} est maintenant « {status} »", "saved": "Enregistré" },
+    "errors": { "generic": "Un problème est survenu. Veuillez réessayer." },
+    "slip": {
+      "title": "Bon de commande",
+      "customer": "Cliente",
+      "delivery": "Livraison",
+      "collect": "Montant à encaisser en espèces",
+      "thanks": "Merci d'avoir choisi Lunelle"
+    }
+  },
+  "edit": {
+    "title": "Modifier la commande",
+    "back": "Retour à la commande",
+    "loadError": "Impossible de charger cette commande.",
+    "retry": "Réessayer",
+    "notEditable": "Seules les nouvelles commandes peuvent être modifiées. Une commande confirmée est verrouillée.",
+    "customer": "Cliente",
+    "name": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "delivery": "Livraison",
+    "methods": { "HAND_TO_HAND": "Remise en main propre", "HOME": "Livraison à domicile", "STOP_DESK": "Bureau Yalidine" },
+    "handHint": "Aucune adresse nécessaire. Le lieu de rencontre se règle sur la page de la commande.",
+    "wilaya": "Wilaya",
+    "selectWilaya": "Choisissez une wilaya",
+    "commune": "Commune",
+    "selectCommune": "Choisissez une commune",
+    "selectOffice": "Choisissez une commune avec un bureau Yalidine",
+    "chooseWilayaFirst": "Choisissez d'abord une wilaya",
+    "loadingCommunes": "Chargement…",
+    "communesError": "Impossible de charger les communes.",
+    "noOffice": "pas de bureau Yalidine",
+    "unavailable": "indisponible",
+    "noOfficeInWilaya": "Aucune commune de cette wilaya n'a de bureau Yalidine. Choisissez la livraison à domicile.",
+    "address": "Adresse de livraison",
+    "note": "Remarque de la cliente",
+    "items": "Articles",
+    "keptPrice": "prix conservé",
+    "currentPrice": "prix actuel",
+    "removed": "N'existe plus dans la boutique. Retiré à l'enregistrement.",
+    "remove": "Retirer",
+    "addLabel": "Ajouter un article",
+    "choose": "Choisissez un produit ou un pack",
+    "products": "Produits",
+    "packs": "Packs",
+    "add": "Ajouter",
+    "inStock": "{count} en stock",
+    "outOfStock": "épuisé",
+    "increase": "Augmenter la quantité",
+    "decrease": "Diminuer la quantité",
+    "itemsTotal": "Total des articles",
+    "feeNote": "Les frais de livraison restent identiques si la destination ne change pas, sinon ils sont recalculés. Le nouveau total s'affiche après l'enregistrement.",
+    "stockNote": "Le stock est ajusté automatiquement à l'enregistrement.",
+    "save": "Enregistrer les modifications",
+    "saving": "Enregistrement…",
+    "toast": "Commande {code} mise à jour",
+    "errors": {
+      "name": "Veuillez saisir le nom de la cliente.",
+      "phone": "Veuillez saisir un numéro de mobile algérien valide.",
+      "wilaya": "Veuillez choisir une wilaya.",
+      "commune": "Veuillez choisir une commune.",
+      "address": "Veuillez saisir l'adresse de livraison.",
+      "items": "Une commande doit contenir au moins un article.",
+      "generic": "Un problème est survenu. Veuillez réessayer."
+    }
   }
 }

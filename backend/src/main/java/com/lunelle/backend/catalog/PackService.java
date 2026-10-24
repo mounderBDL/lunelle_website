@@ -257,7 +257,7 @@ public class PackService {
                 CatalogMapper.name(p.getNameEn(), p.getNameFr()),
                 CatalogMapper.text(p.getDescriptionEn(), p.getDescriptionFr()),
                 p.getImageUrl(), p.getPrice(), individual, Math.max(0, individual - p.getPrice()),
-                availableUnits(p) > 0, items);
+                availableUnits(p) > 0, Math.min(availableUnits(p), Pricing.MAX_PER_ITEM), items);
     }
 
     private static Comparator<PackItem> itemOrder() {
