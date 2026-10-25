@@ -40,4 +40,13 @@ public class AdminNotificationController {
                 ? "Message sent"
                 : "Telegram refused it or could not be reached: check the chat id, and that Start was pressed on the bot");
     }
+
+    public record StatusResult(boolean tokenConfigured) {
+    }
+
+    /** Whether the bot token is set on the server (the page shows this before anything else). */
+    @GetMapping("/status")
+    public StatusResult status() {
+        return new StatusResult(telegram.enabled());
+    }    
 }

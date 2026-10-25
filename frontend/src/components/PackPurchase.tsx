@@ -36,10 +36,6 @@ export default function PackPurchase({ packId, inStock, maxQuantity }: Props) {
 
   return (
     <div>
-      {inStock && stockLimited && maxQuantity <= 5 && (
-        <p className="mb-4 text-sm font-medium text-amber-dark">{t("onlyLeft", { count: maxQuantity })}</p>
-      )}
-
       <div className="flex flex-wrap items-center gap-4">
         <QuantityStepper
           value={qty}

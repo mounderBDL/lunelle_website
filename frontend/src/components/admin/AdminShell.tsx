@@ -6,11 +6,14 @@ import {
   BellOff,
   ExternalLink,
   Flower2,
+  Gift,
   LayoutDashboard,
   LayoutGrid,
   LogOut,
   MoreHorizontal,
   Package,
+  Settings,
+  Truck,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -27,7 +30,7 @@ import type { AdminMe } from "@/lib/admin/types";
 import { useAdminAuth } from "./AdminProviders";
 import { ToastProvider, useToast } from "./Toasts";
 
-type NavKey = "home" | "orders" | "products" | "categories";
+type NavKey = "home" | "orders" | "products" | "packs" | "categories" | "delivery" | "settings";
 type NavItem = { href: string; key: NavKey; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
 // each new screen is added here as it is built; "primary" ones sit in the phone's bottom bar
@@ -35,7 +38,10 @@ const NAV: NavItem[] = [
   { href: "/admin", key: "home", icon: LayoutDashboard, exact: true, primary: true },
   { href: "/admin/orders", key: "orders", icon: Package, primary: true },
   { href: "/admin/products", key: "products", icon: Flower2, primary: true },
+  { href: "/admin/packs", key: "packs", icon: Gift },
   { href: "/admin/categories", key: "categories", icon: LayoutGrid },
+  { href: "/admin/delivery", key: "delivery", icon: Truck },
+  { href: "/admin/settings", key: "settings", icon: Settings },
 ];
 
 function isActive(item: NavItem, pathname: string) {
@@ -80,7 +86,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         <button
           type="button"
           onClick={auth.retry}
-          className="rounded-full bg-rose-dark px-8 py-3 text-sm font-medium text-white hover:bg-cocoa"
+          className="rounded-full bg-petal-700 px-8 py-3 text-sm font-semibold text-white hover:bg-cocoa"
         >
           {tc("retry")}
         </button>
@@ -176,25 +182,26 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
   const moreItems = NAV.filter((item) => !item.primary);
   const moreActive = moreItems.some((item) => isActive(item, pathname));
 
-  const rowClass =
-    "flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50";
+  const rowBase = "flex w-full items-center gap-3 rounded-2xl px-4 text-sm text-cocoa/70 transition-colors hover:bg-petal-50";
+  const rowClass = `${rowBase} py-3`; // phone sheet
+  const compactRow = `${rowBase} py-2`; // sidebar footer
 
-  const soundButton = (
-    <button type="button" onClick={toggleSound} aria-pressed={soundOn} className={rowClass}>
+  const soundButton = (cls: string) => (
+    <button type="button" onClick={toggleSound} aria-pressed={soundOn} className={cls}>
       {soundOn ? <Bell className="h-5 w-5 text-rose-dark" aria-hidden /> : <BellOff className="h-5 w-5" aria-hidden />}
       {soundOn ? t("soundOn") : t("soundOff")}
     </button>
   );
 
-  const shopLink = (
-    <a href="/" target="_blank" rel="noopener noreferrer" className={rowClass}>
+  const shopLink = (cls: string) => (
+    <a href="/" target="_blank" rel="noopener noreferrer" className={cls}>
       <ExternalLink className="h-5 w-5" aria-hidden />
       {t("viewShop")}
     </a>
   );
 
-  const signOutButton = (
-    <button type="button" onClick={signOut} className={rowClass}>
+  const signOutButton = (cls: string) => (
+    <button type="button" onClick={signOut} className={cls}>
       <LogOut className="h-5 w-5" aria-hidden />
       {t("signOut")}
     </button>
@@ -202,14 +209,14 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
 
   return (
     <div className="min-h-screen bg-[radial-gradient(60rem_28rem_at_top_right,var(--color-petal-100),transparent),radial-gradient(44rem_26rem_at_bottom_left,var(--color-petal-50),transparent)]">
-      {/* ── desktop sidebar ── */}
+      {/* ── desktop sidebar: logo on top, scrolling menu, footer always visible ── */}
       <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-petal-200/60 bg-linear-to-b from-petal-50 via-white/70 to-petal-100/60 p-4 backdrop-blur lg:flex">
-        <div className="px-3 pb-6 pt-2">
-          <Logo className="h-14" />
+        <div className="shrink-0 px-3 pb-4 pt-1">
+          <Logo className="h-12" />
           <p className="mt-1 text-xs uppercase tracking-[0.3em] text-rose-dark">{t("studio")}</p>
         </div>
 
-        <nav aria-label={t("menu")} className="space-y-1">
+        <nav aria-label={t("menu")} className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-1 [scrollbar-width:thin]">
           {NAV.map((item) => {
             const active = isActive(item, pathname);
             const count = badge(item.key);
@@ -218,7 +225,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors ${
                   active ? "bg-petal-100 text-petal-700 shadow-sm" : "text-cocoa/70 hover:bg-petal-50"
                 }`}
               >
@@ -234,11 +241,11 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
           })}
         </nav>
 
-        <div className="mt-auto space-y-1 border-t border-rose/15 pt-4">
-          {soundButton}
-          {shopLink}
-          {signOutButton}
-          <div className="flex items-center justify-between px-4 pt-3">
+        <div className="mt-3 shrink-0 space-y-0.5 border-t border-rose/15 pt-3">
+          {soundButton(compactRow)}
+          {shopLink(compactRow)}
+          {signOutButton(compactRow)}
+          <div className="flex items-center justify-between gap-3 px-4 pt-2">
             <p className="min-w-0 truncate text-xs text-cocoa/50" title={admin.email}>
               {admin.name}
             </p>
@@ -313,7 +320,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
             onClick={() => setMoreOpen(false)}
             className="absolute inset-0 bg-cocoa/40"
           />
-          <div className="absolute inset-x-0 bottom-0 rounded-t-3xl bg-cream p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl">
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-cream p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl">
             <div className="mb-3 flex items-center justify-between px-2">
               <div className="min-w-0">
                 <p className="text-xs uppercase tracking-wider text-cocoa/50">{t("signedInAs")}</p>
@@ -339,9 +346,9 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
                 {t(`nav.${item.key}`)}
               </Link>
             ))}
-            {soundButton}
-            {shopLink}
-            {signOutButton}
+            {soundButton(rowClass)}
+            {shopLink(rowClass)}
+            {signOutButton(rowClass)}
           </div>
         </div>
       )}

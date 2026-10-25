@@ -102,3 +102,27 @@
     color: #000;
   }
 }
+
+/* ── studio login: floating moon and orbiting ring ── */
+@keyframes studio-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes studio-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .studio-float {
+    animation: studio-float 7s ease-in-out infinite;
+  }
+  .studio-orbit {
+    animation: studio-orbit 70s linear infinite;
+  }
+}

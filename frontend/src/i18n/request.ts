@@ -18,17 +18,18 @@ function merge(base: Tree, extra: Tree): Tree {
 export default getRequestConfig(async () => {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
   const locale = isLocale(value) ? value : DEFAULT_LOCALE;
-  const [shop, stock, admin, catalog] = await Promise.all([
+  const [shop, stock, admin, catalog, setup] = await Promise.all([
     import(`../../messages/${locale}.json`),
     import(`../../messages/stock.${locale}.json`),
     import(`../../messages/admin.${locale}.json`),
     import(`../../messages/admin.catalog.${locale}.json`),
+    import(`../../messages/admin.setup.${locale}.json`),
   ]);
   return {
     locale,
     messages: {
       ...merge(shop.default as Tree, stock.default as Tree),
-      admin: merge(admin.default as Tree, catalog.default as Tree),
+      admin: merge(merge(admin.default as Tree, catalog.default as Tree), setup.default as Tree),
     },
   };
 });

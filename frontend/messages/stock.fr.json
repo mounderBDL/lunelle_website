@@ -1,6 +1,5 @@
 {
   "product": {
-    "onlyLeft": "Plus que {count, plural, one {# exemplaire} other {# exemplaires}}",
     "limitStock": "{count, plural, one {Seulement # exemplaire disponible.} other {Seulement # exemplaires disponibles.}}",
     "limitStockInCart": "{count, plural, one {Seulement # exemplaire disponible} other {Seulement # exemplaires disponibles}}, et vous en avez déjà {inCart} dans votre panier.",
     "limitMax": "Vous pouvez commander jusqu'à {count} exemplaires du même article.",

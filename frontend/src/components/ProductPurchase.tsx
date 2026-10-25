@@ -96,10 +96,6 @@ export default function ProductPurchase({ product }: { product: PublicProduct })
         </div>
       </div>
 
-      {selected.inStock && stockLimited && selected.maxQuantity <= 5 && (
-        <p className="mt-4 text-sm font-medium text-amber-dark">{t("onlyLeft", { count: selected.maxQuantity })}</p>
-      )}
-
       <div className="mt-6 flex flex-wrap items-center gap-4">
         <QuantityStepper
           value={qty}

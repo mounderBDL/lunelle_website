@@ -1,6 +1,5 @@
 {
   "product": {
-    "onlyLeft": "Only {count} left",
     "limitStock": "Only {count} available.",
     "limitStockInCart": "Only {count} available, and you already have {inCart} in your cart.",
     "limitMax": "You can order up to {count} of the same item.",

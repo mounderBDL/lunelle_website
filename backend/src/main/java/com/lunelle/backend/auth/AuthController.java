@@ -114,6 +114,37 @@ public class AuthController {
         return AdminDto.from(admin);
     }
 
+    /** name, and login email. Changing the email needs the current password. */
+    @PutMapping("/profile")
+    public AdminDto updateProfile(@Valid @RequestBody UpdateProfileRequest request, @AuthenticationPrincipal Jwt jwt) {
+        UUID id = UUID.fromString(jwt.getSubject());
+        AdminUser admin = admins.findById(id)
+                .filter(AdminUser::isActive)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
+        String email = request.email().trim();
+        if (!email.equalsIgnoreCase(admin.getEmail())) {
+            String key = "pw:" + id;
+            attempts.assertAllowed(key);
+            String current = request.currentPassword();
+            if (current == null || !fitsBcrypt(current)
+                    || !passwordEncoder.matches(current, admin.getPasswordHash())) {
+                attempts.recordFailure(key);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The current password is incorrect");
+            }
+            attempts.reset(key);
+            admins.findByEmailIgnoreCase(email)
+                    .filter(other -> !other.getId().equals(id))
+                    .ifPresent(other -> {
+                        throw new ResponseStatusException(HttpStatus.CONFLICT, "This email is already used");
+                    });
+            admin.setEmail(email);
+        }
+        admin.setName(request.name().trim());
+        admins.save(admin);
+        return AdminDto.from(admin);
+    }    
+
     private static boolean fitsBcrypt(String password) {
         return password.getBytes(StandardCharsets.UTF_8).length <= BCRYPT_MAX_BYTES;
     }

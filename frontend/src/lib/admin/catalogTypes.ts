@@ -62,3 +62,34 @@ export type StockMovement = {
   note: string | null;
   createdAt: string;
 };
+
+export type AdminPackItem = {
+  variantId: string;
+  productId: string;
+  productName: Localized;
+  variantLabel: string;
+  quantity: number;
+  unitPrice: number;
+  stock: number;
+  available: boolean;
+};
+
+export type AdminPack = {
+  id: string;
+  slug: string;
+  name: Localized;
+  description: Localized;
+  imageUrl: string | null;
+  price: number;
+  individualTotal: number;
+  saving: number;
+  cost: number | null;
+  margin: number | null;
+  active: boolean;
+  archived: boolean;
+  sortOrder: number;
+  availableUnits: number;
+  inStock: boolean;
+  items: AdminPackItem[];
+  createdAt: string;
+};
