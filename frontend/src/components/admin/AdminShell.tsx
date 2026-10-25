@@ -5,7 +5,9 @@ import {
   Bell,
   BellOff,
   ExternalLink,
+  Flower2,
   LayoutDashboard,
+  LayoutGrid,
   LogOut,
   MoreHorizontal,
   Package,
@@ -25,12 +27,15 @@ import type { AdminMe } from "@/lib/admin/types";
 import { useAdminAuth } from "./AdminProviders";
 import { ToastProvider, useToast } from "./Toasts";
 
-type NavItem = { href: string; key: "home" | "orders"; icon: LucideIcon; exact?: boolean };
+type NavKey = "home" | "orders" | "products" | "categories";
+type NavItem = { href: string; key: NavKey; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
-// each new screen is added here as it is built
+// each new screen is added here as it is built; "primary" ones sit in the phone's bottom bar
 const NAV: NavItem[] = [
-  { href: "/admin", key: "home", icon: LayoutDashboard, exact: true },
-  { href: "/admin/orders", key: "orders", icon: Package },
+  { href: "/admin", key: "home", icon: LayoutDashboard, exact: true, primary: true },
+  { href: "/admin/orders", key: "orders", icon: Package, primary: true },
+  { href: "/admin/products", key: "products", icon: Flower2, primary: true },
+  { href: "/admin/categories", key: "categories", icon: LayoutGrid },
 ];
 
 function isActive(item: NavItem, pathname: string) {
@@ -75,7 +80,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         <button
           type="button"
           onClick={auth.retry}
-          className="rounded-full bg-petal-700 px-8 py-3 text-sm font-medium text-white hover:bg-cocoa"
+          className="rounded-full bg-rose-dark px-8 py-3 text-sm font-medium text-white hover:bg-cocoa"
         >
           {tc("retry")}
         </button>
@@ -166,38 +171,30 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
     router.replace("/admin/login");
   }
 
-  const badge = (key: NavItem["key"]) => (key === "orders" && newCount ? newCount : 0);
+  const badge = (key: NavKey) => (key === "orders" && newCount ? newCount : 0);
+  const primaryItems = NAV.filter((item) => item.primary);
+  const moreItems = NAV.filter((item) => !item.primary);
+  const moreActive = moreItems.some((item) => isActive(item, pathname));
+
+  const rowClass =
+    "flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50";
 
   const soundButton = (
-    <button
-      type="button"
-      onClick={toggleSound}
-      aria-pressed={soundOn}
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
-    >
+    <button type="button" onClick={toggleSound} aria-pressed={soundOn} className={rowClass}>
       {soundOn ? <Bell className="h-5 w-5 text-rose-dark" aria-hidden /> : <BellOff className="h-5 w-5" aria-hidden />}
       {soundOn ? t("soundOn") : t("soundOff")}
     </button>
   );
 
   const shopLink = (
-    <a
-      href="/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
-    >
+    <a href="/" target="_blank" rel="noopener noreferrer" className={rowClass}>
       <ExternalLink className="h-5 w-5" aria-hidden />
       {t("viewShop")}
     </a>
   );
 
   const signOutButton = (
-    <button
-      type="button"
-      onClick={signOut}
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-cocoa/70 transition-colors hover:bg-petal-50"
-    >
+    <button type="button" onClick={signOut} className={rowClass}>
       <LogOut className="h-5 w-5" aria-hidden />
       {t("signOut")}
     </button>
@@ -206,7 +203,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
   return (
     <div className="min-h-screen bg-[radial-gradient(60rem_28rem_at_top_right,var(--color-petal-100),transparent),radial-gradient(44rem_26rem_at_bottom_left,var(--color-petal-50),transparent)]">
       {/* ── desktop sidebar ── */}
-      <aside className="fixed inset-y-0 left-0 z-30 no-print hidden w-64 flex-col border-r border-petal-200/60 bg-linear-to-b from-petal-50 via-white/70 to-petal-100/60 p-4 backdrop-blur lg:flex">
+      <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-petal-200/60 bg-linear-to-b from-petal-50 via-white/70 to-petal-100/60 p-4 backdrop-blur lg:flex">
         <div className="px-3 pb-6 pt-2">
           <Logo className="h-14" />
           <p className="mt-1 text-xs uppercase tracking-[0.3em] text-rose-dark">{t("studio")}</p>
@@ -268,7 +265,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
         aria-label={t("menu")}
         className="no-print fixed inset-x-0 bottom-0 z-30 flex border-t border-rose/15 bg-cream/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
-        {NAV.map((item) => {
+        {primaryItems.map((item) => {
           const active = isActive(item, pathname);
           const count = badge(item.key);
           return (
@@ -277,7 +274,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={`relative flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium ${
-                active ? "text-rose-dark" : "text-cocoa/60"
+                active ? "text-petal-700" : "text-cocoa/60"
               }`}
             >
               <span className={`rounded-full px-5 py-1 ${active ? "bg-petal-200" : ""}`}>
@@ -296,9 +293,11 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
           type="button"
           onClick={() => setMoreOpen(true)}
           aria-expanded={moreOpen}
-          className="flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium text-cocoa/60"
+          className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium ${
+            moreActive ? "text-petal-700" : "text-cocoa/60"
+          }`}
         >
-          <span className="px-5 py-1">
+          <span className={`rounded-full px-5 py-1 ${moreActive ? "bg-petal-200" : ""}`}>
             <MoreHorizontal className="h-5 w-5" aria-hidden />
           </span>
           {t("nav.more")}
@@ -325,11 +324,21 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
                 type="button"
                 onClick={() => setMoreOpen(false)}
                 aria-label={t("menu")}
-                className="rounded-full p-2 hover:bg-blush"
+                className="rounded-full p-2 hover:bg-petal-100"
               >
                 <X className="h-5 w-5" aria-hidden />
               </button>
             </div>
+            {moreItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${rowClass} ${isActive(item, pathname) ? "bg-petal-100 font-semibold text-petal-700" : ""}`}
+              >
+                <item.icon className="h-5 w-5" aria-hidden />
+                {t(`nav.${item.key}`)}
+              </Link>
+            ))}
             {soundButton}
             {shopLink}
             {signOutButton}

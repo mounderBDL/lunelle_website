@@ -9,9 +9,11 @@ export class ApiError extends Error {
 
 /** Calls the backend through the same-origin proxy; the admin cookie is attached by the browser. */
 export async function adminFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const isForm = typeof FormData !== "undefined" && init.body instanceof FormData;
   const res = await fetch(path, {
     ...init,
-    headers: { ...(init.body ? { "Content-Type": "application/json" } : {}), ...init.headers },
+    // JSON bodies get their content type; file uploads must let the browser set it (with its boundary)
+    headers: { ...(init.body && !isForm ? { "Content-Type": "application/json" } : {}), ...init.headers },
     credentials: "same-origin",
     cache: "no-store",
   });
