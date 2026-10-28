@@ -136,7 +136,7 @@ export default function ProductsView() {
                       p.archived ? "opacity-70" : ""
                     }`}
                   >
-                    <div className="relative h-28 w-24 shrink-0 overflow-hidden rounded-t-full rounded-b-xl bg-petal-100">
+                    <div className="relative h-28 w-24 shrink-0 overflow-hidden rounded-xl bg-petal-100">
                       {image ? (
                         <Image src={image} alt={name} fill sizes="96px" className="object-cover" />
                       ) : (

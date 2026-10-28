@@ -16,10 +16,13 @@ import com.lunelle.backend.order.OrderDtos.CheckoutRequest;
 import com.lunelle.backend.order.OrderDtos.PlacedOrderDto;
 import com.lunelle.backend.order.OrderItemType;
 import com.lunelle.backend.order.OrderStatus;
+import com.lunelle.backend.order.OrderQueryService;
+
+import com.lunelle.backend.order.OrderAdminDtos.RestockItem;
+import com.lunelle.backend.order.OrderAdminDtos.RestockRequest;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.lunelle.backend.order.OrderQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -271,4 +274,71 @@ class OrderFlowTest extends IntegrationTestBase {
         assertThatThrownBy(() -> orderQueries.lookup(placed.order().code(), "0552222222"))
                 .satisfies(t -> assertHttp(t, 404));
     }    
+
+    @Test
+    void aReturnedOrderCanBeRestockedOnlyUpToWhatWasOrderedAndNeverTwice() {
+        UUID v = variantId(newProduct(newCategory(), "Rose", 1000, 400, 10));
+        UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111", variantLine(v, 3))).order().code());
+        adminOrders.updateDetails(orderId, new UpdateDetailsRequest(null, "Blida", null, null));
+        adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null);
+        adminOrders.changeStatus(orderId, to(OrderStatus.DELIVERED), null);
+
+        // not returned yet: nothing to put back
+        assertThatThrownBy(() -> adminOrders.restockReturned(orderId,
+                new RestockRequest(List.of(new RestockItem(v, 1)), null), null))
+                .satisfies(t -> assertHttp(t, 409));
+
+        adminOrders.changeStatus(orderId, to(OrderStatus.RETURNED), null);
+        assertThat(stockOf(v)).isEqualTo(7); // a return does not restock by itself
+
+        OrderDetailDto detail = adminOrders.get(orderId);
+        assertThat(detail.restock()).hasSize(1);
+        assertThat(detail.restock().get(0).remaining()).isEqualTo(3);
+
+        adminOrders.restockReturned(orderId, new RestockRequest(List.of(new RestockItem(v, 2)), "checked"), null);
+        assertThat(stockOf(v)).isEqualTo(9);
+
+        // 2 more would exceed the 3 ordered
+        assertThatThrownBy(() -> adminOrders.restockReturned(orderId,
+                new RestockRequest(List.of(new RestockItem(v, 2)), null), null))
+                .satisfies(t -> assertHttp(t, 409));
+        assertThat(stockOf(v)).isEqualTo(9);
+
+        OrderDetailDto after = adminOrders.restockReturned(orderId,
+                new RestockRequest(List.of(new RestockItem(v, 1)), null), null);
+        assertThat(stockOf(v)).isEqualTo(10);
+        assertThat(after.restock().get(0).remaining()).isZero();
+
+        assertThatThrownBy(() -> adminOrders.restockReturned(orderId,
+                new RestockRequest(List.of(new RestockItem(v, 1)), null), null))
+                .satisfies(t -> assertHttp(t, 409));
+    }
+
+    @Test
+    void restockingAReturnedPackOrderReturnsEveryComponent() {
+        UUID cat = newCategory();
+        UUID a = variantId(newProduct(cat, "A", 1000, 400, 10));
+        UUID b = variantId(newProduct(cat, "B", 500, 200, 10));
+        AdminPackDto pack = packs.create(new PackRequest(new LocalizedName("Duo", "Duo"), null, null,
+                1200, true, 0, List.of(new PackItemRequest(a, 1), new PackItemRequest(b, 2))));
+
+        UUID orderId = orderIdByCode(checkout.place(handToHand("0551111111",
+                new CartLineRequest(OrderItemType.PACK, pack.id(), 2))).order().code());
+        assertThat(stockOf(a)).isEqualTo(8);
+        assertThat(stockOf(b)).isEqualTo(6);
+
+        adminOrders.updateDetails(orderId, new UpdateDetailsRequest(null, "Blida", null, null));
+        adminOrders.changeStatus(orderId, to(OrderStatus.CONFIRMED), null);
+        adminOrders.changeStatus(orderId, to(OrderStatus.DELIVERED), null);
+        adminOrders.changeStatus(orderId, to(OrderStatus.RETURNED), null);
+
+        OrderDetailDto detail = adminOrders.get(orderId);
+        assertThat(detail.restock()).hasSize(2);
+        assertThat(detail.restock()).extracting("ordered").containsExactlyInAnyOrder(2, 4);
+
+        adminOrders.restockReturned(orderId, new RestockRequest(
+                List.of(new RestockItem(a, 2), new RestockItem(b, 4)), null), null);
+        assertThat(stockOf(a)).isEqualTo(10);
+        assertThat(stockOf(b)).isEqualTo(10);
+    }
 }

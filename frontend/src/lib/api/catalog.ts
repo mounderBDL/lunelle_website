@@ -6,6 +6,7 @@ import type {
   PublicPack,
   PublicProduct,
   PublicSettings,
+  SocialLink,
 } from "./types";
 
 type ProductQuery = { category?: string; featured?: boolean };
@@ -56,5 +57,6 @@ export const getSettings = () =>
   safe(apiGet<PublicSettings>("/api/settings"), {
     store_name: "Lunelle",
     contact_phone: "",
-    instagram_url: "",
   });
+
+export const getSocialLinks = () => safe(apiGet<SocialLink[]>("/api/social-links"), []);

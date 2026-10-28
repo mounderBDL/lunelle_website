@@ -1,0 +1,66 @@
+{
+  "footer": {
+    "follow": "Suivez-nous",
+    "website": "Site web"
+  },
+  "admin": {
+    "detail": {
+      "dialog": {
+        "RETURNED": {
+          "text": "Le colis est revenu. Le stock n'est pas restauré automatiquement : vérifiez d'abord les flacons, puis utilisez « Remettre en stock » sur la page de la commande."
+        }
+      },
+      "restock": {
+        "title": "Remettre en stock",
+        "text": "Le colis est revenu. Vérifiez chaque flacon, puis indiquez combien sont en bon état pour être revendus. Ils retournent dans votre stock.",
+        "ordered": "Commandé : {count}",
+        "alreadyBack": "déjà remis en stock : {count}",
+        "all": "Tout est revenu en stock.",
+        "backLine": "{count} × {name} ({label}) remis en stock",
+        "note": "Note (facultatif)",
+        "notePlaceholder": "Par exemple : boîte abîmée, 1 flacon ouvert…",
+        "submit": "{count, plural, one {Remettre # flacon en stock} other {Remettre # flacons en stock}}",
+        "submitting": "Ajout…",
+        "done": "Stock mis à jour",
+        "nothing": "Choisissez au moins un flacon à remettre en stock.",
+        "increase": "Augmenter la quantité",
+        "decrease": "Diminuer la quantité",
+        "error": "Un problème est survenu. Veuillez réessayer."
+      }
+    },
+    "settings": {
+      "shop": { "text": "Affichées en bas de page de la boutique." },
+      "social": {
+        "title": "Réseaux sociaux",
+        "text": "Ajoutez les pages où les clientes peuvent vous suivre. Elles apparaissent en bas de page de la boutique, dans cet ordre.",
+        "empty": "Aucun lien pour l'instant.",
+        "add": "Ajouter un lien",
+        "max": "Vous pouvez ajouter jusqu'à {count} liens.",
+        "network": "Réseau",
+        "url": "Lien",
+        "urlPlaceholder": "https://…",
+        "whatsappPlaceholder": "https://wa.me/213… ou un numéro de téléphone",
+        "whatsappHint": "Pour WhatsApp, vous pouvez simplement saisir le numéro de téléphone : nous créons le lien de discussion.",
+        "labelRequired": "Nom affiché (obligatoire)",
+        "labelOptional": "Nom affiché (facultatif)",
+        "moveUp": "Monter",
+        "moveDown": "Descendre",
+        "remove": "Retirer",
+        "save": "Enregistrer les liens",
+        "saving": "Enregistrement…",
+        "saved": "Liens enregistrés",
+        "loadError": "Impossible de charger les liens.",
+        "retry": "Réessayer",
+        "networks": { "WEBSITE": "Site web", "OTHER": "Autre" },
+        "errors": {
+          "url": "Saisissez le lien.",
+          "invalidUrl": "Ce lien doit commencer par http:// ou https://",
+          "invalidPhone": "Saisissez un lien, ou un numéro de mobile algérien valide.",
+          "label": "Donnez un nom à ce lien.",
+          "duplicate": "Ce lien figure deux fois.",
+          "generic": "Un problème est survenu. Veuillez réessayer."
+        }
+      }
+    }
+  }
+}

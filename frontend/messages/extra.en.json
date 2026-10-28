@@ -1,0 +1,66 @@
+{
+  "footer": {
+    "follow": "Follow us",
+    "website": "Website"
+  },
+  "admin": {
+    "detail": {
+      "dialog": {
+        "RETURNED": {
+          "text": "The parcel came back. Stock is not restored automatically: check the bottles first, then use “Return to stock” on the order page."
+        }
+      },
+      "restock": {
+        "title": "Return to stock",
+        "text": "The parcel came back. Check each bottle, then choose how many are fine to sell again. They go back into your stock.",
+        "ordered": "Ordered: {count}",
+        "alreadyBack": "already back in stock: {count}",
+        "all": "Everything is back in stock.",
+        "backLine": "{count} × {name} ({label}) back in stock",
+        "note": "Note (optional)",
+        "notePlaceholder": "For example: box damaged, 1 bottle opened…",
+        "submit": "{count, plural, one {Add # bottle to stock} other {Add # bottles to stock}}",
+        "submitting": "Adding…",
+        "done": "Stock updated",
+        "nothing": "Choose at least one bottle to put back.",
+        "increase": "Increase quantity",
+        "decrease": "Decrease quantity",
+        "error": "Something went wrong. Please try again."
+      }
+    },
+    "settings": {
+      "shop": { "text": "Shown in the footer of the shop." },
+      "social": {
+        "title": "Social media",
+        "text": "Add the pages where customers can follow you. They appear in the shop's footer, in this order.",
+        "empty": "No links yet.",
+        "add": "Add a link",
+        "max": "You can add up to {count} links.",
+        "network": "Network",
+        "url": "Link",
+        "urlPlaceholder": "https://…",
+        "whatsappPlaceholder": "https://wa.me/213… or a phone number",
+        "whatsappHint": "For WhatsApp you can just type the phone number: we build the chat link for you.",
+        "labelRequired": "Name shown (required)",
+        "labelOptional": "Name shown (optional)",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove",
+        "save": "Save links",
+        "saving": "Saving…",
+        "saved": "Links saved",
+        "loadError": "We couldn't load the links.",
+        "retry": "Try again",
+        "networks": { "WEBSITE": "Website", "OTHER": "Other" },
+        "errors": {
+          "url": "Enter the link.",
+          "invalidUrl": "This link must start with http:// or https://",
+          "invalidPhone": "Enter a link, or a valid Algerian mobile number.",
+          "label": "Give this link a name.",
+          "duplicate": "This link is listed twice.",
+          "generic": "Something went wrong. Please try again."
+        }
+      }
+    }
+  }
+}

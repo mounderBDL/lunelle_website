@@ -22,7 +22,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
 
   return (
     <Link href={`/product/${product.slug}`} className="group block">
-      <div className="relative aspect-4/5 overflow-hidden rounded-t-full rounded-b-2xl bg-blush/60">
+      <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-blush/60">
         {image ? (
           <Image
             src={image}
@@ -38,7 +38,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
         )}
 
         {tag && product.inStock && (
-          <span className="absolute left-1/2 top-8 -translate-x-1/2 rounded-full bg-rose-dark px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-white">
+          <span className="absolute left-3 top-3 rounded-full bg-rose-dark px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-white">
             {tag}
           </span>
         )}

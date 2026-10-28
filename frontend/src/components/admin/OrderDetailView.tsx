@@ -18,6 +18,7 @@ import OrderSlip from "./OrderSlip";
 import StatusChip from "./StatusChip";
 import StatusDialog from "./StatusDialog";
 import { useToast } from "./Toasts";
+import RestockCard from "./RestockCard";
 
 const ACTION_ORDER: OrderStatus[] = ["CONFIRMED", "SHIPPED", "DELIVERED", "NEW", "NO_ANSWER", "RETURNED", "CANCELLED"];
 const FORWARD: OrderStatus[] = ["CONFIRMED", "SHIPPED", "DELIVERED"];
@@ -190,6 +191,7 @@ export default function OrderDetailView({ id }: { id: string }) {
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <div className="space-y-6">
+            {order.status === "RETURNED" && order.restock.length > 0 && <RestockCard order={order} />}
             <ItemsCard order={order} />
             <TimelineCard history={order.history} />
           </div>

@@ -14,9 +14,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SettingsService {
 
-    private static final List<String> PUBLIC_KEYS = List.of("store_name", "contact_phone", "instagram_url");
-    private static final List<String> ADMIN_KEYS =
-            List.of("store_name", "contact_phone", "instagram_url", "telegram_chat_id");
+    private static final List<String> PUBLIC_KEYS = List.of("store_name", "contact_phone");
+    private static final List<String> ADMIN_KEYS = List.of("store_name", "contact_phone", "telegram_chat_id");
 
     private final SettingRepository settings;
 
@@ -54,11 +53,6 @@ public class SettingsService {
             case "contact_phone" -> {
                 if (value.length() > 30) {
                     throw bad("The contact phone is too long");
-                }
-            }
-            case "instagram_url" -> {
-                if (!value.isEmpty() && (value.length() > 300 || !value.matches("^https?://\\S+$"))) {
-                    throw bad("The Instagram link must start with http:// or https://");
                 }
             }
             case "telegram_chat_id" -> {

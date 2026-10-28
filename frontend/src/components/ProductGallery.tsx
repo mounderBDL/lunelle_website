@@ -8,7 +8,7 @@ type Props = { images: { id: string; url: string }[]; alt: string; inStock: bool
 
 export default function ProductGallery({ images, alt, inStock }: Props) {
   const [index, setIndex] = useState(0);
-  const frame = "relative aspect-4/5 overflow-hidden rounded-t-full rounded-b-2xl bg-blush/60";
+  const frame = "relative aspect-4/5 overflow-hidden rounded-2xl bg-blush/60";
 
   if (images.length === 0) {
     return (

@@ -1,3 +1,5 @@
+import type { Network } from "@/lib/social";
+
 export type Localized = { en: string | null; fr: string | null };
 
 export type PublicCategory = {
@@ -59,7 +61,13 @@ export type PublicPack = {
 export type PublicSettings = {
   store_name: string;
   contact_phone: string;
-  instagram_url: string;
+};
+
+export type SocialLink = {
+  id: string;
+  network: Network;
+  label: string | null;
+  url: string;
 };
 
 export type QuoteLine = {

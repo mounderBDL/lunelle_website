@@ -108,6 +108,7 @@ export type OrderDetail = {
   allowedStatuses: OrderStatus[];
   items: OrderItemDetail[];
   history: HistoryEntry[];
+  restock: RestockLine[];
 };
 
 // ───── used by the order editor ─────
@@ -128,4 +129,13 @@ export type AdminPackLite = {
   archived: boolean;
   inStock: boolean;
   availableUnits: number;
+};
+
+export type RestockLine = {
+    variantId: string;
+    name: Localized;
+    variantLabel: string;
+    ordered: number;
+    restocked: number;
+    remaining: number;
 };

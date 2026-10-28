@@ -19,7 +19,7 @@ final class OrderAdminMapper {
                 o.getItems().stream().mapToInt(OrderItem::getQuantity).sum(), o.getTotal());
     }
 
-    static OrderDetailDto detail(CustomerOrder o, List<OrderStatusHistory> history) {
+    static OrderDetailDto detail(CustomerOrder o, List<OrderStatusHistory> history, List<RestockLineDto> restock) {
         List<AdminOrderItemDto> items = o.getItems().stream()
                 .sorted(Comparator.comparing(OrderItem::getNameEn)
                         .thenComparing(i -> i.getVariantLabel() == null ? "" : i.getVariantLabel()))
@@ -56,6 +56,6 @@ final class OrderAdminMapper {
                 o.getDeliveryFee(), o.getHandoverPlace(), o.getHandoverAt(), o.getTrackingNumber(),
                 o.getSubtotal(), o.getTotal(), cost, profit, o.getAdminNote(),
                 o.getStatus() == OrderStatus.NEW, OrderWorkflow.allowed(o),
-                items, hist);
+                items, hist, restock);
     }
 }

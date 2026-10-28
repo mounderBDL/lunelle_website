@@ -8,10 +8,13 @@ import com.lunelle.backend.delivery.DeliveryService;
 import com.lunelle.backend.order.OrderAdminDtos.*;
 import com.lunelle.backend.order.OrderDtos.CartLineRequest;
 import com.lunelle.backend.catalog.Pricing;
+import com.lunelle.backend.catalog.CatalogDtos.LocalizedName;
+import com.lunelle.backend.catalog.StockMovementRepository;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +44,7 @@ public class OrderAdminService {
     private final CheckoutService checkout;
     private final DeliveryService delivery;
     private final StockService stock;
+    private final StockMovementRepository movements;
     
 
     private record Key(OrderItemType type, UUID id) {
@@ -322,6 +326,91 @@ public class OrderAdminService {
         return detail(o.getId());
     }
 
+
+       // ───────────── putting the bottles of a returned order back in stock ─────────────
+
+       /**
+        * Called after the admin has checked the returned bottles. Each size can be restocked at most
+        * as many times as it was ordered, in total, however many times this is called.
+        */
+    @Transactional
+    public OrderDetailDto restockReturned(UUID id, RestockRequest r, UUID adminId) {
+        CustomerOrder o = lock(id); // serializes double clicks and two open tabs
+        if (o.getStatus() != OrderStatus.RETURNED) {
+            throw conflict("Only returned orders can be put back in stock");
+        }
+        Map<UUID, Integer> remaining = remainingToRestock(o);
+
+        Map<UUID, Integer> wanted = new TreeMap<>(); // sorted: stock rows are always locked in the same order
+        for (RestockItem item : r.items()) {
+            if (!remaining.containsKey(item.variantId())) {
+                throw bad("This item is not part of the order");
+            }
+            wanted.merge(item.variantId(), item.quantity(), Integer::sum);
+        }
+        for (Map.Entry<UUID, Integer> e : wanted.entrySet()) {
+            int left = remaining.get(e.getKey());
+            if (e.getValue() > left) {
+                throw conflict(left == 0
+                        ? "This item is already back in stock"
+                        : "Only " + left + " left to put back in stock for this item");
+            }
+        }
+
+        UUID orderId = o.getId();
+        String extra = blankToNull(r.note());
+        String note = "Returned order " + o.getCode() + (extra == null ? "" : ": " + extra);
+        for (Map.Entry<UUID, Integer> e : wanted.entrySet()) {
+            stock.change(e.getKey(), e.getValue(), StockReason.RESTOCK, orderId, adminId, note);
+        }
+        return detail(orderId);
+    }
+
+    /** Units of each size still to put back: ordered, minus what earlier restocks already returned. */
+    private Map<UUID, Integer> remainingToRestock(CustomerOrder o) {
+        Map<UUID, Integer> remaining = new TreeMap<>(OrderStock.needs(o));
+        for (Object[] row : movements.restockedByVariant(o.getId(), StockReason.RESTOCK)) {
+            UUID variantId = (UUID) row[0];
+            int restocked = ((Number) row[1]).intValue();
+            remaining.computeIfPresent(variantId, (k, v) -> Math.max(0, v - restocked));
+        }
+        return remaining;
+    }
+
+    private List<RestockLineDto> restockLines(CustomerOrder o) {
+        Map<UUID, Integer> ordered = OrderStock.needs(o);
+        Map<UUID, Integer> remaining = remainingToRestock(o);
+
+        // names and sizes come from what the order saved
+        Map<UUID, LocalizedName> names = new HashMap<>();
+        Map<UUID, String> labels = new HashMap<>();
+        for (OrderItem item : o.getItems()) {
+            if (item.getType() == OrderItemType.VARIANT) {
+                if (item.getVariantId() != null) {
+                    names.putIfAbsent(item.getVariantId(), new LocalizedName(item.getNameEn(), item.getNameFr()));
+                    labels.putIfAbsent(item.getVariantId(), item.getVariantLabel() == null ? "" : item.getVariantLabel());
+                }
+            } else {
+                for (OrderItemComponent c : item.getComponents()) {
+                    if (c.getVariantId() != null) {
+                        names.putIfAbsent(c.getVariantId(), new LocalizedName(c.getNameEn(), c.getNameFr()));
+                        labels.putIfAbsent(c.getVariantId(), c.getVariantLabel());
+                    }
+                }
+            }
+        }
+
+        List<RestockLineDto> lines = new ArrayList<>();
+        for (Map.Entry<UUID, Integer> e : ordered.entrySet()) {
+            int left = remaining.getOrDefault(e.getKey(), 0);
+            lines.add(new RestockLineDto(e.getKey(), names.get(e.getKey()), labels.get(e.getKey()),
+                    e.getValue(), e.getValue() - left, left));
+        }
+        lines.sort(Comparator.comparing((RestockLineDto l) -> l.name().en()).thenComparing(RestockLineDto::variantLabel));
+        return lines;
+    }
+
+
     // ───────────── helpers ─────────────
 
     private CustomerOrder lock(UUID id) {
@@ -332,7 +421,8 @@ public class OrderAdminService {
     private OrderDetailDto detail(UUID id) {
         CustomerOrder o = orders.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
-        return OrderAdminMapper.detail(o, history.findByOrderIdOrderByCreatedAtAsc(id));
+        List<RestockLineDto> restock = o.getStatus() == OrderStatus.RETURNED ? restockLines(o) : List.of();
+        return OrderAdminMapper.detail(o, history.findByOrderIdOrderByCreatedAtAsc(id), restock);
     }
 
     /** Positive delta returns stock, negative takes it. Sorted by size id. Never touch the order afterwards. */

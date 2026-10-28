@@ -1,17 +1,19 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ApiError, adminFetch } from "@/lib/admin/api";
 import type { AdminSettings, TelegramChat, TelegramTest } from "@/lib/admin/deliveryTypes";
 import type { AdminMe } from "@/lib/admin/types";
+import type { SocialLink } from "@/lib/api/types";
+import { normalizePhone } from "@/lib/phone";
+import { BRAND_NAMES, NETWORKS, type Network } from "@/lib/social";
 import { useAdminAuth } from "./AdminProviders";
 import Card, { Skeleton } from "./Card";
-import { Chip, ErrorNote, Field, PRIMARY, SECONDARY, inputClass } from "./FormBits";
+import { Chip, ErrorNote, Field, INPUT, PRIMARY, SECONDARY, inputClass } from "./FormBits";
 import { useToast } from "./Toasts";
-
 type ErrorKey = "tooMany" | "wrongPassword" | "samePassword" | "emailUsed" | "tooLong" | "generic";
 
 function errorKey(error: unknown): ErrorKey {
@@ -59,6 +61,7 @@ export default function SettingsView() {
         ) : (
           <>
             <ShopCard settings={settings.data} />
+            <SocialLinksCard />
             <TelegramCard settings={settings.data} />
           </>
         )}
@@ -271,13 +274,9 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
 
   const [name, setName] = useState(settings.store_name);
   const [phone, setPhone] = useState(settings.contact_phone);
-  const [instagram, setInstagram] = useState(settings.instagram_url);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const dirty =
-    name.trim() !== settings.store_name ||
-    phone.trim() !== settings.contact_phone ||
-    instagram.trim() !== settings.instagram_url;
+  const dirty = name.trim() !== settings.store_name || phone.trim() !== settings.contact_phone;
 
   const save = useMutation({
     mutationFn: (body: object) =>
@@ -294,14 +293,12 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
     const found: Record<string, string> = {};
     if (!name.trim()) found.name = t("errors.name");
     if (phone.trim().length > 30) found.phone = t("errors.phone");
-    if (instagram.trim() && !/^https?:\/\/\S+$/.test(instagram.trim())) found.instagram = t("errors.instagram");
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
     const changes: Record<string, string> = {};
     if (name.trim() !== settings.store_name) changes.store_name = name.trim();
     if (phone.trim() !== settings.contact_phone) changes.contact_phone = phone.trim();
-    if (instagram.trim() !== settings.instagram_url) changes.instagram_url = instagram.trim();
     save.mutate(changes);
   }
 
@@ -312,16 +309,16 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
     <Card title={t("title")}>
       <p className="text-sm text-cocoa/70">{t("text")}</p>
       <form onSubmit={onSubmit} noValidate className="mt-5 space-y-5">
-        <Field id="shop-name" label={t("name")} error={errors.name}>
-          <input
-            id="shop-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            maxLength={80}
-            className={inputClass(errors.name)}
-          />
-        </Field>
         <div className="grid gap-5 sm:grid-cols-2">
+          <Field id="shop-name" label={t("name")} error={errors.name}>
+            <input
+              id="shop-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={80}
+              className={inputClass(errors.name)}
+            />
+          </Field>
           <Field id="shop-phone" label={t("phone")} hint={t("optional")} error={errors.phone}>
             <input
               id="shop-phone"
@@ -330,16 +327,6 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
               onChange={(e) => setPhone(e.target.value)}
               maxLength={30}
               className={inputClass(errors.phone)}
-            />
-          </Field>
-          <Field id="shop-instagram" label={t("instagram")} hint={t("instagramHint")} error={errors.instagram}>
-            <input
-              id="shop-instagram"
-              value={instagram}
-              onChange={(e) => setInstagram(e.target.value)}
-              maxLength={300}
-              placeholder="https://www.instagram.com/lunelle.scents/"
-              className={inputClass(errors.instagram)}
             />
           </Field>
         </div>
@@ -521,5 +508,255 @@ function TelegramCard({ settings }: { settings: AdminSettings }) {
         {test.isError && <p className="text-sm text-red-700">{t("errors.generic")}</p>}
       </div>
     </Card>
+  );
+}
+
+// ───────────────────────── social media ─────────────────────────
+
+const MAX_SOCIAL = 10;
+
+type SocialRow = { key: string; network: Network; label: string; url: string };
+
+const hasName = (network: Network) => network === "OTHER" || network === "WEBSITE";
+const linkSignature = (l: SocialLink) => `${l.network}|${l.label ?? ""}|${l.url}`;
+const rowSignature = (r: SocialRow) => `${r.network}|${hasName(r.network) ? r.label.trim() : ""}|${r.url.trim()}`;
+
+function validWebUrl(text: string) {
+  try {
+    const u = new URL(text);
+    return (u.protocol === "http:" || u.protocol === "https:") && u.hostname.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+function SocialLinksCard() {
+  const t = useTranslations("admin.settings.social");
+  const links = useQuery({
+    queryKey: ["admin", "social-links"],
+    queryFn: () => adminFetch<SocialLink[]>("/api/social-links"),
+  });
+
+  return (
+    <Card title={t("title")}>
+      <p className="text-sm text-cocoa/70">{t("text")}</p>
+      {links.isPending ? (
+        <div className="mt-5 h-24 animate-pulse rounded-2xl bg-petal-100/70" aria-hidden />
+      ) : links.isError ? (
+        <p className="mt-5 text-sm text-cocoa/70">
+          {t("loadError")}{" "}
+          <button type="button" onClick={() => void links.refetch()} className="underline">
+            {t("retry")}
+          </button>
+        </p>
+      ) : (
+        <SocialLinksForm key={links.data.map(linkSignature).join("\n")} links={links.data} />
+      )}
+    </Card>
+  );
+}
+
+function SocialLinksForm({ links }: { links: SocialLink[] }) {
+  const t = useTranslations("admin.settings.social");
+  const tn = useTranslations("admin.settings.social.networks");
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const nextKey = useRef(1);
+
+  const [rows, setRows] = useState<SocialRow[]>(() =>
+    links.map((l, i) => ({ key: `saved-${i}`, network: l.network, label: l.label ?? "", url: l.url })),
+  );
+  const [errors, setErrors] = useState<Record<string, { url?: string; label?: string }>>({});
+
+  const dirty = rows.map(rowSignature).join("\n") !== links.map(linkSignature).join("\n");
+  const networkName = (n: Network) => BRAND_NAMES[n] ?? tn(n);
+
+  function patch(key: string, change: Partial<SocialRow>) {
+    setRows((all) => all.map((r) => (r.key === key ? { ...r, ...change } : r)));
+    setErrors((e) => ({ ...e, [key]: {} }));
+  }
+
+  function move(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    setRows((all) => {
+      if (target < 0 || target >= all.length) return all;
+      const next = [...all];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  }
+
+  const save = useMutation({
+    mutationFn: (body: object[]) =>
+      adminFetch<SocialLink[]>("/api/admin/social-links", { method: "PUT", body: JSON.stringify(body) }),
+    onSuccess: (saved) => {
+      queryClient.setQueryData(["admin", "social-links"], saved);
+      toast.push({ title: t("saved") });
+    },
+  });
+
+  function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (save.isPending) return;
+
+    const found: Record<string, { url?: string; label?: string }> = {};
+    const seen = new Set<string>();
+    for (const r of rows) {
+      const url = r.url.trim();
+      const problem: { url?: string; label?: string } = {};
+      if (!url) problem.url = t("errors.url");
+      else if (r.network === "WHATSAPP" && !/^https?:\/\//i.test(url)) {
+        if (normalizePhone(url) === null) problem.url = t("errors.invalidPhone");
+      } else if (!validWebUrl(url)) problem.url = t("errors.invalidUrl");
+      if (!problem.url && seen.has(url.toLowerCase())) problem.url = t("errors.duplicate");
+      seen.add(url.toLowerCase());
+      if (r.network === "OTHER" && !r.label.trim()) problem.label = t("errors.label");
+      if (problem.url || problem.label) found[r.key] = problem;
+    }
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
+
+    save.mutate(
+      rows.map((r) => ({
+        network: r.network,
+        label: hasName(r.network) ? r.label.trim() || null : null,
+        url: r.url.trim(),
+      })),
+    );
+  }
+
+  const error =
+    save.error instanceof ApiError && save.error.message ? save.error.message : save.isError ? t("errors.generic") : null;
+  const arrow =
+    "rounded-full p-1.5 text-cocoa/60 transition-colors hover:bg-petal-100 hover:text-petal-700 disabled:cursor-not-allowed disabled:opacity-30";
+
+  return (
+    <form onSubmit={onSubmit} noValidate className="mt-5 space-y-4">
+      {rows.length === 0 && <p className="text-sm text-cocoa/60">{t("empty")}</p>}
+
+      <ul className="space-y-3">
+        {rows.map((row, i) => {
+          const problem = errors[row.key] ?? {};
+          return (
+            <li key={row.key} className="rounded-2xl bg-petal-50 p-4">
+              <div className="grid gap-3 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                <label className="block">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-cocoa/60">
+                    {t("network")}
+                  </span>
+                  <select
+                    value={row.network}
+                    onChange={(e) => patch(row.key, { network: e.target.value as Network })}
+                    className={`${INPUT} border-petal-300/70`}
+                  >
+                    {NETWORKS.map((n) => (
+                      <option key={n} value={n}>
+                        {networkName(n)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-cocoa/60">
+                    {t("url")}
+                  </span>
+                  <input
+                    value={row.url}
+                    onChange={(e) => patch(row.key, { url: e.target.value })}
+                    placeholder={row.network === "WHATSAPP" ? t("whatsappPlaceholder") : t("urlPlaceholder")}
+                    maxLength={300}
+                    aria-invalid={Boolean(problem.url)}
+                    className={inputClass(problem.url)}
+                  />
+                  {problem.url && (
+                    <span role="alert" className="mt-1 block text-sm text-red-700">
+                      {problem.url}
+                    </span>
+                  )}
+                </label>
+              </div>
+
+              {hasName(row.network) && (
+                <label className="mt-3 block">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-cocoa/60">
+                    {row.network === "OTHER" ? t("labelRequired") : t("labelOptional")}
+                  </span>
+                  <input
+                    value={row.label}
+                    onChange={(e) => patch(row.key, { label: e.target.value })}
+                    maxLength={60}
+                    aria-invalid={Boolean(problem.label)}
+                    className={inputClass(problem.label)}
+                  />
+                  {problem.label && (
+                    <span role="alert" className="mt-1 block text-sm text-red-700">
+                      {problem.label}
+                    </span>
+                  )}
+                </label>
+              )}
+
+              {row.network === "WHATSAPP" && <p className="mt-2 text-xs text-cocoa/60">{t("whatsappHint")}</p>}
+
+              <div className="mt-3 flex items-center justify-between">
+                <div className="flex">
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    aria-label={t("moveUp")}
+                    title={t("moveUp")}
+                    className={arrow}
+                  >
+                    <ArrowUp className="h-4 w-4" aria-hidden />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    disabled={i === rows.length - 1}
+                    aria-label={t("moveDown")}
+                    title={t("moveDown")}
+                    className={arrow}
+                  >
+                    <ArrowDown className="h-4 w-4" aria-hidden />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRows((all) => all.filter((r) => r.key !== row.key))}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-terracotta-dark hover:underline"
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden />
+                  {t("remove")}
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() =>
+            setRows((all) => [...all, { key: `new-${nextKey.current++}`, network: "INSTAGRAM", label: "", url: "" }])
+          }
+          disabled={rows.length >= MAX_SOCIAL}
+          className={`${SECONDARY} inline-flex items-center gap-2`}
+        >
+          <Plus className="h-4 w-4" aria-hidden />
+          {t("add")}
+        </button>
+        {rows.length >= MAX_SOCIAL && <span className="text-xs text-cocoa/60">{t("max", { count: MAX_SOCIAL })}</span>}
+      </div>
+
+      {error && <ErrorNote>{error}</ErrorNote>}
+
+      <div className="flex justify-end">
+        <button type="submit" disabled={!dirty || save.isPending} className={PRIMARY}>
+          {save.isPending ? t("saving") : t("save")}
+        </button>
+      </div>
+    </form>
   );
 }

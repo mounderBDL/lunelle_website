@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.time.Instant;
 import java.util.List;
@@ -38,17 +40,32 @@ public final class OrderAdminDtos {
             OrderStatus fromStatus, OrderStatus toStatus, String note, UUID adminId, Instant createdAt) {
     }
 
-    public record OrderDetailDto(
-            UUID id, String code, OrderStatus status,
-            Instant createdAt, Instant confirmedAt, Instant shippedAt, Instant deliveredAt, Instant cancelledAt,
-            String customerName, String phone, String customerNote, String locale,
-            DeliveryMethod deliveryMethod, Integer wilayaId, String wilayaName,
-            Integer communeId, String communeName, String address,
-            int deliveryFee, String handoverPlace, Instant handoverAt, String trackingNumber,
-            int subtotal, int total, Integer cost, Integer profit, String adminNote,
-            boolean editable, List<OrderStatus> allowedStatuses,
-            List<AdminOrderItemDto> items, List<HistoryDto> history) {
-    }
+       /** One size that came back with a returned order (packs are split into their components). */
+       public record RestockLineDto(
+               UUID variantId, LocalizedName name, String variantLabel, int ordered, int restocked, int remaining) {
+       }
+
+       public record RestockItem(
+               @NotNull UUID variantId,
+               @NotNull @Min(1) @Max(1000) Integer quantity) {
+       }
+
+       public record RestockRequest(
+               @NotEmpty @Size(max = 50) List<@Valid RestockItem> items,
+               @Size(max = 500) String note) {
+       }    
+
+       public record OrderDetailDto(
+               UUID id, String code, OrderStatus status,
+               Instant createdAt, Instant confirmedAt, Instant shippedAt, Instant deliveredAt, Instant cancelledAt,
+               String customerName, String phone, String customerNote, String locale,
+               DeliveryMethod deliveryMethod, Integer wilayaId, String wilayaName,
+               Integer communeId, String communeName, String address,
+               int deliveryFee, String handoverPlace, Instant handoverAt, String trackingNumber,
+               int subtotal, int total, Integer cost, Integer profit, String adminNote,
+               boolean editable, List<OrderStatus> allowedStatuses,
+               List<AdminOrderItemDto> items, List<HistoryDto> history, List<RestockLineDto> restock) {
+       }
 
     // ───── requests ─────
     public record ChangeStatusRequest(

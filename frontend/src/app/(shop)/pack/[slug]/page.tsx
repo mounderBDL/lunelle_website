@@ -53,7 +53,7 @@ export default async function PackPage({ params }: Props) {
       </nav>
 
       <div className="mt-8 grid gap-10 md:grid-cols-2 md:gap-16">
-        <div className="relative aspect-4/5 overflow-hidden rounded-t-full rounded-b-2xl bg-blush/60">
+        <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-blush/60">
           {image ? (
             <Image
               src={image}

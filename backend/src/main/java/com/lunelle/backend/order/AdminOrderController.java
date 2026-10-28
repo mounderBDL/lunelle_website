@@ -67,4 +67,11 @@ public class AdminOrderController {
     private static UUID adminId(Jwt jwt) {
         return UUID.fromString(jwt.getSubject());
     }
+
+    /** Puts bottles of a RETURNED order back in stock, after the admin has checked them. */
+    @PostMapping("/{id}/restock")
+    public OrderDetailDto restock(@PathVariable UUID id, @Valid @RequestBody RestockRequest request,
+                                  @AuthenticationPrincipal Jwt jwt) {
+        return service.restockReturned(id, request, adminId(jwt));
+    }
 }
