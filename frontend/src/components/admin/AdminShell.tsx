@@ -13,6 +13,7 @@ import {
   MoreHorizontal,
   Package,
   Settings,
+  TrendingUp,
   Truck,
   X,
   type LucideIcon,
@@ -30,13 +31,14 @@ import type { AdminMe } from "@/lib/admin/types";
 import { useAdminAuth } from "./AdminProviders";
 import { ToastProvider, useToast } from "./Toasts";
 
-type NavKey = "home" | "orders" | "products" | "packs" | "categories" | "delivery" | "settings";
+type NavKey = "home" | "orders" | "stats" | "products" | "packs" | "categories" | "delivery" | "settings";
 type NavItem = { href: string; key: NavKey; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
 // each new screen is added here as it is built; "primary" ones sit in the phone's bottom bar
 const NAV: NavItem[] = [
   { href: "/admin", key: "home", icon: LayoutDashboard, exact: true, primary: true },
   { href: "/admin/orders", key: "orders", icon: Package, primary: true },
+  { href: "/admin/stats", key: "stats", icon: TrendingUp },
   { href: "/admin/products", key: "products", icon: Flower2, primary: true },
   { href: "/admin/packs", key: "packs", icon: Gift },
   { href: "/admin/categories", key: "categories", icon: LayoutGrid },

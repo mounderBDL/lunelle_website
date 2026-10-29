@@ -1,0 +1,111 @@
+{
+  "shell": { "nav": { "stats": "Statistiques" } },
+  "stats": {
+    "title": "Statistiques",
+    "subtitle": "Comment va votre boutique.",
+    "note": "Le chiffre d'affaires compte les marchandises des commandes livrées, à la date de livraison. Les frais de livraison reviennent à Yalidine et ne sont jamais inclus. Le bénéfice est le chiffre d'affaires moins le coût des flacons.",
+    "period": "Période",
+    "periods": {
+      "7": "7 jours",
+      "30": "30 jours",
+      "90": "90 jours",
+      "month": "Ce mois-ci",
+      "lastmonth": "Mois dernier",
+      "custom": "Personnalisée"
+    },
+    "from": "Du",
+    "to": "Au",
+    "problems": {
+      "missing": "Choisissez une date de début et une date de fin.",
+      "order": "La date de début doit être avant la date de fin.",
+      "tooLong": "La période ne peut pas dépasser 400 jours."
+    },
+    "compared": "comparé à {range}",
+    "loadError": "Impossible de charger cette section.",
+    "retry": "Réessayer",
+    "kpi": {
+      "revenue": "Chiffre d'affaires",
+      "profit": "Bénéfice brut",
+      "profitHint": "{percent} % de marge",
+      "delivered": "Commandes livrées",
+      "average": "Panier moyen",
+      "vs": "par rapport à la période précédente",
+      "noComparison": "Rien à comparer pour l'instant"
+    },
+    "uncosted": "{amount} de ventes n'ont pas encore de prix de revient et sont exclues du bénéfice.",
+    "uncostedAction": "Ajouter les prix de revient manquants",
+    "chart": {
+      "title": "Ventes dans le temps",
+      "show": "Afficher",
+      "groupBy": "Regrouper par",
+      "metrics": { "revenue": "Chiffre d'affaires", "profit": "Bénéfice", "orders": "Commandes" },
+      "granularities": { "day": "Jour", "week": "Semaine", "month": "Mois" },
+      "received": "Reçues",
+      "delivered": "Livrées",
+      "rowHeader": "Période",
+      "caption": "Ventes dans le temps",
+      "weekOf": "Semaine du {date}",
+      "total": "Total : {value}",
+      "totalOrders": "{received} reçues · {delivered} livrées",
+      "bestDay": "Meilleur jour : {title} · {value}",
+      "bestWeek": "Meilleure semaine : {title} · {value}",
+      "bestMonth": "Meilleur mois : {title} · {value}",
+      "empty": "Aucune commande livrée sur cette période pour l'instant. Les commandes apparaissent ici le jour de leur livraison.",
+      "emptyOrders": "Aucune commande sur cette période."
+    },
+    "funnel": {
+      "title": "Parcours des commandes",
+      "text": "Commandes reçues sur cette période, regroupées selon leur état actuel.",
+      "received": "{count, plural, one {# commande reçue} other {# commandes reçues}}",
+      "empty": "Aucune commande reçue sur cette période.",
+      "noData": "Pas encore assez de données",
+      "rates": {
+        "confirmation": { "title": "Confirmées", "detail": "{count} commandes sur {total} ont été confirmées ou sont allées plus loin." },
+        "cancellation": { "title": "Annulées", "detail": "{count} commandes sur {total} ont été annulées." },
+        "return": { "title": "Retournées", "detail": "{count} colis sur {total} expédiés sont revenus." }
+      }
+    },
+    "best": {
+      "title": "Meilleures ventes",
+      "text": "Commandes livrées uniquement. Toutes les contenances d'un produit sont comptées ensemble.",
+      "sort": "Classer par",
+      "sorts": { "units": "Quantité", "revenue": "Chiffre d'affaires", "profit": "Bénéfice" },
+      "products": "Produits",
+      "packs": "Packs",
+      "empty": "Rien de vendu sur cette période pour l'instant.",
+      "sold": "{count, plural, one {# vendu} other {# vendus}}",
+      "sub": {
+        "units": "Chiffre d'affaires {revenue} · Bénéfice {profit}",
+        "revenue": "{units} vendus · Bénéfice {profit}",
+        "profit": "{units} vendus · Chiffre d'affaires {revenue}"
+      }
+    },
+    "categories": {
+      "title": "Ventes par catégorie",
+      "text": "Les packs sont comptés sur leur propre ligne.",
+      "empty": "Rien de vendu sur cette période pour l'instant.",
+      "sub": "{share} % du chiffre d'affaires · {units} vendus · Bénéfice {profit}"
+    },
+    "delivery": {
+      "title": "Comment les clientes reçoivent leur commande",
+      "empty": "Aucune commande livrée sur cette période pour l'instant.",
+      "sub": "{orders, plural, one {# commande} other {# commandes}} · {share} % du chiffre d'affaires",
+      "subFees": "{orders, plural, one {# commande} other {# commandes}} · {share} % du chiffre d'affaires · Frais de livraison {fees}",
+      "feesNote": "Frais de livraison sur ces commandes : {amount}. Ils reviennent à Yalidine et ne font pas partie de votre chiffre d'affaires."
+    },
+    "wilayas": {
+      "title": "Principales wilayas",
+      "text": "Commandes livrées par destination. Les remises en main propre n'ont pas de wilaya.",
+      "empty": "Aucune commande livrée avec une destination pour l'instant.",
+      "orders": "{count, plural, one {# commande} other {# commandes}}",
+      "sub": "Chiffre d'affaires {revenue}"
+    },
+    "lowStock": {
+      "title": "Stock bas",
+      "empty": "Toutes les contenances sont bien approvisionnées.",
+      "outOfStock": "Épuisé",
+      "left": "{count} restant(s)",
+      "more": "+ {count} autre(s)"
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "shell": { "nav": { "stats": "Statistics" } },
+  "stats": {
+    "title": "Statistics",
+    "subtitle": "How your shop is doing.",
+    "note": "Revenue counts the goods on delivered orders, dated by delivery day. Delivery fees belong to Yalidine and are never included. Profit is revenue minus what the bottles cost you.",
+    "period": "Period",
+    "periods": {
+      "7": "7 days",
+      "30": "30 days",
+      "90": "90 days",
+      "month": "This month",
+      "lastmonth": "Last month",
+      "custom": "Custom"
+    },
+    "from": "From",
+    "to": "To",
+    "problems": {
+      "missing": "Choose a start date and an end date.",
+      "order": "The start date must be before the end date.",
+      "tooLong": "The period can't be longer than 400 days."
+    },
+    "compared": "compared with {range}",
+    "loadError": "We couldn't load this section.",
+    "retry": "Try again",
+    "kpi": {
+      "revenue": "Revenue",
+      "profit": "Gross profit",
+      "profitHint": "{percent}% margin",
+      "delivered": "Delivered orders",
+      "average": "Average order",
+      "vs": "vs the previous period",
+      "noComparison": "Nothing to compare with yet"
+    },
+    "uncosted": "{amount} of sales have no cost price yet, so they are left out of the profit.",
+    "uncostedAction": "Add the missing cost prices",
+    "chart": {
+      "title": "Sales over time",
+      "show": "Show",
+      "groupBy": "Group by",
+      "metrics": { "revenue": "Revenue", "profit": "Profit", "orders": "Orders" },
+      "granularities": { "day": "Day", "week": "Week", "month": "Month" },
+      "received": "Received",
+      "delivered": "Delivered",
+      "rowHeader": "Period",
+      "caption": "Sales over time",
+      "weekOf": "Week of {date}",
+      "total": "Total: {value}",
+      "totalOrders": "{received} received · {delivered} delivered",
+      "bestDay": "Best day: {title} · {value}",
+      "bestWeek": "Best week: {title} · {value}",
+      "bestMonth": "Best month: {title} · {value}",
+      "empty": "No delivered orders in this period yet. Orders appear here on the day they are delivered.",
+      "emptyOrders": "No orders in this period."
+    },
+    "funnel": {
+      "title": "Order journey",
+      "text": "Orders received in this period, grouped by where they are now.",
+      "received": "{count, plural, one {# order received} other {# orders received}}",
+      "empty": "No orders were received in this period.",
+      "noData": "Not enough data yet",
+      "rates": {
+        "confirmation": { "title": "Confirmed", "detail": "{count} of {total} orders were confirmed or went further." },
+        "cancellation": { "title": "Cancelled", "detail": "{count} of {total} orders were cancelled." },
+        "return": { "title": "Returned", "detail": "{count} of {total} parcels sent came back." }
+      }
+    },
+    "best": {
+      "title": "Best sellers",
+      "text": "Delivered orders only. All sizes of a product are counted together.",
+      "sort": "Rank by",
+      "sorts": { "units": "Units", "revenue": "Revenue", "profit": "Profit" },
+      "products": "Products",
+      "packs": "Packs",
+      "empty": "Nothing sold yet in this period.",
+      "sold": "{count} sold",
+      "sub": {
+        "units": "Revenue {revenue} · Profit {profit}",
+        "revenue": "{units} sold · Profit {profit}",
+        "profit": "{units} sold · Revenue {revenue}"
+      }
+    },
+    "categories": {
+      "title": "Sales by category",
+      "text": "Packs are counted on their own line.",
+      "empty": "Nothing sold yet in this period.",
+      "sub": "{share}% of revenue · {units} sold · Profit {profit}"
+    },
+    "delivery": {
+      "title": "How customers receive their orders",
+      "empty": "No delivered orders in this period yet.",
+      "sub": "{orders, plural, one {# order} other {# orders}} · {share}% of revenue",
+      "subFees": "{orders, plural, one {# order} other {# orders}} · {share}% of revenue · Delivery fees {fees}",
+      "feesNote": "Delivery fees on these orders: {amount}. They belong to Yalidine and are not part of your revenue."
+    },
+    "wilayas": {
+      "title": "Top wilayas",
+      "text": "Delivered orders by destination. Hand-to-hand orders have no wilaya.",
+      "empty": "No delivered order with a destination yet.",
+      "orders": "{count, plural, one {# order} other {# orders}}",
+      "sub": "Revenue {revenue}"
+    },
+    "lowStock": {
+      "title": "Running low",
+      "empty": "Every size is well stocked.",
+      "outOfStock": "Out of stock",
+      "left": "{count} left",
+      "more": "+ {count} more"
+    }
+  }
+}
