@@ -1,10 +1,10 @@
-import { Check } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import OrderDetails from "@/components/OrderDetails";
 import OrderStatusPanel from "@/components/OrderStatusPanel";
+import WaxSeal from "@/components/WaxSeal";
 import { loadOrder } from "@/lib/api/catalog";
 
 type Props = { params: Promise<{ token: string }> };
@@ -26,10 +26,8 @@ export default async function OrderPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <header className="text-center">
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-dark text-white">
-          <Check className="h-7 w-7" aria-hidden />
-        </span>
-        <h1 className="mt-5 text-5xl">{t("thanks")}</h1>
+        <WaxSeal className="mx-auto h-28 w-28" />
+        <h1 className="mt-6 text-5xl">{t("thanks")}</h1>
         <p className="mt-3 text-cocoa/75">{t("received")}</p>
       </header>
 

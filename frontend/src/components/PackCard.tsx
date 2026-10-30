@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PublicPack } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
-import ImagePlaceholder from "./ImagePlaceholder";
+import TiltFrame from "./TiltFrame";
+import PackFanMini from "./PackFanMini";
 
 type Props = {
   pack: PublicPack;
@@ -16,8 +17,11 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
   const image = imageUrlOrNull(pack.imageUrl);
 
   return (
-    <Link href={`/pack/${pack.slug}`} className="group block">
-      <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-blush/60">
+    <Link
+      href={`/pack/${pack.slug}`}
+      className="group block rounded-2xl outline-offset-4 transition-transform duration-200 active:scale-[0.985]"
+    >
+      <TiltFrame className="relative aspect-4/3 overflow-hidden rounded-2xl bg-blush/60">
         {image ? (
           <Image
             src={image}
@@ -29,7 +33,7 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
             }`}
           />
         ) : (
-          <ImagePlaceholder />
+          <PackFanMini items={pack.items} />
         )}
         <span className="absolute left-4 top-4 rounded-full bg-parchment px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-rose-dark">
           {labels.pack}
@@ -39,7 +43,7 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
             {labels.outOfStock}
           </span>
         )}
-      </div>
+      </TiltFrame>
 
       <div className="mt-4 text-center">
         <h3 className="font-display text-xl">{name}</h3>

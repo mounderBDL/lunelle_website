@@ -1,0 +1,54 @@
+{
+  "moon": { "top": "Retour en haut" },
+  "drawer": {
+    "title": "Votre panier",
+    "close": "Fermer le panier",
+    "viewFull": "Voir le panier complet",
+    "items": "{count, plural, one {# article} other {# articles}}"
+  },
+  "home": { "explore": "Découvrir" },
+  "product": {
+    "changeChoice": "Modifier la contenance ou la quantité",
+    "addedShort": "Ajouté ✓"
+  },
+  "notes": {
+    "levels": { "top": "Notes de tête", "middle": "Notes de cœur", "base": "Notes de fond" },
+    "hints": {
+      "top": "La première impression, celles que l'on sent tout de suite.",
+      "middle": "Le cœur du parfum, il se révèle quand les premières notes s'estompent.",
+      "base": "Le sillage durable qui reste sur la peau."
+    },
+    "hint": "Touchez une note pour la voir éclore"
+  },
+  "gallery": {
+    "label": "Photos du produit",
+    "photo": "Photo {current} sur {total}",
+    "previous": "Photo précédente",
+    "next": "Photo suivante",
+    "zoomIn": "Zoomer",
+    "zoomOut": "Dézoomer",
+    "goTo": "Afficher la photo {n}",
+    "hintTouch": "Double-touchez ou pincez pour zoomer",
+    "hintMouse": "Double-cliquez pour zoomer"
+  },
+  "fan": {
+    "hint": "Survolez ou touchez une carte pour la voir de près",
+    "inside": "{count, plural, one {# article dans le pack} other {# articles dans le pack}}",
+    "view": "Voir le produit"
+  },
+  "checkout": {
+    "cards": {
+      "free": "Gratuit",
+      "from": "À partir de {amount}",
+      "soon": "Pas encore disponible"
+    },
+    "picker": {
+      "searchWilaya": "Rechercher une wilaya ou son numéro",
+      "searchCommune": "Rechercher une commune",
+      "noResults": "Aucun résultat pour « {query} »",
+      "empty": "Rien à choisir.",
+      "clear": "Effacer la recherche",
+      "close": "Fermer"
+    }
+  }
+}

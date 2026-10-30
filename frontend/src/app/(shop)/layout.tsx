@@ -1,5 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import CartDrawer from "@/components/CartDrawer";
+import MoonProgress from "@/components/MoonProgress";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -15,6 +17,8 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
         <main className="flex-1">{children}</main>
         <SiteFooter />
       </div>
+      <CartDrawer />
+      <MoonProgress />
     </NextIntlClientProvider>
   );
 }

@@ -7,6 +7,7 @@ import ImagePlaceholder from "@/components/ImagePlaceholder";
 import PackPurchase from "@/components/PackPurchase";
 import { loadPack } from "@/lib/api/catalog";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
+import PackFan from "@/components/PackFan";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -92,39 +93,12 @@ export default async function PackPage({ params }: Props) {
           {description && <p className="mt-6 whitespace-pre-line text-cocoa/80">{description}</p>}
 
           <div className="mt-8">
-            <PackPurchase packId={pack.id} inStock={pack.inStock} maxQuantity={pack.maxQuantity} />
+            <PackPurchase packId={pack.id} inStock={pack.inStock} maxQuantity={pack.maxQuantity} imageUrl={image} />
           </div>
 
           <section className="mt-10">
             <h2 className="text-2xl">{t("contains")}</h2>
-            <ul className="mt-4 space-y-3">
-              {pack.items.map((item) => {
-                const itemName = localized(item.productName, locale);
-                const thumb = imageUrlOrNull(item.imageUrl);
-                return (
-                  <li key={`${item.productSlug}-${item.variantLabel}`}>
-                    <Link
-                      href={`/product/${item.productSlug}`}
-                      className="flex items-center gap-4 rounded-xl border border-rose/20 p-3 transition-colors hover:bg-blush/50"
-                    >
-                      <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-blush/60">
-                        {thumb ? (
-                          <Image src={thumb} alt={itemName} fill sizes="56px" className="object-cover" />
-                        ) : (
-                          <ImagePlaceholder />
-                        )}
-                      </div>
-                      <span>
-                        <span className="block font-display text-lg leading-tight">
-                          {item.quantity} × {itemName}
-                        </span>
-                        <span className="block text-sm text-cocoa/70">{item.variantLabel}</span>
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <PackFan items={pack.items} />
           </section>
         </div>
       </div>

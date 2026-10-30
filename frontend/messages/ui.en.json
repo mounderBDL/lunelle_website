@@ -1,0 +1,54 @@
+{
+  "moon": { "top": "Back to the top" },
+  "drawer": {
+    "title": "Your cart",
+    "close": "Close the cart",
+    "viewFull": "View full cart",
+    "items": "{count, plural, one {# item} other {# items}}"
+  },
+  "home": { "explore": "Explore" },
+  "product": {
+    "changeChoice": "Change size or quantity",
+    "addedShort": "Added ✓"
+  },
+  "notes": {
+    "levels": { "top": "Top notes", "middle": "Heart notes", "base": "Base notes" },
+    "hints": {
+      "top": "The first impression, the notes you smell right away.",
+      "middle": "The heart of the fragrance, it appears as the first notes fade.",
+      "base": "The lasting trail that stays on your skin."
+    },
+    "hint": "Tap a note to see it bloom"
+  },
+  "gallery": {
+    "label": "Product photos",
+    "photo": "Photo {current} of {total}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "goTo": "Show photo {n}",
+    "hintTouch": "Double-tap or pinch to zoom",
+    "hintMouse": "Double-click to zoom"
+  },
+  "fan": {
+    "hint": "Hover or tap a card to look closer",
+    "inside": "{count, plural, one {# item inside} other {# items inside}}",
+    "view": "View product"
+  },
+  "checkout": {
+    "cards": {
+      "free": "Free",
+      "from": "From {amount}",
+      "soon": "Not available yet"
+    },
+    "picker": {
+      "searchWilaya": "Search a wilaya or its number",
+      "searchCommune": "Search a commune",
+      "noResults": "No result for “{query}”",
+      "empty": "Nothing to choose from.",
+      "clear": "Clear the search",
+      "close": "Close"
+    }
+  }
+}

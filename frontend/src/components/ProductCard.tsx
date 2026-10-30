@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { PublicProduct } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import ImagePlaceholder from "./ImagePlaceholder";
+import TiltFrame from "./TiltFrame";
 
 type Props = {
   product: PublicProduct;
@@ -21,8 +22,11 @@ export default function ProductCard({ product, locale, labels }: Props) {
   const tag = onSale ? labels.sale : product.badge;
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block">
-      <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-blush/60">
+    <Link
+      href={`/product/${product.slug}`}
+      className="group block rounded-2xl outline-offset-4 transition-transform duration-200 active:scale-[0.985]"
+    >
+      <TiltFrame className="relative aspect-4/5 overflow-hidden rounded-2xl bg-blush/60">
         {image ? (
           <Image
             src={image}
@@ -47,7 +51,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
             {labels.outOfStock}
           </span>
         )}
-      </div>
+      </TiltFrame>
 
       <div className="mt-4 text-center">
         <h3 className="font-display text-xl">{name}</h3>

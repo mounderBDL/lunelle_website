@@ -10,10 +10,11 @@ import type { Commune, DeliveryMethod, DeliveryWilaya, QuoteDto } from "@/lib/ap
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import { normalizePhone } from "@/lib/phone";
 import { useCart } from "@/store/cart";
+import DeliveryCards from "./DeliveryCards";
 import ImagePlaceholder from "./ImagePlaceholder";
+import Picker, { type PickerOption } from "./Picker";
 
 const subscribe = () => () => {};
-const METHODS: DeliveryMethod[] = ["HAND_TO_HAND", "HOME", "STOP_DESK"];
 const INPUT =
   "w-full rounded-xl border bg-white/70 px-4 py-3 text-base outline-none transition-colors focus:border-rose-dark focus:ring-2 focus:ring-rose/30 disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -72,7 +73,9 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   // ── form ──
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [method, setMethod] = useState<DeliveryMethod>("HOME");
+  const [method, setMethod] = useState<DeliveryMethod>(() =>
+    wilayas.some((w) => w.home.available) ? "HOME" : "HAND_TO_HAND",
+  );
   const [wilayaId, setWilayaId] = useState("");
   const [communeId, setCommuneId] = useState("");
   const [address, setAddress] = useState("");
@@ -169,6 +172,38 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   const total = fee === null || quote === null ? null : quote.subtotal + fee;
   const canSubmit = !submitting && quoteFresh && quote !== null && quote.ok;
 
+  // ── what the delivery cards and the pickers show ──
+  const cheapest = (pick: (w: DeliveryWilaya) => { fee: number; available: boolean }) => {
+    const fees = wilayas.map(pick).filter((r) => r.available).map((r) => r.fee);
+    return fees.length > 0 ? Math.min(...fees) : null;
+  };
+  const homeFrom = cheapest((w) => w.home);
+  const officeFrom = cheapest((w) => w.stopDesk);
+  const cardBadges: Record<DeliveryMethod, string | null> = {
+    HAND_TO_HAND: t("cards.free"),
+    HOME: homeFrom === null ? null : t("cards.from", { amount: formatMoney(homeFrom, locale) }),
+    STOP_DESK: officeFrom === null ? null : t("cards.from", { amount: formatMoney(officeFrom, locale) }),
+  };
+  const cardsOff: Record<DeliveryMethod, boolean> = {
+    HAND_TO_HAND: false,
+    HOME: homeFrom === null,
+    STOP_DESK: officeFrom === null,
+  };
+
+  const wilayaOptions: PickerOption[] = wilayas.map((w) => {
+    const ok = methodAvailable(w, method);
+    const feeHere = method === "HOME" ? w.home.fee : w.stopDesk.fee;
+    return {
+      id: String(w.id),
+      label: w.name,
+      badge: String(w.id).padStart(2, "0"),
+      disabled: !ok,
+      hint: ok ? formatMoney(feeHere, locale) : method === "STOP_DESK" ? t("noOffice") : t("unavailable"),
+    };
+  });
+  const communeOptions: PickerOption[] = communes.map((c) => ({ id: String(c.id), label: c.name }));
+  const noResults = (query: string) => (query ? t("picker.noResults", { query }) : t("picker.empty"));
+
   // ── handlers ──
   function chooseMethod(next: DeliveryMethod) {
     if (next === method) return;
@@ -238,12 +273,6 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
     setSubmitError(result);
   }
 
-  const wilayaLabel = (w: DeliveryWilaya) => {
-    const base = `${String(w.id).padStart(2, "0")} - ${w.name}`;
-    if (methodAvailable(w, method)) return base;
-    return `${base} (${method === "STOP_DESK" ? t("noOffice") : t("unavailable")})`;
-  };
-
   return (
     <form
       onSubmit={onSubmit}
@@ -289,32 +318,13 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
           <h2 id="delivery-title" className="text-3xl">
             {t("delivery")}
           </h2>
-          <div role="radiogroup" aria-labelledby="delivery-title" className="mt-5 grid gap-3">
-            {METHODS.map((m) => {
-              const selected = m === method;
-              return (
-                <label
-                  key={m}
-                  className={`flex cursor-pointer gap-3 rounded-xl border p-4 transition-colors ${
-                    selected ? "border-rose-dark bg-blush/60" : "border-rose/30 hover:border-rose-dark"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="delivery"
-                    value={m}
-                    checked={selected}
-                    onChange={() => chooseMethod(m)}
-                    className="mt-1 accent-rose-dark"
-                  />
-                  <span>
-                    <span className="block font-medium">{t(`methods.${m}.title`)}</span>
-                    <span className="block text-sm text-cocoa/70">{t(`methods.${m}.text`)}</span>
-                  </span>
-                </label>
-              );
-            })}
-          </div>
+          <DeliveryCards
+            value={method}
+            onChange={chooseMethod}
+            badges={cardBadges}
+            unavailable={cardsOff}
+            labelId="delivery-title"
+          />
 
           <div className="mt-6 space-y-5">
             {method === "HAND_TO_HAND" ? (
@@ -322,20 +332,20 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
             ) : (
               <>
                 <Field id="field-wilaya" label={t("wilaya")} error={errors.wilaya}>
-                  <select
+                  <Picker
                     id="field-wilaya"
+                    title={t("wilaya")}
                     value={wilayaId}
-                    onChange={(e) => chooseWilaya(e.target.value)}
-                    aria-invalid={Boolean(errors.wilaya)}
-                    className={inputClass(errors.wilaya)}
-                  >
-                    <option value="">{t("selectWilaya")}</option>
-                    {wilayas.map((w) => (
-                      <option key={w.id} value={String(w.id)} disabled={!methodAvailable(w, method)}>
-                        {wilayaLabel(w)}
-                      </option>
-                    ))}
-                  </select>
+                    options={wilayaOptions}
+                    onChange={chooseWilaya}
+                    placeholder={t("selectWilaya")}
+                    searchLabel={t("picker.searchWilaya")}
+                    noResults={noResults}
+                    clearLabel={t("picker.clear")}
+                    closeLabel={t("picker.close")}
+                    invalid={Boolean(errors.wilaya)}
+                    describedBy={errors.wilaya ? "field-wilaya-error" : undefined}
+                  />
                 </Field>
 
                 <Field
@@ -344,32 +354,32 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
                   error={errors.commune}
                   hint={method === "STOP_DESK" ? t("officeHint") : undefined}
                 >
-                  <select
+                  <Picker
                     id="field-commune"
+                    title={t("commune")}
                     value={communeId}
-                    onChange={(e) => {
-                      setCommuneId(e.target.value);
+                    options={communeOptions}
+                    onChange={(value) => {
+                      setCommuneId(value);
                       setErrors((er) => ({ ...er, commune: "" }));
                     }}
-                    disabled={!destinationReady || !communesReady || communesFailed || noOfficeInWilaya}
-                    aria-invalid={Boolean(errors.commune)}
-                    className={inputClass(errors.commune)}
-                  >
-                    <option value="">
-                      {!destinationReady
+                    placeholder={
+                      !destinationReady
                         ? t("chooseWilayaFirst")
                         : !communesReady
                           ? t("loadingCommunes")
                           : method === "STOP_DESK"
                             ? t("selectOfficeCommune")
-                            : t("selectCommune")}
-                    </option>
-                    {communes.map((c) => (
-                      <option key={c.id} value={String(c.id)}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
+                            : t("selectCommune")
+                    }
+                    searchLabel={t("picker.searchCommune")}
+                    noResults={noResults}
+                    clearLabel={t("picker.clear")}
+                    closeLabel={t("picker.close")}
+                    disabled={!destinationReady || !communesReady || communesFailed || noOfficeInWilaya}
+                    invalid={Boolean(errors.commune)}
+                    describedBy={errors.commune ? "field-commune-error" : undefined}
+                  />
                 </Field>
 
                 {communesFailed && (

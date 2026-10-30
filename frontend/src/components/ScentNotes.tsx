@@ -1,5 +1,16 @@
-/** One note level per line, e.g. "Top: Bergamot, Apple". Lines without a "Label:" are shown as plain text. */
+import { parseScentNotes } from "@/lib/scent";
+import ScentPyramid from "./ScentPyramid";
+
+/**
+ * "Top: …", "Middle: …", "Base: …" (or Tête, Cœur, Fond) become the interactive pyramid.
+ * Notes written in any other way are shown as a plain list, as before.
+ */
 export default function ScentNotes({ text }: { text: string }) {
+  const parsed = parseScentNotes(text);
+  if (parsed) {
+    return <ScentPyramid levels={parsed.levels} other={parsed.other} />;
+  }
+
   const rows = text
     .split(/\r?\n/)
     .map((line) => line.trim())

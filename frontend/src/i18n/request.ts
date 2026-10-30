@@ -20,7 +20,7 @@ const mergeAll = (...trees: Tree[]) => trees.reduce((acc, tree) => merge(acc, tr
 export default getRequestConfig(async () => {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
   const locale = isLocale(value) ? value : DEFAULT_LOCALE;
-  const [shop, stock, admin, catalog, setup, extra, stats] = await Promise.all([
+  const [shop, stock, admin, catalog, setup, extra, stats, ui] = await Promise.all([
     import(`../../messages/${locale}.json`),
     import(`../../messages/stock.${locale}.json`),
     import(`../../messages/admin.${locale}.json`),
@@ -28,12 +28,13 @@ export default getRequestConfig(async () => {
     import(`../../messages/admin.setup.${locale}.json`),
     import(`../../messages/extra.${locale}.json`),
     import(`../../messages/admin.stats.${locale}.json`),
+    import(`../../messages/ui.${locale}.json`),
   ]);
   const { admin: extraAdmin, ...extraShop } = extra.default as Tree;
   return {
     locale,
     messages: {
-      ...mergeAll(shop.default as Tree, stock.default as Tree, extraShop),
+      ...mergeAll(shop.default as Tree, stock.default as Tree, extraShop, ui.default as Tree),
       admin: mergeAll(
         admin.default as Tree,
         catalog.default as Tree,

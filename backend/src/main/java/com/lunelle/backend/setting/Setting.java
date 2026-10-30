@@ -11,12 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Setting {
 
-    public Setting(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
     @Id
     @Column(name = "key", length = 100)
     private String key;

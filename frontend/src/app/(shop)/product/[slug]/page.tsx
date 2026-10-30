@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: Props) {
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-28 pt-12 sm:px-6 md:pb-12">
       <nav aria-label="Breadcrumb" className="text-sm text-cocoa/60">
         <Link href="/" className="hover:text-rose-dark">
           {tc("home")}
