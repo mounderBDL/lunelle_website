@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import CardGrid from "@/components/CardGrid";
 import PackCard from "@/components/PackCard";
 import { loadPacks } from "@/lib/api/catalog";
 import { formatMoney } from "@/lib/format";
@@ -28,7 +29,7 @@ export default async function PacksPage() {
       {packs.length === 0 ? (
         <p className="mt-16 text-center font-display text-2xl text-cocoa/70">{t("empty")}</p>
       ) : (
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <CardGrid kind="packs" className="mt-12">
           {packs.map((pack) => (
             <PackCard
               key={pack.id}
@@ -38,7 +39,7 @@ export default async function PacksPage() {
               saveLabel={pack.saving > 0 ? t("save", { amount: formatMoney(pack.saving, locale) }) : null}
             />
           ))}
-        </div>
+        </CardGrid>
       )}
     </div>
   );

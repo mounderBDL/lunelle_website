@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import CardGrid from "@/components/CardGrid";
 import CollectionsGallery from "@/components/CollectionsGallery";
 import HomeHero from "@/components/HomeHero";
 import PackCard from "@/components/PackCard";
@@ -52,11 +53,11 @@ export default async function HomePage() {
       {featured.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <h2 className="reveal text-center text-4xl">{t("favourites")}</h2>
-          <div className="reveal mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          <CardGrid kind="products" className="reveal mt-10">
             {featured.map((product) => (
               <ProductCard key={product.id} product={product} locale={locale} labels={productLabels} />
             ))}
-          </div>
+          </CardGrid>
         </section>
       )}
 
@@ -66,7 +67,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <h2 className="reveal text-center text-4xl">{t("packs")}</h2>
             <p className="reveal mx-auto mt-3 max-w-xl text-center text-cocoa/70">{t("packsText")}</p>
-            <div className="reveal mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <CardGrid kind="packs" className="reveal mt-10">
               {packs.map((pack) => (
                 <PackCard
                   key={pack.id}
@@ -76,7 +77,7 @@ export default async function HomePage() {
                   saveLabel={pack.saving > 0 ? tp("save", { amount: formatMoney(pack.saving, locale) }) : null}
                 />
               ))}
-            </div>
+            </CardGrid>
           </div>
         </section>
       )}

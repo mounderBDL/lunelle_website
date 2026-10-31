@@ -25,11 +25,7 @@
     "photo": "Photo {current} sur {total}",
     "previous": "Photo précédente",
     "next": "Photo suivante",
-    "zoomIn": "Zoomer",
-    "zoomOut": "Dézoomer",
-    "goTo": "Afficher la photo {n}",
-    "hintTouch": "Double-touchez ou pincez pour zoomer",
-    "hintMouse": "Double-cliquez pour zoomer"
+    "goTo": "Afficher la photo {n}"
   },
   "fan": {
     "hint": "Survolez ou touchez une carte pour la voir de près",

@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PublicPack } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
-import TiltFrame from "./TiltFrame";
 import PackFanMini from "./PackFanMini";
+import TiltFrame from "./TiltFrame";
 
 type Props = {
   pack: PublicPack;
@@ -27,7 +27,7 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
             src={image}
             alt={name}
             fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 33vw, 50vw"
             className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
               pack.inStock ? "" : "opacity-60 grayscale"
             }`}
@@ -35,25 +35,25 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
         ) : (
           <PackFanMini items={pack.items} />
         )}
-        <span className="absolute left-4 top-4 rounded-full bg-parchment px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-rose-dark">
+        <span className="absolute left-2 top-2 rounded-full bg-parchment px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-rose-dark sm:left-4 sm:top-4 sm:px-3 sm:py-1 sm:text-[11px]">
           {labels.pack}
         </span>
         {!pack.inStock && (
-          <span className="absolute inset-x-0 bottom-4 mx-auto w-fit rounded-full bg-cocoa/85 px-4 py-1 text-xs uppercase tracking-wider text-white">
+          <span className="absolute inset-x-0 bottom-3 mx-auto w-fit rounded-full bg-cocoa/85 px-3 py-1 text-[10px] uppercase tracking-wider text-white sm:bottom-4 sm:px-4 sm:text-xs">
             {labels.outOfStock}
           </span>
         )}
       </TiltFrame>
 
-      <div className="mt-4 text-center">
-        <h3 className="font-display text-xl">{name}</h3>
-        <p className="mt-1 text-sm text-cocoa/80">
+      <div className="mt-3 text-center sm:mt-4">
+        <h3 className="font-display text-lg leading-tight sm:text-xl">{name}</h3>
+        <p className="mt-1 text-xs leading-snug text-cocoa/80 sm:text-sm">
           {saveLabel && (
-            <span className="mr-2 text-cocoa/50 line-through">{formatMoney(pack.individualTotal, locale)}</span>
+            <span className="mr-1.5 text-cocoa/50 line-through sm:mr-2">{formatMoney(pack.individualTotal, locale)}</span>
           )}
           <span className="font-semibold text-rose-dark">{formatMoney(pack.price, locale)}</span>
         </p>
-        {saveLabel && <p className="mt-1 text-xs uppercase tracking-wider text-gold">{saveLabel}</p>}
+        {saveLabel && <p className="mt-1 text-[10px] uppercase tracking-wide text-gold sm:text-xs sm:tracking-wider">{saveLabel}</p>}
       </div>
     </Link>
   );

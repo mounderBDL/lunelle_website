@@ -25,11 +25,7 @@
     "photo": "Photo {current} of {total}",
     "previous": "Previous photo",
     "next": "Next photo",
-    "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out",
-    "goTo": "Show photo {n}",
-    "hintTouch": "Double-tap or pinch to zoom",
-    "hintMouse": "Double-click to zoom"
+    "goTo": "Show photo {n}"
   },
   "fan": {
     "hint": "Hover or tap a card to look closer",

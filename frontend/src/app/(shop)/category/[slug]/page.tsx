@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import CardGrid from "@/components/CardGrid";
 import ProductCard from "@/components/ProductCard";
 import { loadCategories, loadProducts } from "@/lib/api/catalog";
 import { localized } from "@/lib/format";
@@ -52,11 +53,11 @@ export default async function CategoryPage({ params }: Props) {
       {products.length === 0 ? (
         <p className="mt-16 text-center font-display text-2xl text-cocoa/70">{t("empty")}</p>
       ) : (
-        <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <CardGrid kind="products" className="mt-12">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} locale={locale} labels={labels} />
           ))}
-        </div>
+        </CardGrid>
       )}
     </div>
   );
