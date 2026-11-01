@@ -1,79 +1,79 @@
 {
   "nav": {
     "collections": "Collections",
-    "bestSellers": "Best sellers",
-    "story": "Our story",
+    "bestSellers": "Meilleures ventes",
+    "story": "Notre histoire",
     "faq": "FAQ"
   },
-  "footer": { "shop": "Shop", "faq": "FAQ" },
-  "home": { "bestSellers": "Best sellers" },
+  "footer": { "shop": "Boutique", "faq": "FAQ", "call": "Appelez-nous" },
+  "home": { "bestSellers": "Meilleures ventes" },
   "story": {
-    "eyebrow": "Our story",
-    "title": "Scent, told like a poem",
-    "p1": "At Lunelle, a fragrance is more than something you wear. It is a mood, a memory, a small poem you carry on your skin.",
-    "p2": "Our mists, musks and perfumes are soft and romantic: clean freshness, white flowers, warm vanilla and the quiet glow of moonlight.",
-    "p3": "From the name on the bottle to the way it reaches your door, every detail is meant to feel gentle, and a little bit magical.",
-    "signature": "The poetry of scent",
+    "eyebrow": "Notre histoire",
+    "title": "Un parfum raconté comme un poème",
+    "p1": "Chez Lunelle, un parfum est bien plus qu'une chose que l'on porte. C'est une humeur, un souvenir, un petit poème que l'on garde sur la peau.",
+    "p2": "Nos brumes, muscs et parfums sont doux et romantiques : une fraîcheur propre, des fleurs blanches, une vanille chaleureuse et la lueur discrète de la lune.",
+    "p3": "Du nom sur le flacon à la façon dont il arrive chez vous, chaque détail se veut tendre, et un peu magique.",
+    "signature": "La poésie du parfum",
     "promises": {
       "call": {
-        "title": "Confirmed with a call",
-        "text": "Every order is confirmed by phone, within 24 hours."
+        "title": "Confirmée par un appel",
+        "text": "Chaque commande est confirmée par téléphone, dans les 24 heures."
       },
       "delivery": {
-        "title": "Your door, an office or hand-to-hand",
-        "text": "Home delivery, pick-up at a Yalidine office, or a free meeting in person."
+        "title": "Chez vous, en bureau ou en main propre",
+        "text": "Livraison à domicile, retrait dans un bureau Yalidine, ou rencontre gratuite en personne."
       },
       "payment": {
-        "title": "Pay when it arrives",
-        "text": "Cash only, when you receive your order. Nothing to pay online."
+        "title": "Vous payez à la réception",
+        "text": "Uniquement en espèces, quand vous recevez votre commande. Rien à payer en ligne."
       }
     }
   },
   "faq": {
     "eyebrow": "Questions",
-    "title": "Good to know",
-    "subtitle": "The answers to the questions we hear most. Anything else? Message us, we love hearing from you.",
+    "title": "Bon à savoir",
+    "subtitle": "Les réponses aux questions que l'on nous pose le plus. Autre chose ? Écrivez-nous, nous adorons vous lire.",
     "items": {
       "account": {
-        "q": "Do I need an account to order?",
-        "a": "No. Add your favourites to the cart, then enter your name, phone number and delivery details at checkout. There is nothing to sign up for."
+        "q": "Faut-il un compte pour commander ?",
+        "a": "Non. Ajoutez vos coups de cœur au panier, puis indiquez votre nom, votre numéro de téléphone et vos informations de livraison au moment de commander. Il n'y a rien à créer."
       },
       "payment": {
-        "q": "How do I pay?",
-        "a": "You pay in cash when you receive your order: at the hand-over, at your door, or when you collect it at the Yalidine office. Nothing is paid online."
+        "q": "Comment payer ?",
+        "a": "Vous payez en espèces à la réception de votre commande : lors de la remise en main propre, à votre porte, ou au bureau Yalidine quand vous la retirez. Rien n'est payé en ligne."
       },
       "afterOrder": {
-        "q": "What happens after I place my order?",
-        "a": "We call you within 24 hours to confirm your order. Please keep your phone nearby, and check that the number you entered is correct."
+        "q": "Que se passe-t-il après ma commande ?",
+        "a": "Nous vous appelons dans les 24 heures pour confirmer votre commande. Gardez votre téléphone à portée de main et vérifiez que le numéro saisi est correct."
       },
       "delivery": {
-        "q": "How does delivery work, and how much does it cost?",
-        "a": "Choose hand-to-hand (free, we arrange the meeting place by phone), home delivery, or pick-up at a Yalidine office. The fee depends on your wilaya and the delivery type, and you see the exact total before you confirm."
+        "q": "Comment fonctionne la livraison, et combien coûte-t-elle ?",
+        "a": "Choisissez la remise en main propre (gratuite, nous convenons du lieu de rencontre par téléphone), la livraison à domicile ou le retrait dans un bureau Yalidine. Les frais dépendent de votre wilaya et du type de livraison, et vous voyez le total exact avant de confirmer."
       },
       "tracking": {
-        "q": "Can I follow my order?",
-        "a": "Yes. Open “Track my order” at the bottom of the page and enter your order number with the phone number you ordered with."
+        "q": "Puis-je suivre ma commande ?",
+        "a": "Oui. Ouvrez « Suivre ma commande » en bas de la page et saisissez votre numéro de commande avec le numéro de téléphone utilisé."
       },
       "packs": {
-        "q": "How do packs work?",
-        "a": "A pack is a set of products sold together for less than buying each piece separately. Its contents are fixed, and the pack page shows exactly how much you save."
+        "q": "Comment fonctionnent les packs ?",
+        "a": "Un pack est un ensemble de produits vendus ensemble moins cher qu'à l'unité. Son contenu est fixe, et la page du pack indique précisément combien vous économisez."
       },
       "stock": {
-        "q": "What if a product is out of stock?",
-        "a": "Out-of-stock products stay on the site but can't be added to your cart until they are available again."
+        "q": "Et si un produit est épuisé ?",
+        "a": "Les produits épuisés restent sur le site mais ne peuvent pas être ajoutés au panier tant qu'ils ne sont pas de nouveau disponibles."
       },
       "contact": {
-        "q": "How can I reach you?",
-        "a": "You will find our contact details and social media at the bottom of this page. Message us any time."
+        "q": "Comment vous joindre ?",
+        "a": "Vous trouverez nos coordonnées et nos réseaux sociaux en bas de cette page. Écrivez-nous quand vous voulez."
       }
     }
   },
   "admin": {
     "products": {
-      "chips": { "featured": "Best seller" },
+      "chips": { "featured": "Meilleure vente" },
       "form": {
-        "featured": "Show in “Best sellers”",
-        "featuredHint": "Shown in the “Best sellers” section of the home page."
+        "featured": "Afficher dans « Meilleures ventes »",
+        "featuredHint": "Affiché dans la section « Meilleures ventes » de la page d'accueil."
       }
     }
   }

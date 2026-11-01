@@ -5,7 +5,7 @@
     "story": "Our story",
     "faq": "FAQ"
   },
-  "footer": { "shop": "Shop", "faq": "FAQ" },
+  "footer": { "shop": "Shop", "faq": "FAQ", "call": "Call us" },
   "home": { "bestSellers": "Best sellers" },
   "story": {
     "eyebrow": "Our story",
