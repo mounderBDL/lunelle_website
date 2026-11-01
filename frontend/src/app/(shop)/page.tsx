@@ -1,9 +1,11 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import CardGrid from "@/components/CardGrid";
 import CollectionsGallery from "@/components/CollectionsGallery";
+import FaqSection from "@/components/FaqSection";
 import HomeHero from "@/components/HomeHero";
 import PackCard from "@/components/PackCard";
 import ProductCard from "@/components/ProductCard";
+import StorySection from "@/components/StorySection";
 import { getCategories, getPacks, getProducts } from "@/lib/api/catalog";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 
@@ -39,7 +41,7 @@ export default async function HomePage() {
         </p>
       )}
 
-      {/* Collections */}
+      {/* 1. Collections */}
       {collections.length > 0 && (
         <section id="collections" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <h2 className="reveal text-center text-4xl">{t("collections")}</h2>
@@ -49,10 +51,10 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Favourites */}
+      {/* 2. Best sellers */}
       {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <h2 className="reveal text-center text-4xl">{t("favourites")}</h2>
+        <section id="best-sellers" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
+          <h2 className="reveal text-center text-4xl">{t("bestSellers")}</h2>
           <CardGrid kind="products" className="reveal mt-10">
             {featured.map((product) => (
               <ProductCard key={product.id} product={product} locale={locale} labels={productLabels} />
@@ -61,7 +63,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Packs */}
+      {/* 3. Packs */}
       {packs.length > 0 && (
         <section id="packs" className="scroll-mt-20 bg-parchment/50 py-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -81,6 +83,10 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* 4. Our story  5. FAQ */}
+      <StorySection />
+      <FaqSection />
     </>
   );
 }

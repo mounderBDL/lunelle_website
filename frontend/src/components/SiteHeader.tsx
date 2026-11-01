@@ -1,22 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getLocale, getTranslations } from "next-intl/server";
-import { getCategories } from "@/lib/api/catalog";
-import { localized } from "@/lib/format";
+import { getTranslations } from "next-intl/server";
+import { getCategories, getPacks, getProducts } from "@/lib/api/catalog";
+import type { NavSection } from "@/lib/sections";
 import CartButton from "./CartButton";
+import DesktopNav from "./DesktopNav";
 import LanguageSwitcher from "./LanguageSwitcher";
-import MobileNav, { type NavItem } from "./MobileNav";
+import MobileNav from "./MobileNav";
 
 export default async function SiteHeader() {
-  const [t, locale, categories] = await Promise.all([
+  const [t, categories, featured, packs] = await Promise.all([
     getTranslations("nav"),
-    getLocale(),
     getCategories(),
+    getProducts({ featured: true }),
+    getPacks(),
   ]);
 
-  const items: NavItem[] = [
-    ...categories.map((c) => ({ href: `/category/${c.slug}`, label: localized(c.name, locale) })),
-    { href: "/packs", label: t("packs") },
+  // the menu lists the sections of the home page; a section that is empty is not offered
+  const items: NavSection[] = [
+    ...(categories.length > 0 ? [{ id: "collections", label: t("collections") }] : []),
+    ...(featured.length > 0 ? [{ id: "best-sellers", label: t("bestSellers") }] : []),
+    ...(packs.length > 0 ? [{ id: "packs", label: t("packs") }] : []),
+    { id: "story", label: t("story") },
+    { id: "faq", label: t("faq") },
   ];
 
   return (
@@ -33,17 +39,7 @@ export default async function SiteHeader() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label={t("menu")}>
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="font-display text-lg text-cocoa/90 transition-colors hover:text-rose-dark"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <DesktopNav items={items} label={t("menu")} />
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

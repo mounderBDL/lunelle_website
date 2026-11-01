@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "collections": "Collections",
+    "bestSellers": "Best sellers",
+    "story": "Our story",
+    "faq": "FAQ"
+  },
+  "footer": { "shop": "Shop", "faq": "FAQ" },
+  "home": { "bestSellers": "Best sellers" },
+  "story": {
+    "eyebrow": "Our story",
+    "title": "Scent, told like a poem",
+    "p1": "At Lunelle, a fragrance is more than something you wear. It is a mood, a memory, a small poem you carry on your skin.",
+    "p2": "Our mists, musks and perfumes are soft and romantic: clean freshness, white flowers, warm vanilla and the quiet glow of moonlight.",
+    "p3": "From the name on the bottle to the way it reaches your door, every detail is meant to feel gentle, and a little bit magical.",
+    "signature": "The poetry of scent",
+    "promises": {
+      "call": {
+        "title": "Confirmed with a call",
+        "text": "Every order is confirmed by phone, within 24 hours."
+      },
+      "delivery": {
+        "title": "Your door, an office or hand-to-hand",
+        "text": "Home delivery, pick-up at a Yalidine office, or a free meeting in person."
+      },
+      "payment": {
+        "title": "Pay when it arrives",
+        "text": "Cash only, when you receive your order. Nothing to pay online."
+      }
+    }
+  },
+  "faq": {
+    "eyebrow": "Questions",
+    "title": "Good to know",
+    "subtitle": "The answers to the questions we hear most. Anything else? Message us, we love hearing from you.",
+    "items": {
+      "account": {
+        "q": "Do I need an account to order?",
+        "a": "No. Add your favourites to the cart, then enter your name, phone number and delivery details at checkout. There is nothing to sign up for."
+      },
+      "payment": {
+        "q": "How do I pay?",
+        "a": "You pay in cash when you receive your order: at the hand-over, at your door, or when you collect it at the Yalidine office. Nothing is paid online."
+      },
+      "afterOrder": {
+        "q": "What happens after I place my order?",
+        "a": "We call you within 24 hours to confirm your order. Please keep your phone nearby, and check that the number you entered is correct."
+      },
+      "delivery": {
+        "q": "How does delivery work, and how much does it cost?",
+        "a": "Choose hand-to-hand (free, we arrange the meeting place by phone), home delivery, or pick-up at a Yalidine office. The fee depends on your wilaya and the delivery type, and you see the exact total before you confirm."
+      },
+      "tracking": {
+        "q": "Can I follow my order?",
+        "a": "Yes. Open “Track my order” at the bottom of the page and enter your order number with the phone number you ordered with."
+      },
+      "packs": {
+        "q": "How do packs work?",
+        "a": "A pack is a set of products sold together for less than buying each piece separately. Its contents are fixed, and the pack page shows exactly how much you save."
+      },
+      "stock": {
+        "q": "What if a product is out of stock?",
+        "a": "Out-of-stock products stay on the site but can't be added to your cart until they are available again."
+      },
+      "contact": {
+        "q": "How can I reach you?",
+        "a": "You will find our contact details and social media at the bottom of this page. Message us any time."
+      }
+    }
+  },
+  "admin": {
+    "products": {
+      "chips": { "featured": "Best seller" },
+      "form": {
+        "featured": "Show in “Best sellers”",
+        "featuredHint": "Shown in the “Best sellers” section of the home page."
+      }
+    }
+  }
+}

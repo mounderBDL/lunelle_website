@@ -758,3 +758,268 @@
     row-gap: 2.5rem;
   }
 }
+
+/* ── shop: scroll animations of "Our story" and the FAQ ── */
+
+/* without the scroll animation, the moon is simply full */
+.story-shade {
+  transform: translateX(-104%);
+}
+
+/* ── the moon: driven by the scroll position of the whole section (supported browsers) ── */
+@keyframes story-float {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(-70px);
+  }
+}
+@keyframes story-turn-a {
+  from {
+    transform: rotate(-40deg);
+  }
+  to {
+    transform: rotate(110deg);
+  }
+}
+@keyframes story-turn-b {
+  from {
+    transform: rotate(30deg);
+  }
+  to {
+    transform: rotate(-100deg);
+  }
+}
+@keyframes story-phase {
+  from {
+    transform: translateX(-28%);
+  }
+  to {
+    transform: translateX(-104%);
+  }
+}
+@keyframes story-glow {
+  from {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .story-section {
+      view-timeline: --story block;
+    }
+    .story-art {
+      animation: story-float linear both;
+      animation-timeline: --story;
+      animation-range: cover 0% cover 100%;
+    }
+    .story-halo {
+      animation: story-glow linear both;
+      animation-timeline: --story;
+      animation-range: entry 0% cover 50%;
+    }
+    .story-ring-a {
+      animation: story-turn-a linear both;
+      animation-timeline: --story;
+    }
+    .story-ring-b {
+      animation: story-turn-b linear both;
+      animation-timeline: --story;
+    }
+    .story-shade {
+      animation: story-phase linear both;
+      animation-timeline: --story;
+      animation-range: entry 20% cover 55%;
+    }
+  }
+}
+
+/* ── everything else follows the scroll: ScrollScrub sets --p (0 to 1) on each [data-sc] item ── */
+[data-scrub] [data-sc] {
+  opacity: var(--p, 1);
+}
+[data-scrub] [data-sc="rise"] {
+  transform: translateY(calc((1 - var(--p, 1)) * 36px));
+}
+[data-scrub] [data-sc="word"] {
+  transform: translateY(calc((1 - var(--p, 1)) * 0.8em));
+  filter: blur(calc((1 - var(--p, 1)) * 8px));
+}
+[data-scrub] [data-sc="slide"] {
+  transform: translateX(calc((1 - var(--p, 1)) * -48px));
+}
+[data-scrub] [data-sc="card"] {
+  transform: translateY(calc((1 - var(--p, 1)) * 44px)) scale(calc(0.96 + var(--p, 1) * 0.04));
+}
+/* the list of promises is only a track for its thread: it is never faded */
+[data-scrub] [data-sc="thread"] {
+  opacity: 1;
+}
+/* each icon grows as its row arrives (it reads the progress of its row) */
+[data-scrub] .story-icon {
+  transform: scale(calc(0.4 + var(--p, 1) * 0.6));
+}
+
+/* the gold thread through the three promises, drawn while you scroll along the list */
+.story-promises::before {
+  content: "";
+  position: absolute;
+  left: 1.375rem;
+  top: 1.4rem;
+  bottom: 1.4rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--color-gold), var(--color-petal-300));
+  transform-origin: top;
+  opacity: 0.7;
+}
+[data-scrub] .story-promises::before {
+  transform: scaleY(var(--p, 1));
+}
+
+/* ── the FAQ cards: the open one lifts a little ── */
+.faq-item {
+  transition:
+    translate 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 350ms ease,
+    border-color 350ms ease,
+    background-color 350ms ease;
+}
+.faq-item[data-open="true"] {
+  translate: 0 -2px;
+  background-color: #ffffff;
+  border-color: color-mix(in srgb, var(--color-rose) 55%, transparent);
+  box-shadow: 0 18px 36px -22px rgba(154, 85, 96, 0.55);
+}
+
+/* the answer unfolds: its row goes from 0 to its natural height (works in every browser) */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 380ms;
+}
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-item,
+  .faq-panel,
+  .faq-panel[data-open="true"] {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ── shop: mobile menu ── */
+
+/* the hamburger: three lines that turn into an X */
+.mnav-burger {
+  position: relative;
+  display: block;
+  width: 1.25rem;
+  height: 0.875rem;
+}
+.mnav-burger span {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 9999px;
+  background: currentColor;
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+}
+.mnav-burger span:nth-child(1) {
+  top: 0;
+}
+.mnav-burger span:nth-child(2) {
+  top: 6px;
+}
+.mnav-burger span:nth-child(3) {
+  top: 12px;
+}
+.mnav-burger[data-open="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.mnav-burger[data-open="true"] span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+.mnav-burger[data-open="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* the dimmed page under the header */
+.mnav-backdrop {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: calc(100dvh - 4rem);
+  background: rgba(61, 47, 44, 0.35);
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+.mnav[data-open="true"] .mnav-backdrop {
+  opacity: 1;
+}
+
+/* the panel unfolds from the top (the shadow sits on the wrapper, outside the clipping) */
+.mnav-panel-wrap {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  filter: drop-shadow(0 22px 22px rgba(154, 85, 96, 0.2));
+}
+.mnav-panel {
+  background: var(--color-cream);
+  opacity: 0;
+  clip-path: inset(0 0 100% 0 round 0 0 1.5rem 1.5rem);
+  transition:
+    clip-path 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 250ms ease;
+}
+.mnav[data-open="true"] .mnav-panel {
+  opacity: 1;
+  clip-path: inset(0 0 0 0 round 0 0 1.5rem 1.5rem);
+}
+
+/* the links rise one after another when opening, and leave together when closing */
+.mnav-item {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+.mnav[data-open="true"] .mnav-item {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 450ms ease calc(140ms + var(--i, 0) * 60ms),
+    transform 550ms cubic-bezier(0.22, 1, 0.36, 1) calc(140ms + var(--i, 0) * 60ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mnav-burger span,
+  .mnav-backdrop,
+  .mnav-panel,
+  .mnav-item,
+  .mnav[data-open="true"] .mnav-item {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
