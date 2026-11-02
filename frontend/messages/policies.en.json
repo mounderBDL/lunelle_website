@@ -1,0 +1,162 @@
+{
+  "footer": {
+    "deliveryReturns": "Delivery & returns",
+    "privacy": "Privacy policy",
+    "terms": "Terms of sale"
+  },
+  "checkout": {
+    "agree": "By placing your order, you agree to our <terms>terms of sale</terms> and <privacy>privacy policy</privacy>."
+  },
+  "policies": {
+    "updated": "Last updated: {date}",
+    "draft": "Draft: these texts are still being reviewed by the shop and may change.",
+    "contactTitle": "Questions?",
+    "contactPhone": "Call us on {phone}",
+    "contactSocial": "Or message us on social media: the links are at the bottom of every page.",
+    "related": "Also read",
+    "pages": {
+      "delivery": {
+        "title": "Delivery & returns",
+        "intro": "Everything you need to know about how your Lunelle order reaches you.",
+        "sections": {
+          "how": {
+            "title": "How an order works",
+            "p1": "Place your order on the site: no account is needed.",
+            "p2": "We call you within 24 hours to confirm it. Please keep your phone nearby and check that the number you entered is correct.",
+            "p3": "If you want to change something (an item, the address or the delivery method), tell us during the confirmation call."
+          },
+          "methods": {
+            "title": "Ways to receive your order",
+            "p1": "Hand-to-hand: free of charge, with no address needed. We agree on the meeting place and time with you by phone.",
+            "p2": "Home delivery: your order is delivered to your address. You choose your wilaya and commune and enter your address at checkout.",
+            "p3": "Yalidine office: you collect your order at the Yalidine office of the commune you choose. Only communes with an office are offered."
+          },
+          "fees": {
+            "title": "Delivery fees",
+            "p1": "Hand-to-hand is free.",
+            "p2": "For home and office delivery, the fee depends on your wilaya and on the delivery method.",
+            "p3": "The exact fee and your total are shown at checkout before you confirm your order."
+          },
+          "payment": {
+            "title": "Payment",
+            "p1": "You pay in cash, only when you receive your order: to the delivery person for home delivery, at the Yalidine office when you collect it, or at the meeting for hand-to-hand.",
+            "p2": "There is no online payment. The total to pay is the price of your products plus the delivery fee, if any.",
+            "p3": "We never ask for payment in advance."
+          },
+          "times": {
+            "title": "Delivery times",
+            "p1": "The delivery time depends on your wilaya and the delivery method.",
+            "p2": "We tell you the estimated time when we call to confirm your order."
+          },
+          "tracking": {
+            "title": "Following your order",
+            "p1": "After you order, you get a private page that shows where your order is.",
+            "p2": "You can also use “Track my order” at the bottom of any page, with your order number and the phone number you used."
+          },
+          "unreachable": {
+            "title": "If we can't reach you",
+            "p1": "If we are unable to reach you by phone, we can't confirm your order, and it may be cancelled."
+          },
+          "problems": {
+            "title": "Problems, returns and exchanges",
+            "p1": "Please check your parcel when you receive it.",
+            "p2": "If an item is damaged or isn't what you ordered, contact us as soon as possible with your order number: our phone number and social media are at the bottom of every page.",
+            "p3": "Our policy on returns and exchanges is being finalised and will be published here."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Privacy policy",
+        "intro": "This page explains what information we collect when you order from Lunelle, and how we use it.",
+        "sections": {
+          "collect": {
+            "title": "What we collect",
+            "p1": "Your name and phone number.",
+            "p2": "Your delivery choice and destination: wilaya, commune and, for home delivery, your address.",
+            "p3": "The items you order, and any note you add."
+          },
+          "use": {
+            "title": "How we use it",
+            "p1": "To call you and confirm your order.",
+            "p2": "To prepare and deliver your order.",
+            "p3": "To let you follow your order.",
+            "p4": "To contact you about your order if needed."
+          },
+          "sharing": {
+            "title": "Who sees it",
+            "p1": "Your information is used by the Lunelle team to handle your order, including through the private chat where we receive new orders.",
+            "p2": "To deliver your order, the necessary details (your name, phone number and destination) are given to the delivery service, such as Yalidine.",
+            "p3": "We do not sell your information, and we do not use it for advertising."
+          },
+          "storage": {
+            "title": "Your browser",
+            "p1": "Your cart is saved in your browser so you don't lose it. It stays on your device.",
+            "p2": "We save your language choice in a cookie.",
+            "p3": "We don't use advertising or tracking cookies at the moment. If this changes, we will update this page."
+          },
+          "keep": {
+            "title": "How long we keep it",
+            "p1": "We keep your order information for as long as needed to handle your order and to keep our records."
+          },
+          "rights": {
+            "title": "Your choices",
+            "p1": "You can ask us to correct or delete your information, or ask what we hold about you.",
+            "p2": "Contact us by phone or on social media: our details are at the bottom of every page."
+          },
+          "security": {
+            "title": "Security",
+            "p1": "We take reasonable measures to protect your information, and only authorised people can access orders."
+          },
+          "changes": {
+            "title": "Changes",
+            "p1": "We may update this page. The date at the top shows when it was last changed."
+          }
+        }
+      },
+      "terms": {
+        "title": "Terms of sale",
+        "intro": "These terms apply to every order placed on this site.",
+        "sections": {
+          "about": {
+            "title": "About us",
+            "p1": "This site is operated by Lunelle, a perfume brand.",
+            "p2": "By placing an order, you agree to these terms."
+          },
+          "orders": {
+            "title": "Orders",
+            "p1": "Placing an order is a request to buy. It is confirmed when we call you and agree the details together.",
+            "p2": "We may refuse or cancel an order, for example if an item is no longer available or if we cannot reach you.",
+            "p3": "You can ask for changes during the confirmation call."
+          },
+          "prices": {
+            "title": "Prices",
+            "p1": "Prices are in Algerian dinars (DZD). Discounted products show the old and the new price.",
+            "p2": "Packs have a fixed price, shown on the pack page.",
+            "p3": "Delivery fees are shown separately at checkout. The price you see when you place your order is the price you pay."
+          },
+          "availability": {
+            "title": "Availability",
+            "p1": "Our stock is limited. Products that are out of stock can't be ordered.",
+            "p2": "You can order up to 10 of the same item in one order."
+          },
+          "payment": {
+            "title": "Payment",
+            "p1": "Payment is in cash on receipt of your order. See “Delivery & returns” for details."
+          },
+          "delivery": {
+            "title": "Delivery",
+            "p1": "Delivery methods, fees and times are described on the “Delivery & returns” page."
+          },
+          "problems": {
+            "title": "Returns and exchanges",
+            "p1": "Our policy on returns and exchanges is being finalised. Meanwhile, if there is a problem with your order, contact us as soon as possible."
+          },
+          "law": {
+            "title": "Applicable law",
+            "p1": "These terms are governed by Algerian law."
+          }
+        }
+      }
+    }
+  }
+}

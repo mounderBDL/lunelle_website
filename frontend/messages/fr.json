@@ -11,7 +11,7 @@
   "nav": { "packs": "Packs", "cart": "Panier", "menu": "Menu" },
   "home": {
     "heroEyebrow": "Brumes · Muscs · Parfums",
-    "heroTitle": "La poésie du parfum",
+    "heroTitle": "The poetry of scent",
     "heroText": "Des fragrances douces et romantiques, faites pour rester dans les mémoires. Découvrez nos brumes, muscs et parfums.",
     "shop": "Découvrir la collection",
     "packsCta": "Voir nos packs",
@@ -199,7 +199,7 @@
     }
   },
   "footer": {
-    "tagline": "La poésie du parfum",
+    "tagline": "The poetry of scent",
     "help": "Aide",
     "track": "Suivre ma commande",
     "contact": "Contact",

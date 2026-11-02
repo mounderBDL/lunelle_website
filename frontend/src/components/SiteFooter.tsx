@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCategories, getPacks, getSettings, getSocialLinks } from "@/lib/api/catalog";
 import { localized } from "@/lib/format";
 import { BRAND_NAMES } from "@/lib/social";
+import SocialIcon from "./SocialIcon";
 
 const LINK = "inline-block py-1.5 text-sm transition-all hover:translate-x-0.5 hover:text-rose-dark";
 
@@ -48,19 +49,16 @@ export default async function SiteFooter() {
             {socials.length > 0 && (
               <>
                 <p className="mt-6 text-xs font-medium uppercase tracking-[0.2em] text-cocoa/70">{t("follow")}</p>
-                <ul className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
-                  {socials.map((social) => (
-                    <li key={social.id}>
-                      <a
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block rounded-full border border-rose/30 bg-white/50 px-4 py-1.5 text-sm transition-colors hover:border-rose-dark hover:bg-white hover:text-rose-dark"
-                      >
-                        {social.label || BRAND_NAMES[social.network] || t("website")}
-                      </a>
-                    </li>
-                  ))}
+                <ul className="mt-3 flex flex-wrap justify-center gap-3 lg:justify-start">
+                  {socials.map((social) => {
+                    const name = social.label || BRAND_NAMES[social.network] || t("website");
+                    const custom = (social.network === "WEBSITE" || social.network === "OTHER") && Boolean(social.label);
+                    return (
+                      <li key={social.id}>
+                        <SocialIcon network={social.network} url={social.url} name={name} showLabel={custom} />
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             )}
@@ -103,6 +101,21 @@ export default async function SiteFooter() {
                   {t("track")}
                 </Link>
               </li>
+              <li>
+                <Link href="/delivery-returns" className={LINK}>
+                  {t("deliveryReturns")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className={LINK}>
+                  {t("privacy")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className={LINK}>
+                  {t("terms")}
+                </Link>
+              </li>              
             </ul>
           </div>
 

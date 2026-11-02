@@ -1,0 +1,162 @@
+{
+  "footer": {
+    "deliveryReturns": "Livraison et retours",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions de vente"
+  },
+  "checkout": {
+    "agree": "En passant commande, vous acceptez nos <terms>conditions de vente</terms> et notre <privacy>politique de confidentialité</privacy>."
+  },
+  "policies": {
+    "updated": "Dernière mise à jour : {date}",
+    "draft": "Brouillon : ces textes sont encore en cours de relecture par la boutique et peuvent changer.",
+    "contactTitle": "Une question ?",
+    "contactPhone": "Appelez-nous au {phone}",
+    "contactSocial": "Ou écrivez-nous sur les réseaux sociaux : les liens sont en bas de chaque page.",
+    "related": "À lire aussi",
+    "pages": {
+      "delivery": {
+        "title": "Livraison et retours",
+        "intro": "Tout ce qu'il faut savoir sur la façon dont votre commande Lunelle vous parvient.",
+        "sections": {
+          "how": {
+            "title": "Comment fonctionne une commande",
+            "p1": "Passez votre commande sur le site : aucun compte n'est nécessaire.",
+            "p2": "Nous vous appelons dans les 24 heures pour la confirmer. Gardez votre téléphone à portée de main et vérifiez que le numéro saisi est correct.",
+            "p3": "Si vous souhaitez modifier quelque chose (un article, l'adresse ou le mode de livraison), dites-le-nous pendant l'appel de confirmation."
+          },
+          "methods": {
+            "title": "Les façons de recevoir votre commande",
+            "p1": "Remise en main propre : gratuite, sans adresse à fournir. Nous convenons avec vous du lieu et de l'heure de rencontre par téléphone.",
+            "p2": "Livraison à domicile : votre commande est livrée à votre adresse. Vous choisissez votre wilaya et votre commune, et vous saisissez votre adresse au moment de commander.",
+            "p3": "Bureau Yalidine : vous retirez votre commande au bureau Yalidine de la commune choisie. Seules les communes disposant d'un bureau sont proposées."
+          },
+          "fees": {
+            "title": "Frais de livraison",
+            "p1": "La remise en main propre est gratuite.",
+            "p2": "Pour la livraison à domicile et en bureau, les frais dépendent de votre wilaya et du mode de livraison.",
+            "p3": "Les frais exacts et votre total sont affichés avant de confirmer votre commande."
+          },
+          "payment": {
+            "title": "Paiement",
+            "p1": "Vous payez en espèces, uniquement à la réception de votre commande : au livreur pour la livraison à domicile, au bureau Yalidine lors du retrait, ou lors de la rencontre pour la remise en main propre.",
+            "p2": "Il n'y a aucun paiement en ligne. Le total à payer est le prix de vos produits plus les frais de livraison, le cas échéant.",
+            "p3": "Nous ne demandons jamais de paiement à l'avance."
+          },
+          "times": {
+            "title": "Délais de livraison",
+            "p1": "Le délai dépend de votre wilaya et du mode de livraison.",
+            "p2": "Nous vous indiquons le délai estimé lors de l'appel de confirmation."
+          },
+          "tracking": {
+            "title": "Suivre votre commande",
+            "p1": "Après votre commande, vous recevez une page privée qui indique où elle en est.",
+            "p2": "Vous pouvez aussi utiliser « Suivre ma commande », en bas de chaque page, avec votre numéro de commande et le numéro de téléphone utilisé."
+          },
+          "unreachable": {
+            "title": "Si nous ne parvenons pas à vous joindre",
+            "p1": "Si nous ne parvenons pas à vous joindre par téléphone, nous ne pouvons pas confirmer votre commande, et elle peut être annulée."
+          },
+          "problems": {
+            "title": "Problèmes, retours et échanges",
+            "p1": "Merci de vérifier votre colis à sa réception.",
+            "p2": "Si un article est abîmé ou ne correspond pas à votre commande, contactez-nous dès que possible avec votre numéro de commande : nos coordonnées et nos réseaux sont en bas de chaque page.",
+            "p3": "Notre politique de retours et d'échanges est en cours de finalisation et sera publiée ici."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Politique de confidentialité",
+        "intro": "Cette page explique quelles informations nous recueillons lorsque vous commandez chez Lunelle, et comment nous les utilisons.",
+        "sections": {
+          "collect": {
+            "title": "Ce que nous recueillons",
+            "p1": "Votre nom et votre numéro de téléphone.",
+            "p2": "Votre mode de livraison et votre destination : wilaya, commune et, pour la livraison à domicile, votre adresse.",
+            "p3": "Les articles commandés et la note éventuelle que vous ajoutez."
+          },
+          "use": {
+            "title": "Comment nous les utilisons",
+            "p1": "Pour vous appeler et confirmer votre commande.",
+            "p2": "Pour préparer et livrer votre commande.",
+            "p3": "Pour vous permettre de suivre votre commande.",
+            "p4": "Pour vous contacter au sujet de votre commande si nécessaire."
+          },
+          "sharing": {
+            "title": "Qui y a accès",
+            "p1": "Vos informations sont utilisées par l'équipe Lunelle pour traiter votre commande, y compris via la messagerie privée où nous recevons les nouvelles commandes.",
+            "p2": "Pour livrer votre commande, les informations nécessaires (votre nom, votre numéro de téléphone et votre destination) sont transmises au service de livraison, comme Yalidine.",
+            "p3": "Nous ne vendons pas vos informations et ne les utilisons pas à des fins publicitaires."
+          },
+          "storage": {
+            "title": "Votre navigateur",
+            "p1": "Votre panier est enregistré dans votre navigateur pour que vous ne le perdiez pas. Il reste sur votre appareil.",
+            "p2": "Nous enregistrons votre choix de langue dans un cookie.",
+            "p3": "Nous n'utilisons actuellement aucun cookie publicitaire ou de suivi. Si cela change, nous mettrons cette page à jour."
+          },
+          "keep": {
+            "title": "Durée de conservation",
+            "p1": "Nous conservons les informations de votre commande aussi longtemps que nécessaire pour la traiter et tenir nos registres."
+          },
+          "rights": {
+            "title": "Vos choix",
+            "p1": "Vous pouvez nous demander de corriger ou de supprimer vos informations, ou de savoir ce que nous détenons à votre sujet.",
+            "p2": "Contactez-nous par téléphone ou sur les réseaux sociaux : nos coordonnées sont en bas de chaque page."
+          },
+          "security": {
+            "title": "Sécurité",
+            "p1": "Nous prenons des mesures raisonnables pour protéger vos informations, et seules les personnes autorisées ont accès aux commandes."
+          },
+          "changes": {
+            "title": "Modifications",
+            "p1": "Nous pouvons mettre cette page à jour. La date en haut indique la dernière modification."
+          }
+        }
+      },
+      "terms": {
+        "title": "Conditions de vente",
+        "intro": "Ces conditions s'appliquent à toute commande passée sur ce site.",
+        "sections": {
+          "about": {
+            "title": "À propos de nous",
+            "p1": "Ce site est exploité par Lunelle, une marque de parfums.",
+            "p2": "En passant commande, vous acceptez ces conditions."
+          },
+          "orders": {
+            "title": "Commandes",
+            "p1": "Passer une commande est une demande d'achat. Elle est confirmée lorsque nous vous appelons et que nous convenons ensemble des détails.",
+            "p2": "Nous pouvons refuser ou annuler une commande, par exemple si un article n'est plus disponible ou si nous ne parvenons pas à vous joindre.",
+            "p3": "Vous pouvez demander des modifications pendant l'appel de confirmation."
+          },
+          "prices": {
+            "title": "Prix",
+            "p1": "Les prix sont en dinars algériens (DZD). Les produits en promotion affichent l'ancien et le nouveau prix.",
+            "p2": "Les packs ont un prix fixe, indiqué sur la page du pack.",
+            "p3": "Les frais de livraison sont affichés séparément au moment de commander. Le prix que vous voyez quand vous passez commande est le prix que vous payez."
+          },
+          "availability": {
+            "title": "Disponibilité",
+            "p1": "Notre stock est limité. Les produits épuisés ne peuvent pas être commandés.",
+            "p2": "Vous pouvez commander jusqu'à 10 exemplaires du même article par commande."
+          },
+          "payment": {
+            "title": "Paiement",
+            "p1": "Le paiement se fait en espèces à la réception de votre commande. Voir « Livraison et retours » pour le détail."
+          },
+          "delivery": {
+            "title": "Livraison",
+            "p1": "Les modes, frais et délais de livraison sont décrits sur la page « Livraison et retours »."
+          },
+          "problems": {
+            "title": "Retours et échanges",
+            "p1": "Notre politique de retours et d'échanges est en cours de finalisation. En attendant, si votre commande pose un problème, contactez-nous dès que possible."
+          },
+          "law": {
+            "title": "Droit applicable",
+            "p1": "Ces conditions sont régies par le droit algérien."
+          }
+        }
+      }
+    }
+  }
+}

@@ -522,7 +522,20 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
 
           <p className="mt-5 text-sm text-cocoa/70">{t("payment")}</p>
           <p className="mt-2 text-sm font-medium text-rose-dark">{t("callWithin24")}</p>
-
+          <p className="mt-3 text-xs text-cocoa/60">
+            {t.rich("agree", {
+              terms: (chunks) => (
+                <Link href="/terms" className="underline hover:text-rose-dark">
+                  {chunks}
+                </Link>
+              ),
+              privacy: (chunks) => (
+                <Link href="/privacy" className="underline hover:text-rose-dark">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
           {submitError && (
             <div role="alert" className="mt-5 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
               <p>

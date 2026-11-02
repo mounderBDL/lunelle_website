@@ -5,7 +5,7 @@
     "story": "Notre histoire",
     "faq": "FAQ"
   },
-  "footer": { "shop": "Boutique", "faq": "FAQ", "call": "Appelez-nous" },
+  "footer": { "shop": "Boutique", "faq": "FAQ", "call": "Appelez-nous", "tagline": "The poetry of scent" },
   "home": { "bestSellers": "Meilleures ventes" },
   "story": {
     "eyebrow": "Notre histoire",
@@ -13,7 +13,7 @@
     "p1": "Chez Lunelle, un parfum est bien plus qu'une chose que l'on porte. C'est une humeur, un souvenir, un petit poème que l'on garde sur la peau.",
     "p2": "Nos brumes, muscs et parfums sont doux et romantiques : une fraîcheur propre, des fleurs blanches, une vanille chaleureuse et la lueur discrète de la lune.",
     "p3": "Du nom sur le flacon à la façon dont il arrive chez vous, chaque détail se veut tendre, et un peu magique.",
-    "signature": "La poésie du parfum",
+    "signature": "The poetry of scent",
     "promises": {
       "call": {
         "title": "Confirmée par un appel",

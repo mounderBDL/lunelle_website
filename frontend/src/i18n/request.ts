@@ -26,7 +26,7 @@ function split(tree: Tree): { shop: Tree; admin: Tree } {
 export default getRequestConfig(async () => {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
   const locale = isLocale(value) ? value : DEFAULT_LOCALE;
-  const [shop, stock, admin, catalog, setup, extra, stats, ui, home] = await Promise.all([
+  const [shop, stock, admin, catalog, setup, extra, stats, ui, policies, home] = await Promise.all([
     import(`../../messages/${locale}.json`),
     import(`../../messages/stock.${locale}.json`),
     import(`../../messages/admin.${locale}.json`),
@@ -35,6 +35,7 @@ export default getRequestConfig(async () => {
     import(`../../messages/extra.${locale}.json`),
     import(`../../messages/admin.stats.${locale}.json`),
     import(`../../messages/ui.${locale}.json`),
+    import(`../../messages/policies.${locale}.json`),
     import(`../../messages/home.${locale}.json`),
   ]);
   const fromExtra = split(extra.default as Tree);
@@ -43,7 +44,14 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: {
-      ...mergeAll(shop.default as Tree, stock.default as Tree, fromExtra.shop, ui.default as Tree, fromHome.shop),
+      ...mergeAll(
+        shop.default as Tree,
+        stock.default as Tree,
+        fromExtra.shop,
+        ui.default as Tree,
+        policies.default as Tree,
+        fromHome.shop,
+      ),
       admin: mergeAll(
         admin.default as Tree,
         catalog.default as Tree,
