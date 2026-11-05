@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { DeliveryMethod } from "@/lib/api/types";
 
 const ICONS: Record<DeliveryMethod, LucideIcon> = { HAND_TO_HAND: Hand, HOME: Truck, STOP_DESK: Store };
-const ORDER: DeliveryMethod[] = ["HAND_TO_HAND", "HOME", "STOP_DESK"];
+const ORDER: DeliveryMethod[] = ["HOME", "STOP_DESK"];
 
 type Props = {
   value: DeliveryMethod;
@@ -21,7 +21,7 @@ export default function DeliveryCards({ value, onChange, badges, unavailable, la
   const t = useTranslations("checkout");
 
   return (
-    <div role="radiogroup" aria-labelledby={labelId} className="mt-5 grid gap-3 sm:grid-cols-3">
+    <div role="radiogroup" aria-labelledby={labelId} className="mt-5 grid gap-3 sm:grid-cols-2">
       {ORDER.map((method) => {
         const Icon = ICONS[method];
         const selected = method === value;

@@ -20,11 +20,20 @@ import java.util.Set;
 public class MediaService {
 
     public static final long MAX_BYTES = 5L * 1024 * 1024;
-    private static final Set<String> FOLDERS = Set.of("products", "categories", "packs", "banners");
+    private static final Set<String> FOLDERS = Set.of("products", "categories", "packs", "banners", "reviews");
+
+    /** An uploaded image: where it lives and how big it is (0 when unknown). */
+    public record Uploaded(String url, String publicId, int width, int height) {
+    }
 
     private final Cloudinary cloudinary;
 
     public UploadDto upload(MultipartFile file, String folder) {
+        Uploaded uploaded = uploadImage(file, folder);
+        return new UploadDto(uploaded.url(), uploaded.publicId());
+    }
+
+    public Uploaded uploadImage(MultipartFile file, String folder) {
         if (!FOLDERS.contains(folder)) {
             throw bad("Unknown folder");
         }
@@ -47,7 +56,8 @@ public class MediaService {
             Map<?, ?> result = cloudinary.uploader().upload(bytes, ObjectUtils.asMap(
                     "folder", "lunelle/" + folder,
                     "resource_type", "image"));
-            return new UploadDto((String) result.get("secure_url"), (String) result.get("public_id"));
+            return new Uploaded((String) result.get("secure_url"), (String) result.get("public_id"),
+                    size(result.get("width")), size(result.get("height")));
         } catch (Exception e) {
             log.error("Cloudinary upload failed", e);
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Image upload failed, please try again");
@@ -64,6 +74,10 @@ public class MediaService {
         } catch (Exception e) {
             log.warn("Could not delete Cloudinary asset {}", publicId, e);
         }
+    }
+
+    private static int size(Object value) {
+        return value instanceof Number number ? number.intValue() : 0;
     }
 
     /** Checks the file signature (magic bytes): JPEG, PNG or WebP. */

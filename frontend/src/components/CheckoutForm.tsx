@@ -74,7 +74,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [method, setMethod] = useState<DeliveryMethod>(() =>
-    wilayas.some((w) => w.home.available) ? "HOME" : "HAND_TO_HAND",
+    wilayas.some((w) => w.home.available) ? "HOME" : "STOP_DESK",
   );
   const [wilayaId, setWilayaId] = useState("");
   const [communeId, setCommuneId] = useState("");

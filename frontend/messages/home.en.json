@@ -20,8 +20,8 @@
         "text": "Every order is confirmed by phone, within 24 hours."
       },
       "delivery": {
-        "title": "Your door, an office or hand-to-hand",
-        "text": "Home delivery, pick-up at a Yalidine office, or a free meeting in person."
+        "title": "Your door or an office",
+        "text": "Home delivery, or pick-up at a Yalidine office."
       },
       "payment": {
         "title": "Pay when it arrives",
@@ -40,7 +40,7 @@
       },
       "payment": {
         "q": "How do I pay?",
-        "a": "You pay in cash when you receive your order: at the hand-over, at your door, or when you collect it at the Yalidine office. Nothing is paid online."
+        "a": "You pay in cash when you receive your order: at your door, or when you collect it at the Yalidine office. Nothing is paid online."
       },
       "afterOrder": {
         "q": "What happens after I place my order?",
@@ -48,7 +48,7 @@
       },
       "delivery": {
         "q": "How does delivery work, and how much does it cost?",
-        "a": "Choose hand-to-hand (free, we arrange the meeting place by phone), home delivery, or pick-up at a Yalidine office. The fee depends on your wilaya and the delivery type, and you see the exact total before you confirm."
+        "a": "Choose home delivery or pick-up at a Yalidine office. The fee depends on your wilaya and the delivery type, and you see the exact total before you confirm."
       },
       "tracking": {
         "q": "Can I follow my order?",

@@ -60,4 +60,19 @@ class StaffPolicyTest {
         assertThat(ok("POST", "/api/admin/stats/low-stock")).isFalse();
         assertThat(ok("GET", "/api/admin/stats/low-stock/extra")).isFalse();
     }
+
+    @Test
+    void staffCanManageReviewScreenshots() {
+        String id = "/api/admin/reviews/3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        assertThat(ok("GET", "/api/admin/reviews")).isTrue();
+        assertThat(ok("POST", "/api/admin/reviews")).isTrue();
+        assertThat(ok("PUT", "/api/admin/reviews/order")).isTrue();
+        assertThat(ok("DELETE", id)).isTrue();
+
+        assertThat(ok("PUT", id)).isFalse();
+        assertThat(ok("GET", id)).isFalse();
+        assertThat(ok("DELETE", "/api/admin/reviews")).isFalse();
+        assertThat(ok("POST", "/api/admin/reviews/order")).isFalse();
+        assertThat(ok("DELETE", id + "/x")).isFalse();
+    }
 }

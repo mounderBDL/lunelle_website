@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public final class StaffPolicy {
 
     private static final Pattern ORDERS = Pattern.compile("^/api/admin/orders(/[^/]+(/[^/]+)?)?/?$");
+    private static final Pattern REVIEW_ITEM = Pattern.compile("^/api/admin/reviews/[^/]+$");
 
     private StaffPolicy() {
     }
@@ -26,7 +27,11 @@ public final class StaffPolicy {
             case "/api/admin/stats/low-stock" -> read;
             // items for the order editor, without cost prices
             case "/api/admin/order-catalog/products", "/api/admin/order-catalog/packs" -> read;
-            default -> ORDERS.matcher(path).matches();
+            // review screenshots: list, add, reorder, delete
+            case "/api/admin/reviews" -> read || "POST".equals(method);
+            case "/api/admin/reviews/order" -> "PUT".equals(method);
+            default -> ORDERS.matcher(path).matches()
+                    || ("DELETE".equals(method) && REVIEW_ITEM.matcher(path).matches());
         };
     }
 }

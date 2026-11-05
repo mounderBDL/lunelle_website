@@ -27,19 +27,17 @@
           },
           "methods": {
             "title": "Les façons de recevoir votre commande",
-            "p1": "Remise en main propre : gratuite, sans adresse à fournir. Nous convenons avec vous du lieu et de l'heure de rencontre par téléphone.",
-            "p2": "Livraison à domicile : votre commande est livrée à votre adresse. Vous choisissez votre wilaya et votre commune, et vous saisissez votre adresse au moment de commander.",
-            "p3": "Bureau Yalidine : vous retirez votre commande au bureau Yalidine de la commune choisie. Seules les communes disposant d'un bureau sont proposées."
+            "p1": "Livraison à domicile : votre commande est livrée à votre adresse. Vous choisissez votre wilaya et votre commune, et vous saisissez votre adresse au moment de commander.",
+            "p2": "Bureau Yalidine : vous retirez votre commande au bureau Yalidine de la commune choisie. Seules les communes disposant d'un bureau sont proposées."
           },
           "fees": {
             "title": "Frais de livraison",
-            "p1": "La remise en main propre est gratuite.",
-            "p2": "Pour la livraison à domicile et en bureau, les frais dépendent de votre wilaya et du mode de livraison.",
-            "p3": "Les frais exacts et votre total sont affichés avant de confirmer votre commande."
+            "p1": "Pour la livraison à domicile et en bureau, les frais dépendent de votre wilaya et du mode de livraison.",
+            "p2": "Les frais exacts et votre total sont affichés avant de confirmer votre commande."
           },
           "payment": {
             "title": "Paiement",
-            "p1": "Vous payez en espèces, uniquement à la réception de votre commande : au livreur pour la livraison à domicile, au bureau Yalidine lors du retrait, ou lors de la rencontre pour la remise en main propre.",
+            "p1": "Vous payez en espèces, uniquement à la réception de votre commande : au livreur pour la livraison à domicile, ou au bureau Yalidine lors du retrait.",
             "p2": "Il n'y a aucun paiement en ligne. Le total à payer est le prix de vos produits plus les frais de livraison, le cas échéant.",
             "p3": "Nous ne demandons jamais de paiement à l'avance."
           },

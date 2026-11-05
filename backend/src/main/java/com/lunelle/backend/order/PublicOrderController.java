@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import com.lunelle.backend.delivery.DeliveryMethod;
+import org.springframework.web.server.ResponseStatusException;
 
 @Tag(name = "Checkout & orders (public)")
 @RestController
@@ -25,6 +27,11 @@ public class PublicOrderController {
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public PlacedOrderDto place(@Valid @RequestBody CheckoutRequest request) {
+        // hand-to-hand is agreed by phone and set by the admin; customers can't pick it at checkout
+        if (request.deliveryMethod() == DeliveryMethod.HAND_TO_HAND) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Please choose home delivery or a Yalidine office");
+        }
         return checkout.place(request);
     }
 

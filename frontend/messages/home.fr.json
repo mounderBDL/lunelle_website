@@ -20,8 +20,8 @@
         "text": "Chaque commande est confirmée par téléphone, dans les 24 heures."
       },
       "delivery": {
-        "title": "Chez vous, en bureau ou en main propre",
-        "text": "Livraison à domicile, retrait dans un bureau Yalidine, ou rencontre gratuite en personne."
+        "title": "Chez vous ou en bureau",
+        "text": "Livraison à domicile, ou retrait dans un bureau Yalidine."
       },
       "payment": {
         "title": "Vous payez à la réception",
@@ -40,7 +40,7 @@
       },
       "payment": {
         "q": "Comment payer ?",
-        "a": "Vous payez en espèces à la réception de votre commande : lors de la remise en main propre, à votre porte, ou au bureau Yalidine quand vous la retirez. Rien n'est payé en ligne."
+        "a": "Vous payez en espèces à la réception de votre commande : à votre porte, ou au bureau Yalidine quand vous la retirez. Rien n'est payé en ligne."
       },
       "afterOrder": {
         "q": "Que se passe-t-il après ma commande ?",
@@ -48,7 +48,7 @@
       },
       "delivery": {
         "q": "Comment fonctionne la livraison, et combien coûte-t-elle ?",
-        "a": "Choisissez la remise en main propre (gratuite, nous convenons du lieu de rencontre par téléphone), la livraison à domicile ou le retrait dans un bureau Yalidine. Les frais dépendent de votre wilaya et du type de livraison, et vous voyez le total exact avant de confirmer."
+        "a": "Choisissez la livraison à domicile ou le retrait dans un bureau Yalidine. Les frais dépendent de votre wilaya et du type de livraison, et vous voyez le total exact avant de confirmer."
       },
       "tracking": {
         "q": "Puis-je suivre ma commande ?",

@@ -14,8 +14,8 @@ export const POLICY_PAGES: Record<PolicyPageKey, { path: string; sections: Polic
     path: "/delivery-returns",
     sections: [
       { key: "how", items: 3 },
-      { key: "methods", items: 3, list: true },
-      { key: "fees", items: 3 },
+      { key: "methods", items: 2, list: true },
+      { key: "fees", items: 2 },
       { key: "payment", items: 3 },
       { key: "times", items: 2 },
       { key: "tracking", items: 2 },
