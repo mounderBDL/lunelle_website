@@ -1,6 +1,17 @@
 import type { DeliveryMethod, Localized, OrderStatus } from "@/lib/api/types";
 
-export type AdminMe = { id: string; email: string; name: string };
+export type AdminRole = "OWNER" | "STAFF";
+
+export type AdminMe = { id: string; email: string; name: string; role: AdminRole };
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  email: string;
+  role: AdminRole;
+  active: boolean;
+  createdAt: string;
+};
 
 export type Page<T> = { items: T[]; page: number; size: number; totalElements: number; totalPages: number };
 

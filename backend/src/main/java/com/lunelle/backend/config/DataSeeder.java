@@ -42,6 +42,7 @@ public class DataSeeder implements ApplicationRunner {
                 admin.setEmail(adminEmail.trim());
                 admin.setPasswordHash(passwordEncoder.encode(adminPassword));
                 admin.setName("Admin");
+                admin.setRole(com.lunelle.backend.admin.AdminRole.OWNER);
                 admins.save(admin);
                 log.info("Admin account created for {}", adminEmail);
             }

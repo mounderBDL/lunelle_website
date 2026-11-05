@@ -20,12 +20,12 @@ export default function PackEditView({ id }: { id: string }) {
 
   const pack = useQuery({
     queryKey: ["admin", "packs", id],
-    queryFn: () => adminFetch<AdminPack>(`/api/admin/packs/${id}`),
+    queryFn: () => adminFetch<AdminPack>(`/api/admin/order-catalog/packs/${id}`),
     retry: (count, error) => !(error instanceof ApiError && error.status === 404) && count < 1,
   });
   const products = useQuery({
     queryKey: ["admin", "products", "catalog"],
-    queryFn: () => adminFetch<AdminProduct[]>("/api/admin/products"),
+    queryFn: () => adminFetch<AdminProduct[]>("/api/admin/order-catalog/products"),
     staleTime: 0,
     refetchOnMount: "always",
   });
@@ -125,7 +125,7 @@ function RestoreCard({ pack }: { pack: AdminPack }) {
   const toast = useToast();
 
   const restore = useMutation({
-    mutationFn: () => adminFetch<AdminPack>(`/api/admin/packs/${pack.id}/restore`, { method: "POST" }),
+    mutationFn: () => adminFetch<AdminPack>(`/api/admin/order-catalog/packs/${pack.id}/restore`, { method: "POST" }),
     onSuccess: (updated) => {
       queryClient.setQueryData(["admin", "packs", pack.id], updated);
       void queryClient.invalidateQueries({ queryKey: ["admin", "packs", "all"] });
@@ -181,7 +181,7 @@ function ArchiveCard({ pack }: { pack: AdminPack }) {
           danger
           onClose={() => setConfirming(false)}
           onConfirm={async () => {
-            const updated = await adminFetch<AdminPack>(`/api/admin/packs/${pack.id}`, { method: "DELETE" });
+            const updated = await adminFetch<AdminPack>(`/api/admin/order-catalog/packs/${pack.id}`, { method: "DELETE" });
             queryClient.setQueryData(["admin", "packs", pack.id], updated);
             void queryClient.invalidateQueries({ queryKey: ["admin", "packs", "all"] });
             toast.push({ title: t("done") });

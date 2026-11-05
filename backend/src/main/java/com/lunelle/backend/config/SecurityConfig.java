@@ -34,14 +34,14 @@ public class SecurityConfig {
     private String cookieName;
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, AdminAuthorization adminAuthorization) throws Exception {
         http
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable) // protected by SameSite=Lax cookie + same-origin proxy
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/api/admin/auth/login", "/api/admin/auth/logout").permitAll()
-                .requestMatchers("/api/admin/**").authenticated()
+                .requestMatchers("/api/admin/**").access(adminAuthorization)
                 .anyRequest().permitAll())
             .oauth2ResourceServer(oauth -> oauth
                 .bearerTokenResolver(bearerTokenResolver())

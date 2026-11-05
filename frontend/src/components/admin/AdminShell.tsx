@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Truck,
   X,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -31,8 +32,11 @@ import type { AdminMe } from "@/lib/admin/types";
 import { useAdminAuth } from "./AdminProviders";
 import { ToastProvider, useToast } from "./Toasts";
 
-type NavKey = "home" | "orders" | "stats" | "products" | "packs" | "categories" | "delivery" | "settings";
+type NavKey = "home" | "orders" | "stats" | "products" | "packs" | "categories" | "delivery" | "team" | "settings";
 type NavItem = { href: string; key: NavKey; icon: LucideIcon; exact?: boolean; primary?: boolean };
+
+// team members only get these screens (the server enforces the same rule)
+const STAFF_KEYS: NavKey[] = ["home", "orders"];
 
 // each new screen is added here as it is built; "primary" ones sit in the phone's bottom bar
 const NAV: NavItem[] = [
@@ -43,6 +47,7 @@ const NAV: NavItem[] = [
   { href: "/admin/packs", key: "packs", icon: Gift },
   { href: "/admin/categories", key: "categories", icon: LayoutGrid },
   { href: "/admin/delivery", key: "delivery", icon: Truck },
+  { href: "/admin/team", key: "team", icon: Users },
   { href: "/admin/settings", key: "settings", icon: Settings },
 ];
 
@@ -154,6 +159,12 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
     return () => window.removeEventListener("pointerdown", primeAudio);
   }, [soundOn]);
 
+  // team members have no business outside their two screens: send them home
+  const allowed = admin.role === "OWNER" || pathname === "/admin" || pathname.startsWith("/admin/orders");
+  useEffect(() => {
+    if (!allowed) router.replace("/admin");
+  }, [allowed, router]);  
+
   // close the mobile sheet after navigating
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -180,8 +191,9 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
   }
 
   const badge = (key: NavKey) => (key === "orders" && newCount ? newCount : 0);
-  const primaryItems = NAV.filter((item) => item.primary);
-  const moreItems = NAV.filter((item) => !item.primary);
+  const nav = admin.role === "OWNER" ? NAV : NAV.filter((item) => STAFF_KEYS.includes(item.key));
+  const primaryItems = nav.filter((item) => item.primary);
+  const moreItems = nav.filter((item) => !item.primary);
   const moreActive = moreItems.some((item) => isActive(item, pathname));
 
   const rowBase = "flex w-full items-center gap-3 rounded-2xl px-4 text-sm text-cocoa/70 transition-colors hover:bg-petal-50";
@@ -219,7 +231,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
         </div>
 
         <nav aria-label={t("menu")} className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-1 [scrollbar-width:thin]">
-          {NAV.map((item) => {
+          {nav.map((item) => {
             const active = isActive(item, pathname);
             const count = badge(item.key);
             return (
@@ -266,7 +278,7 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
       </header>
 
       <main className="print-reset px-4 pb-28 pt-6 sm:px-8 lg:pb-12 lg:pl-72 lg:pr-10 lg:pt-10">
-        <div className="mx-auto max-w-5xl">{children}</div>
+        <div className="mx-auto max-w-5xl">{allowed ? children : null}</div>
       </main>
 
       {/* ── mobile bottom navigation ── */}

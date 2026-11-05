@@ -28,6 +28,10 @@ public class AdminUser {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private AdminRole role = AdminRole.STAFF;
+
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 

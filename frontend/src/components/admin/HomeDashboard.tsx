@@ -118,6 +118,8 @@ export default function HomeDashboard() {
   const nowMs = useNow();
   const counts = useOrderCounts();
   const [days, setDays] = useState<Period>(30);
+  // team members only see "Needs a call" and "Running low" (the server refuses the rest anyway)
+  const isOwner = auth.status === "authed" && auth.admin.role === "OWNER";
 
   const overview = useQuery({
     queryKey: ["stats", "overview", days],
@@ -127,6 +129,7 @@ export default function HomeDashboard() {
       ),
     placeholderData: keepPreviousData,
     refetchInterval: 120_000,
+    enabled: isOwner,
   });
 
   const needsCall = useQuery({
@@ -190,9 +193,9 @@ export default function HomeDashboard() {
         <p className="mt-2 max-w-md text-cocoa/75">{t("subtitle")}</p>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className={isOwner ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]" : "grid gap-8 lg:grid-cols-2"}>
         {/* ── attention (first on phones) ── */}
-        <div className="order-first space-y-6 lg:order-last">
+        <div className={isOwner ? "order-first space-y-6 lg:order-last" : "space-y-6 lg:col-span-2 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0"}>
           <Card>
             <div className="flex items-start justify-between gap-3">
               <h2 className="text-2xl">{t("needsCall")}</h2>
@@ -288,7 +291,8 @@ export default function HomeDashboard() {
           </Card>
         </div>
 
-        {/* ── numbers ── */}
+        {/* ── numbers (owner only) ── */}
+        {isOwner && (
         <div className="space-y-6">
           <div role="group" aria-label={t("period")} className="flex gap-2">
             {PERIODS.map((p) => (
@@ -370,6 +374,7 @@ export default function HomeDashboard() {
             </>
           )}
         </div>
+        )}
       </div>
     </div>
   );

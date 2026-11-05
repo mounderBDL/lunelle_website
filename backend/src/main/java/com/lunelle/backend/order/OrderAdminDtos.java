@@ -65,6 +65,19 @@ public final class OrderAdminDtos {
                int subtotal, int total, Integer cost, Integer profit, String adminNote,
                boolean editable, List<OrderStatus> allowedStatuses,
                List<AdminOrderItemDto> items, List<HistoryDto> history, List<RestockLineDto> restock) {
+
+           /** Staff never see what the shop paid for the goods, nor the profit. */
+           public OrderDetailDto withoutCosts() {
+               List<AdminOrderItemDto> safeItems = items.stream()
+                       .map(i -> new AdminOrderItemDto(i.id(), i.type(), i.refId(), i.name(), i.variantLabel(),
+                               i.originalUnitPrice(), i.unitPrice(), null, i.quantity(), i.lineTotal(), i.components()))
+                       .toList();
+               return new OrderDetailDto(id, code, status, createdAt, confirmedAt, shippedAt, deliveredAt, cancelledAt,
+                       customerName, phone, customerNote, locale, deliveryMethod, wilayaId, wilayaName,
+                       communeId, communeName, address, deliveryFee, handoverPlace, handoverAt, trackingNumber,
+                       subtotal, total, null, null, adminNote, editable, allowedStatuses,
+                       safeItems, history, restock);
+           }
        }
 
     // ───── requests ─────

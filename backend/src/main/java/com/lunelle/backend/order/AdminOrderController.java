@@ -1,5 +1,6 @@
 package com.lunelle.backend.order;
 
+import com.lunelle.backend.admin.AdminAccess;
 import com.lunelle.backend.delivery.DeliveryMethod;
 import com.lunelle.backend.order.OrderAdminDtos.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class AdminOrderController {
 
     private final OrderAdminService service;
+    private final AdminAccess access;
 
     @GetMapping
     public PageDto<OrderListItemDto> list(
@@ -42,26 +44,32 @@ public class AdminOrderController {
     }
 
     @GetMapping("/{id}")
-    public OrderDetailDto get(@PathVariable UUID id) {
-        return service.get(id);
+    public OrderDetailDto get(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return shape(service.get(id), jwt);
     }
 
     /** Only while the order is NEW. Send the complete list of items the order should contain. */
     @PutMapping("/{id}")
     public OrderDetailDto edit(@PathVariable UUID id, @Valid @RequestBody EditOrderRequest request,
                                @AuthenticationPrincipal Jwt jwt) {
-        return service.edit(id, request, adminId(jwt));
+        return shape(service.edit(id, request, adminId(jwt)), jwt);
     }
 
     @PostMapping("/{id}/status")
     public OrderDetailDto changeStatus(@PathVariable UUID id, @Valid @RequestBody ChangeStatusRequest request,
                                        @AuthenticationPrincipal Jwt jwt) {
-        return service.changeStatus(id, request, adminId(jwt));
+        return shape(service.changeStatus(id, request, adminId(jwt)), jwt);
     }
 
     @PutMapping("/{id}/details")
-    public OrderDetailDto details(@PathVariable UUID id, @Valid @RequestBody UpdateDetailsRequest request) {
-        return service.updateDetails(id, request);
+    public OrderDetailDto details(@PathVariable UUID id, @Valid @RequestBody UpdateDetailsRequest request,
+                                  @AuthenticationPrincipal Jwt jwt) {
+        return shape(service.updateDetails(id, request), jwt);
+    }
+
+    /** Cost and profit are for the owner only. */
+    private OrderDetailDto shape(OrderDetailDto dto, Jwt jwt) {
+        return access.isOwner(jwt) ? dto : dto.withoutCosts();
     }
 
     private static UUID adminId(Jwt jwt) {
@@ -72,6 +80,6 @@ public class AdminOrderController {
     @PostMapping("/{id}/restock")
     public OrderDetailDto restock(@PathVariable UUID id, @Valid @RequestBody RestockRequest request,
                                   @AuthenticationPrincipal Jwt jwt) {
-        return service.restockReturned(id, request, adminId(jwt));
+        return shape(service.restockReturned(id, request, adminId(jwt)), jwt);
     }
 }
