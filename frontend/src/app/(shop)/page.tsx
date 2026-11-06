@@ -5,18 +5,20 @@ import FaqSection from "@/components/FaqSection";
 import HomeHero from "@/components/HomeHero";
 import PackCard from "@/components/PackCard";
 import ProductCard from "@/components/ProductCard";
+import ReviewsSection from "@/components/ReviewsSection";
 import StorySection from "@/components/StorySection";
-import { getCategories, getPacks, getProducts } from "@/lib/api/catalog";
+import { getCategories, getPacks, getProducts, getReviews } from "@/lib/api/catalog";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 
 export default async function HomePage() {
-  const [t, tp, locale, categories, featured, packs] = await Promise.all([
+  const [t, tp, locale, categories, featured, packs, reviews] = await Promise.all([
     getTranslations("home"),
     getTranslations("product"),
     getLocale(),
     getCategories(),
     getProducts({ featured: true }),
     getPacks(),
+    getReviews(),
   ]);
 
   const productLabels = { from: tp("from"), outOfStock: tp("outOfStock"), sale: tp("sale") };
@@ -84,8 +86,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* 4. Our story  5. FAQ */}
+      {/* 4. Our story  5. Reviews (only when there are some)  6. FAQ */}
       <StorySection />
+      <ReviewsSection reviews={reviews} />
       <FaqSection />
     </>
   );

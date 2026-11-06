@@ -6,6 +6,7 @@ import type {
   PublicPack,
   PublicProduct,
   PublicSettings,
+  ReviewShot,
   SocialLink,
 } from "./types";
 
@@ -58,5 +59,7 @@ export const getSettings = () =>
     store_name: "Lunelle",
     contact_phone: "",
   });
+
+export const getReviews = () => safe(apiGet<ReviewShot[]>("/api/reviews"), []);
 
 export const getSocialLinks = () => safe(apiGet<SocialLink[]>("/api/social-links"), []);

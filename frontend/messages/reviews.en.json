@@ -1,0 +1,40 @@
+{
+  "nav": { "reviews": "Reviews" },
+  "reviews": {
+    "eyebrow": "Kind words",
+    "title": "Loved by our customers",
+    "subtitle": "A few of the messages we receive on Instagram.",
+    "alt": "Customer review, screenshot {number}",
+    "show": "Show screenshot {number}",    
+    "open": "View screenshot {number}",
+    "close": "Close",
+    "previous": "Previous screenshot",
+    "next": "Next screenshot",
+    "counter": "{current} / {total}"
+  },
+  "admin": {
+    "shell": { "nav": { "reviews": "Reviews" } },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "Screenshots of kind messages from Instagram. They appear on the shop between \"Our story\" and the FAQ, in this order.",
+      "hint": "Up to {max} screenshots (JPEG, PNG or WebP). Hide private details such as phone numbers before uploading.",
+      "counter": "{count} of {max}",
+      "add": "Add screenshots",
+      "drop": "or drop them here",
+      "uploading": "Uploading {current} of {total}…",
+      "number": "Screenshot {number}",
+      "moveEarlier": "Move earlier",
+      "moveLater": "Move later",
+      "delete": "Delete screenshot",
+      "deleteTitle": "Delete this screenshot?",
+      "deleteText": "It will be removed from the shop.",
+      "empty": "No screenshots yet. When you add some, a Reviews section appears on the shop before the FAQ.",
+      "full": "You have reached the limit of {max} screenshots. Delete one to add another.",
+      "tooMany": "Only {count} more can be added. The others were skipped.",
+      "wrongType": "Only JPEG, PNG or WebP images are accepted.",
+      "loadError": "We couldn't load the screenshots.",
+      "retry": "Try again",
+      "error": "Something went wrong. Please try again."
+    }
+  }
+}

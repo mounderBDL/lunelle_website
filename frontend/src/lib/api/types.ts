@@ -142,3 +142,6 @@ export type OrderSummary = {
   deliveryFee: number;
   total: number;
 };
+
+/** An Instagram screenshot of a customer review (width and height are 0 when unknown). */
+export type ReviewShot = { id: string; url: string; width: number; height: number };

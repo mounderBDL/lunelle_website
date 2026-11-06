@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { getCategories, getPacks, getProducts } from "@/lib/api/catalog";
+import { getCategories, getPacks, getProducts, getReviews } from "@/lib/api/catalog";
 import type { NavSection } from "@/lib/sections";
 import CartButton from "./CartButton";
 import DesktopNav from "./DesktopNav";
@@ -9,11 +9,12 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import MobileNav from "./MobileNav";
 
 export default async function SiteHeader() {
-  const [t, categories, featured, packs] = await Promise.all([
+  const [t, categories, featured, packs, reviews] = await Promise.all([
     getTranslations("nav"),
     getCategories(),
     getProducts({ featured: true }),
     getPacks(),
+    getReviews(),
   ]);
 
   // the menu lists the sections of the home page; a section that is empty is not offered
@@ -22,6 +23,7 @@ export default async function SiteHeader() {
     ...(featured.length > 0 ? [{ id: "best-sellers", label: t("bestSellers") }] : []),
     ...(packs.length > 0 ? [{ id: "packs", label: t("packs") }] : []),
     { id: "story", label: t("story") },
+    ...(reviews.length > 0 ? [{ id: "reviews", label: t("reviews") }] : []),
     { id: "faq", label: t("faq") },
   ];
 

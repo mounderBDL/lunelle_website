@@ -26,7 +26,7 @@ function split(tree: Tree): { shop: Tree; admin: Tree } {
 export default getRequestConfig(async () => {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
   const locale = isLocale(value) ? value : DEFAULT_LOCALE;
-  const [shop, stock, admin, catalog, setup, extra, stats, ui, policies, home, team] = await Promise.all([
+  const [shop, stock, admin, catalog, setup, extra, stats, ui, policies, home, team, reviews] = await Promise.all([
     import(`../../messages/${locale}.json`),
     import(`../../messages/stock.${locale}.json`),
     import(`../../messages/admin.${locale}.json`),
@@ -38,9 +38,11 @@ export default getRequestConfig(async () => {
     import(`../../messages/policies.${locale}.json`),
     import(`../../messages/home.${locale}.json`),
     import(`../../messages/admin.team.${locale}.json`),
+    import(`../../messages/reviews.${locale}.json`),
   ]);
   const fromExtra = split(extra.default as Tree);
   const fromHome = split(home.default as Tree); // loaded last: its texts win
+  const fromReviews = split(reviews.default as Tree);
 
   return {
     locale,
@@ -51,6 +53,7 @@ export default getRequestConfig(async () => {
         fromExtra.shop,
         ui.default as Tree,
         policies.default as Tree,
+        fromReviews.shop,
         fromHome.shop,
       ),
       admin: mergeAll(
@@ -60,6 +63,7 @@ export default getRequestConfig(async () => {
         fromExtra.admin,
         stats.default as Tree,
         team.default as Tree,
+        fromReviews.admin,
       ),
     },
   };

@@ -5,7 +5,7 @@
   --color-parchment: #f6e4e2; /* changed to blush */
   --color-blush: #f6e4e2; 
   --color-rose: #b76e79;
-  --color-rose-dark: #9a5560;
+  --color-rose-dark: #b76e79;
   --color-cocoa: #3d2f2c;
   --color-gold: #b8924a;
   --color-sage: #8a9a78;
@@ -1021,5 +1021,42 @@
   .mnav[data-open="true"] .mnav-item {
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
+  }
+}
+
+
+/* ── shop: review screenshots viewer ── */
+.review-lightbox {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  color: #fff;
+  background: transparent;
+}
+.review-lightbox::backdrop {
+  background: rgba(61, 47, 44, 0.85);
+  backdrop-filter: blur(4px);
+}
+.review-lightbox[open] {
+  animation: review-fade 220ms ease-out;
+}
+@keyframes review-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-lightbox[open] {
+    animation: none;
   }
 }

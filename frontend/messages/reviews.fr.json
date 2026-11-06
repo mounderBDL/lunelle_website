@@ -1,0 +1,40 @@
+{
+  "nav": { "reviews": "Avis" },
+  "reviews": {
+    "eyebrow": "Mots doux",
+    "title": "Adorés par nos clientes",
+    "subtitle": "Quelques-uns des messages que nous recevons sur Instagram.",
+    "alt": "Avis d'une cliente, capture {number}",
+    "show": "Afficher la capture {number}",    
+    "open": "Voir la capture {number}",
+    "close": "Fermer",
+    "previous": "Capture précédente",
+    "next": "Capture suivante",
+    "counter": "{current} / {total}"
+  },
+  "admin": {
+    "shell": { "nav": { "reviews": "Avis" } },
+    "reviews": {
+      "title": "Avis",
+      "subtitle": "Des captures d'écran de gentils messages reçus sur Instagram. Elles apparaissent sur la boutique entre « Notre histoire » et la FAQ, dans cet ordre.",
+      "hint": "Jusqu'à {max} captures (JPEG, PNG ou WebP). Masquez les informations privées, comme les numéros de téléphone, avant d'ajouter.",
+      "counter": "{count} sur {max}",
+      "add": "Ajouter des captures",
+      "drop": "ou déposez-les ici",
+      "uploading": "Envoi {current} sur {total}…",
+      "number": "Capture {number}",
+      "moveEarlier": "Avancer",
+      "moveLater": "Reculer",
+      "delete": "Supprimer la capture",
+      "deleteTitle": "Supprimer cette capture ?",
+      "deleteText": "Elle sera retirée de la boutique.",
+      "empty": "Aucune capture pour le moment. Dès que vous en ajoutez, une section Avis apparaît sur la boutique avant la FAQ.",
+      "full": "Vous avez atteint la limite de {max} captures. Supprimez-en une pour en ajouter une autre.",
+      "tooMany": "Seules {count} captures de plus peuvent être ajoutées. Les autres ont été ignorées.",
+      "wrongType": "Seules les images JPEG, PNG ou WebP sont acceptées.",
+      "loadError": "Impossible de charger les captures.",
+      "retry": "Réessayer",
+      "error": "Une erreur est survenue. Veuillez réessayer."
+    }
+  }
+}

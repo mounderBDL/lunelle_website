@@ -9,6 +9,7 @@ import {
   Gift,
   LayoutDashboard,
   LayoutGrid,
+  MessageCircleHeart,
   LogOut,
   MoreHorizontal,
   Package,
@@ -32,11 +33,11 @@ import type { AdminMe } from "@/lib/admin/types";
 import { useAdminAuth } from "./AdminProviders";
 import { ToastProvider, useToast } from "./Toasts";
 
-type NavKey = "home" | "orders" | "stats" | "products" | "packs" | "categories" | "delivery" | "team" | "settings";
+type NavKey = "home" | "orders" | "stats" | "products" | "packs" | "categories" | "delivery" | "reviews" | "team" | "settings";
 type NavItem = { href: string; key: NavKey; icon: LucideIcon; exact?: boolean; primary?: boolean };
 
 // team members only get these screens (the server enforces the same rule)
-const STAFF_KEYS: NavKey[] = ["home", "orders"];
+const STAFF_KEYS: NavKey[] = ["home", "orders", "reviews"];
 
 // each new screen is added here as it is built; "primary" ones sit in the phone's bottom bar
 const NAV: NavItem[] = [
@@ -47,6 +48,7 @@ const NAV: NavItem[] = [
   { href: "/admin/packs", key: "packs", icon: Gift },
   { href: "/admin/categories", key: "categories", icon: LayoutGrid },
   { href: "/admin/delivery", key: "delivery", icon: Truck },
+  { href: "/admin/reviews", key: "reviews", icon: MessageCircleHeart },  
   { href: "/admin/team", key: "team", icon: Users },
   { href: "/admin/settings", key: "settings", icon: Settings },
 ];
@@ -160,7 +162,11 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
   }, [soundOn]);
 
   // team members have no business outside their two screens: send them home
-  const allowed = admin.role === "OWNER" || pathname === "/admin" || pathname.startsWith("/admin/orders");
+  const allowed =
+    admin.role === "OWNER" ||
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/orders") ||
+    pathname.startsWith("/admin/reviews");
   useEffect(() => {
     if (!allowed) router.replace("/admin");
   }, [allowed, router]);  
