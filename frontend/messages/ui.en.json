@@ -9,6 +9,7 @@
   "home": { "explore": "Explore" },
   "product": {
     "changeChoice": "Change size or quantity",
+    "chooseSize": "Choose a size",    
     "addedShort": "Added ✓"
   },
   "notes": {

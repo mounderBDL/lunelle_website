@@ -1,6 +1,7 @@
 import { Phone, Truck, Wallet } from "lucide-react";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import StoryBouquet from "./art/StoryBouquet";
 import ScrollScrub from "./ScrollScrub";
 import ScrollWords from "./ScrollWords";
 
@@ -19,32 +20,13 @@ export default async function StorySection() {
       <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-b from-cream via-blush/40 to-cream" />
 
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20">
-        {/* the moon: it drifts, its rings turn and its phase fills while the section crosses the screen */}
-        <div
-          aria-hidden
-          className="story-art relative mx-auto flex aspect-square w-full max-w-xs items-center justify-center sm:max-w-sm"
-        >
-          <span className="story-halo absolute inset-8 rounded-full bg-petal-300/60 blur-3xl" />
-
-          <span className="story-ring-a absolute inset-0 rounded-full border border-petal-300/70">
-            <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-petal-500" />
-            <span className="absolute bottom-[12%] left-[6%] h-2 w-2 rounded-full bg-white" />
+        {/* a vintage bouquet: it drifts while the section crosses the screen, and sways gently */}
+        <div aria-hidden className="story-art relative mx-auto w-full max-w-xs sm:max-w-sm">
+          <span className="story-halo absolute inset-6 rounded-full bg-amber-soft/70 blur-3xl" />
+          <StoryBouquet className="relative h-auto w-full drop-shadow-[0_24px_30px_rgba(125,92,61,0.25)]" />
+          <span className="absolute bottom-[3%] left-1/2 -translate-x-1/2 rounded-sm bg-[#fbf3e3] px-4 py-1.5 ring-1 ring-gold/50">
+            <Image src="/brand/logo.png" alt="" width={240} height={90} className="h-auto w-24 mix-blend-multiply sm:w-28" />
           </span>
-          <span className="story-ring-b absolute inset-7 rounded-full border border-dashed border-petal-300/60">
-            <span className="absolute -right-1 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-lavender-dark/50" />
-          </span>
-
-          <div className="absolute inset-14 overflow-hidden rounded-full bg-[radial-gradient(circle_at_30%_25%,#ffffff,var(--color-petal-50)_55%,var(--color-petal-100))] shadow-[0_30px_70px_-24px_rgba(185,90,112,0.5),inset_0_-10px_30px_rgba(239,184,193,0.45)]">
-            <span className="story-shade absolute inset-0 rounded-full bg-petal-300/60" />
-          </div>
-
-          <Image
-            src="/brand/logo.png"
-            alt=""
-            width={240}
-            height={90}
-            className="relative h-auto w-[44%] mix-blend-multiply"
-          />
         </div>
 
         {/* the words */}

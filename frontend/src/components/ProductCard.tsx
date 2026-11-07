@@ -4,6 +4,7 @@ import type { PublicProduct } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import ImagePlaceholder from "./ImagePlaceholder";
 import TiltFrame from "./TiltFrame";
+import QuickAdd from "./QuickAdd";
 
 type Props = {
   product: PublicProduct;
@@ -20,8 +21,10 @@ export default function ProductCard({ product, locale, labels }: Props) {
   const multipleSizes = product.variants.length > 1;
   const onSale = product.onSale && cheapest !== null && cheapest.finalPrice < cheapest.price;
   const tag = onSale ? labels.sale : product.badge;
+  const only = product.variants.length === 1 ? product.variants[0] : null; // one size: add straight away
 
   return (
+    <div className="relative">
     <Link
       href={`/product/${product.slug}`}
       className="group block rounded-2xl outline-offset-4 transition-transform duration-200 active:scale-[0.985]"
@@ -68,5 +71,26 @@ export default function ProductCard({ product, locale, labels }: Props) {
         )}
       </div>
     </Link>
+
+    {product.inStock && only && (
+      <QuickAdd
+        aspect="aspect-4/5"
+        type="VARIANT"
+        id={only.id}
+        maxQuantity={only.maxQuantity}
+        imageUrl={product.images[0]?.url ?? null}
+      />
+    )}
+    {product.inStock && multipleSizes && (
+      <QuickAdd
+        aspect="aspect-4/5"
+        type="VARIANT"
+        id={product.id}
+        maxQuantity={0}
+        imageUrl={null}
+        chooseHref={`/product/${product.slug}`}
+      />
+    )}
+    </div>
   );
 }

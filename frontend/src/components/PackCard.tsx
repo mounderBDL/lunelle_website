@@ -4,6 +4,7 @@ import type { PublicPack } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import PackFanMini from "./PackFanMini";
 import TiltFrame from "./TiltFrame";
+import QuickAdd from "./QuickAdd";
 
 type Props = {
   pack: PublicPack;
@@ -17,6 +18,7 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
   const image = imageUrlOrNull(pack.imageUrl);
 
   return (
+    <div className="relative">
     <Link
       href={`/pack/${pack.slug}`}
       className="group block rounded-2xl outline-offset-4 transition-transform duration-200 active:scale-[0.985]"
@@ -56,5 +58,10 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
         {saveLabel && <p className="mt-1 text-[10px] uppercase tracking-wide text-gold sm:text-xs sm:tracking-wider">{saveLabel}</p>}
       </div>
     </Link>
+
+    {pack.inStock && (
+      <QuickAdd aspect="aspect-4/3" type="PACK" id={pack.id} maxQuantity={pack.maxQuantity} imageUrl={pack.imageUrl} />
+    )}
+    </div>
   );
 }

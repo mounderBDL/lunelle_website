@@ -5,7 +5,7 @@
   --color-parchment: #f6e4e2; /* changed to blush */
   --color-blush: #f6e4e2; 
   --color-rose: #b76e79;
-  --color-rose-dark: #b76e79;
+  --color-rose-dark: #9a5560;
   --color-cocoa: #3d2f2c;
   --color-gold: #b8924a;
   --color-sage: #8a9a78;
@@ -1058,5 +1058,64 @@
 @media (prefers-reduced-motion: reduce) {
   .review-lightbox[open] {
     animation: none;
+  }
+}
+
+/* ── vintage plants: hero clouds, hero plants, the story bouquet ── */
+@keyframes cloud-drift {
+  from {
+    transform: translateX(calc(-1 * var(--x, 0px) - 26rem));
+  }
+  to {
+    transform: translateX(calc(100vw - var(--x, 0px) + 4rem));
+  }
+}
+@keyframes vine-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes vine-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes story-sway {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-cloud {
+    animation: cloud-drift var(--dur, 150s) linear var(--delay, 0s) infinite;
+  }
+  .vine-stem {
+    stroke-dasharray: 1;
+    animation: vine-draw 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  }
+  .vine-pop {
+    transform-box: fill-box;
+    transform-origin: 0 50%;
+    animation: vine-pop 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 1s) both;
+  }
+  .vine-pop-c {
+    transform-origin: 50% 50%;
+  }
+  .story-sway {
+    transform-box: view-box;
+    transform-origin: 200px 380px;
+    animation: story-sway 8s ease-in-out infinite;
   }
 }

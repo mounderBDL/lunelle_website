@@ -9,6 +9,7 @@
   "home": { "explore": "Découvrir" },
   "product": {
     "changeChoice": "Modifier la contenance ou la quantité",
+    "chooseSize": "Choisir une taille",    
     "addedShort": "Ajouté ✓"
   },
   "notes": {
