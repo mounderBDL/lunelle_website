@@ -58,6 +58,7 @@ export const getSettings = () =>
   safe(apiGet<PublicSettings>("/api/settings"), {
     store_name: "Lunelle",
     contact_phone: "",
+    contact_email: "",
   });
 
 export const getReviews = () => safe(apiGet<ReviewShot[]>("/api/reviews"), []);

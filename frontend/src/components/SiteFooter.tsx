@@ -1,4 +1,4 @@
-import { Moon, Phone } from "lucide-react";
+import { Mail, Moon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -28,7 +28,7 @@ export default async function SiteFooter() {
     getCategories(),
     getPacks(),
   ]);
-  const phone = settings.contact_phone.trim();
+  const email = (settings.contact_email ?? "").trim();
   const hasShop = categories.length > 0 || packs.length > 0;
 
   return (
@@ -120,19 +120,21 @@ export default async function SiteFooter() {
           </div>
 
           {/* ── contact ── */}
-          {phone && (
+          {email && (
             <div className="col-span-2 flex flex-col items-center text-center lg:col-span-1 lg:items-start lg:text-left">
               <Heading>{t("contact")}</Heading>
               <a
-                href={`tel:${phone.replace(/\s+/g, "")}`}
-                className="mt-4 flex w-full max-w-xs items-center justify-center gap-3 rounded-full border border-rose/30 bg-white/60 px-5 py-3 transition-colors hover:border-rose-dark hover:bg-white lg:w-auto lg:max-w-none lg:justify-start"
+                href={`mailto:${email}`}
+                className="mt-4 flex max-w-full items-center gap-2.5 rounded-full border border-rose/30 bg-white/60 px-4 py-2 transition-colors hover:border-rose-dark hover:bg-white"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blush text-rose-dark">
-                  <Phone className="h-4 w-4" aria-hidden />
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blush text-rose-dark">
+                  <Mail className="h-3.5 w-3.5" aria-hidden />
                 </span>
-                <span className="text-left">
-                  <span className="block text-xs text-cocoa/70">{t("call")}</span>
-                  <span className="block font-medium tabular-nums">{phone}</span>
+                <span className="min-w-0 text-left">
+                  <span className="block text-[11px] leading-tight text-cocoa/70">{t("write")}</span>
+                  <span className="block text-sm font-medium leading-tight [overflow-wrap:anywhere] lg:whitespace-nowrap">
+                    {email}
+                  </span>
                 </span>
               </a>
             </div>

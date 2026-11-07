@@ -61,6 +61,7 @@ export type PublicPack = {
 export type PublicSettings = {
   store_name: string;
   contact_phone: string;
+  contact_email: string;
 };
 
 export type SocialLink = {

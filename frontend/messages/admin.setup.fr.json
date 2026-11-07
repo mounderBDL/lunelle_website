@@ -215,6 +215,7 @@
       "text": "Affichées en bas de page de la boutique.",
       "name": "Nom de la boutique",
       "phone": "Téléphone de contact",
+      "email": "E-mail professionnel",
       "optional": "Facultatif.",
       "instagram": "Lien Instagram",
       "instagramHint": "Facultatif. Commence par https://",
@@ -225,7 +226,8 @@
         "name": "Veuillez saisir le nom de la boutique.",
         "phone": "Le numéro de téléphone est trop long.",
         "instagram": "Le lien Instagram doit commencer par http:// ou https://",
-        "generic": "Un problème est survenu. Veuillez réessayer."
+        "generic": "Un problème est survenu. Veuillez réessayer.",
+        "email": "Veuillez saisir une adresse e-mail valide."
       }
     },
     "telegram": {

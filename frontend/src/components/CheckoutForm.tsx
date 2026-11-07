@@ -478,7 +478,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-display text-lg leading-tight">{lineName}</p>
+                      <p className="font-script text-xl font-normal leading-tight">{lineName}</p>
                       <p className="text-xs text-cocoa/60">
                         {line.type === "PACK" ? t("pack") : line.variantLabel} · × {line.quantity}
                       </p>

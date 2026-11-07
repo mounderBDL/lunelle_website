@@ -215,6 +215,7 @@
       "text": "Shown in the footer of the shop.",
       "name": "Shop name",
       "phone": "Contact phone",
+      "email": "Business email",      
       "optional": "Optional.",
       "instagram": "Instagram link",
       "instagramHint": "Optional. Starts with https://",
@@ -225,7 +226,8 @@
         "name": "Please enter the shop name.",
         "phone": "The phone number is too long.",
         "instagram": "The Instagram link must start with http:// or https://",
-        "generic": "Something went wrong. Please try again."
+        "generic": "Something went wrong. Please try again.",
+        "email": "Please enter a valid email address."
       }
     },
     "telegram": {

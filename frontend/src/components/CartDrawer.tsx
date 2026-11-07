@@ -169,7 +169,7 @@ function DrawerBody() {
                   <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="font-display text-lg leading-tight">{name}</p>
+                        <p className="font-script text-xl font-normal leading-tight">{name}</p>
                         <p className="text-sm text-cocoa/65">{q.type === "PACK" ? t("pack") : q.variantLabel}</p>
                       </div>
                       <p className="shrink-0 text-right text-sm">

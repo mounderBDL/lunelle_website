@@ -48,7 +48,7 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
       </TiltFrame>
 
       <div className="mt-3 text-center sm:mt-4">
-        <h3 className="font-display text-lg leading-tight sm:text-xl">{name}</h3>
+        <h3 className="font-script text-xl font-normal leading-tight sm:text-2xl">{name}</h3>
         <p className="mt-1 text-xs leading-snug text-cocoa/80 sm:text-sm">
           {saveLabel && (
             <span className="mr-1.5 text-cocoa/50 line-through sm:mr-2">{formatMoney(pack.individualTotal, locale)}</span>

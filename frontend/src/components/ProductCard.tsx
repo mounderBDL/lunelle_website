@@ -57,7 +57,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
       </TiltFrame>
 
       <div className="mt-4 text-center">
-        <h3 className="font-display text-xl">{name}</h3>
+        <h3 className="font-script text-2xl font-normal">{name}</h3>
         {cheapest && (
           <p className="mt-1 text-sm text-cocoa/80">
             {multipleSizes && <span className="mr-1 text-cocoa/60">{labels.from}</span>}

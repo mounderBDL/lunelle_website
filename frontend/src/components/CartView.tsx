@@ -141,7 +141,7 @@ export default function CartView() {
               <div className="flex min-w-0 flex-1 flex-col justify-between gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <h2 className="font-display text-xl leading-tight">{name}</h2>
+                    <h2 className="font-script text-2xl font-normal leading-tight">{name}</h2>
                     <p className="mt-0.5 text-sm text-cocoa/70">
                       {q.type === "PACK" ? t("pack") : q.variantLabel}
                     </p>

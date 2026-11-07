@@ -274,9 +274,13 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
 
   const [name, setName] = useState(settings.store_name);
   const [phone, setPhone] = useState(settings.contact_phone);
+  const [email, setEmail] = useState(settings.contact_email ?? "");  
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const dirty = name.trim() !== settings.store_name || phone.trim() !== settings.contact_phone;
+  const dirty =
+    name.trim() !== settings.store_name ||
+    phone.trim() !== settings.contact_phone ||
+    email.trim() !== (settings.contact_email ?? "");
 
   const save = useMutation({
     mutationFn: (body: object) =>
@@ -293,12 +297,14 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
     const found: Record<string, string> = {};
     if (!name.trim()) found.name = t("errors.name");
     if (phone.trim().length > 30) found.phone = t("errors.phone");
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) found.email = t("errors.email");    
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
     const changes: Record<string, string> = {};
     if (name.trim() !== settings.store_name) changes.store_name = name.trim();
     if (phone.trim() !== settings.contact_phone) changes.contact_phone = phone.trim();
+    if (email.trim() !== (settings.contact_email ?? "")) changes.contact_email = email.trim();    
     save.mutate(changes);
   }
 
@@ -329,6 +335,16 @@ function ShopCard({ settings }: { settings: AdminSettings }) {
               className={inputClass(errors.phone)}
             />
           </Field>
+          <Field id="shop-email" label={t("email")} hint={t("optional")} error={errors.email}>
+            <input
+              id="shop-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              maxLength={120}
+              className={inputClass(errors.email)}
+            />
+          </Field>          
         </div>
 
         {error && <ErrorNote>{error}</ErrorNote>}

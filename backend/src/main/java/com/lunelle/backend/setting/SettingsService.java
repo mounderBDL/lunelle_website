@@ -14,8 +14,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SettingsService {
 
-    private static final List<String> PUBLIC_KEYS = List.of("store_name", "contact_phone");
-    private static final List<String> ADMIN_KEYS = List.of("store_name", "contact_phone", "telegram_chat_id");
+    private static final List<String> PUBLIC_KEYS = List.of("store_name", "contact_phone", "contact_email");
+    private static final List<String> ADMIN_KEYS = List.of("store_name", "contact_phone", "contact_email", "telegram_chat_id");
 
     private final SettingRepository settings;
 
@@ -55,6 +55,11 @@ public class SettingsService {
                     throw bad("The contact phone is too long");
                 }
             }
+            case "contact_email" -> {
+                if (value.length() > 120 || (!value.isEmpty() && !value.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"))) {
+                    throw bad("The contact email is not a valid email address");
+                }
+            }            
             case "telegram_chat_id" -> {
                 if (!value.isEmpty() && !value.matches("^-?\\d{5,20}$")) {
                     throw bad("The Telegram chat id is a number (groups start with a minus sign)");

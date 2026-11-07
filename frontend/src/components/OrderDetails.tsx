@@ -26,7 +26,8 @@ export default function OrderDetails({ order }: { order: OrderSummary }) {
           <li key={i} className="flex justify-between gap-4 py-4">
             <div className="min-w-0">
               <p className="font-display text-xl leading-tight">
-                {item.quantity} × {localized(item.name, locale)}
+                {item.quantity} ×{" "}
+                <span className="font-script text-2xl font-normal">{localized(item.name, locale)}</span>
               </p>
               {item.type === "VARIANT" && item.variantLabel && (
                 <p className="text-sm text-cocoa/70">{item.variantLabel}</p>

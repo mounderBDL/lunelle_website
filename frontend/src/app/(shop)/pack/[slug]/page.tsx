@@ -70,7 +70,7 @@ export default async function PackPage({ params }: Props) {
         </div>
 
         <div>
-          <h1 className="text-4xl sm:text-5xl">{name}</h1>
+          <h1 className="font-script text-5xl font-normal sm:text-6xl">{name}</h1>
 
           <div className="mt-6">
             {pack.saving > 0 && (

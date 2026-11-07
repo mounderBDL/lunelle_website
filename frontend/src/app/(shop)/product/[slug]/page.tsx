@@ -67,7 +67,7 @@ export default async function ProductPage({ params }: Props) {
         <ProductGallery images={images} alt={name} inStock={product.inStock} />
 
         <div>
-          <h1 className="text-4xl sm:text-5xl">{name}</h1>
+          <h1 className="font-script text-5xl font-normal sm:text-6xl">{name}</h1>
           <div className="mt-6">
             <ProductPurchase product={product} />
           </div>

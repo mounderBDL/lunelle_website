@@ -13,6 +13,7 @@ export default function PackFan({ items }: { items: PublicPackItem[] }) {
   const t = useTranslations("fan");
   const locale = useLocale();
   const wrap = useRef<HTMLDivElement>(null);
+  const touch = useRef(false); // true while the last thing the visitor used was a finger or a pen
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<number | null>(null);
 
@@ -70,13 +71,22 @@ export default function PackFan({ items }: { items: PublicPackItem[] }) {
               <Link
                 href={`/product/${item.productSlug}`}
                 aria-label={`${item.quantity} × ${itemName} (${item.variantLabel})`}
+                onPointerDown={(event) => {
+                  touch.current = event.pointerType !== "mouse";
+                }}
+                onKeyDown={() => {
+                  touch.current = false;
+                }}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") setActive(i);
                 }}
-                onFocus={() => setActive(i)}
+                onFocus={(event) => {
+                  // only keyboard focus lifts the card: a tap also focuses the link, and must not count as the first tap
+                  if (event.currentTarget.matches(":focus-visible")) setActive(i);
+                }}
                 onClick={(event) => {
-                  // on a touch screen the first tap lifts the card, the second one opens the product
-                  if (!isActive && window.matchMedia("(hover: none)").matches) {
+                  // finger or pen: the first tap lifts the card, the second one opens the product
+                  if (touch.current && !isActive) {
                     event.preventDefault();
                     setActive(i);
                   }
@@ -103,7 +113,8 @@ export default function PackFan({ items }: { items: PublicPackItem[] }) {
         {selected ? (
           <>
             <p className="font-display text-xl">
-              {selected.quantity} × {localized(selected.productName, locale)}
+              {selected.quantity} ×{" "}
+              <span className="font-script text-2xl font-normal">{localized(selected.productName, locale)}</span>
             </p>
             <p className="text-sm text-cocoa/65">
               {selected.variantLabel} ·{" "}

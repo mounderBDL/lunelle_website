@@ -11,6 +11,7 @@ export type OfficeImportResult = {
 export type AdminSettings = {
   store_name: string;
   contact_phone: string;
+  contact_email: string;  
   telegram_chat_id: string;
 };
 

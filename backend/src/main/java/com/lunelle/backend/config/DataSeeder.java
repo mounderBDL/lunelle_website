@@ -51,6 +51,7 @@ public class DataSeeder implements ApplicationRunner {
         Map<String, String> defaults = Map.of(
                 "store_name", "Lunelle",
                 "contact_phone", "",
+                "contact_email", "",
                 "telegram_chat_id", "");
         defaults.forEach((key, value) -> {
             if (!settings.existsById(key)) {

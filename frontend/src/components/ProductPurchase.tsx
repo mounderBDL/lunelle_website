@@ -200,7 +200,7 @@ export default function ProductPurchase({ product }: { product: PublicProduct })
             aria-label={t("changeChoice")}
             className="min-w-0 flex-1 text-left"
           >
-            <span className="block truncate font-display text-lg leading-tight">{name}</span>
+            <span className="block truncate font-script text-xl font-normal leading-tight">{name}</span>
             <span className="block truncate text-sm text-cocoa/70">
               {selected.label} · {formatMoney(selected.finalPrice, locale)}
               {qty > 1 ? ` × ${qty}` : ""}
