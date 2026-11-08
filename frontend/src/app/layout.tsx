@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   return (
-    <html lang={locale} className={`${display.variable} ${sans.variable} ${script.variable}`}>
+    <html lang={locale} data-scroll-behavior="smooth" className={`${display.variable} ${sans.variable} ${script.variable}`}>
       <body className="min-h-screen">{children}</body>
     </html>
   );

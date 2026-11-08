@@ -192,8 +192,8 @@ function ShellFrame({ admin, children }: { admin: AdminMe; children: React.React
     } catch {
       // the cookie may already be gone: continue anyway
     }
-    queryClient.clear();
-    router.replace("/admin/login");
+    // a full page load forgets everything held in memory, so the login page can't think we are still signed in
+    window.location.assign("/admin/login");
   }
 
   const badge = (key: NavKey) => (key === "orders" && newCount ? newCount : 0);
