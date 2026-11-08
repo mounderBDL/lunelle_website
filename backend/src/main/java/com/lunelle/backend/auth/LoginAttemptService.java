@@ -1,84 +1,48 @@
 package com.lunelle.backend.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lunelle.backend.common.AttemptStore;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * In-memory brute-force protection (single server instance).
+ * Brute-force protection for the studio login, kept in the database (see {@link AttemptStore}).
  * A key (email) is locked after MAX_FAILURES failures inside WINDOW; a global cap stops
- * attackers who rotate emails. A restart clears everything.
+ * attackers who rotate emails. Restarts and extra server copies do not reset the counts.
  */
 @Service
 public class LoginAttemptService {
 
-    static final int MAX_FAILURES = 5;
-    static final int MAX_GLOBAL_FAILURES = 50;
-    static final Duration WINDOW = Duration.ofMinutes(15);
-    private static final int MAX_TRACKED_KEYS = 10_000;
+    public static final int MAX_FAILURES = 5;
+    public static final int MAX_GLOBAL_FAILURES = 50;
+    public static final Duration WINDOW = Duration.ofMinutes(15);
+    private static final String SCOPE = "login";
 
-    private final Clock clock;
-    private final Map<String, Deque<Instant>> failures = new HashMap<>();
-    private final Deque<Instant> globalFailures = new ArrayDeque<>();
+    private final AttemptStore store;
 
-    @Autowired
-    public LoginAttemptService() {
-        this(Clock.systemUTC());
-    }
-
-    LoginAttemptService(Clock clock) {
-        this.clock = clock;
+    public LoginAttemptService(AttemptStore store) {
+        this.store = store;
     }
 
     /** Throws 429 when this key (or the whole system) has had too many recent failures. */
-    public synchronized void assertAllowed(String key) {
-        Instant now = clock.instant();
-        prune(globalFailures, now);
-        Deque<Instant> own = failures.get(key);
-        if (own != null) {
-            prune(own, now);
-            if (own.isEmpty()) {
-                failures.remove(key);
-                own = null;
-            }
-        }
-        if (globalFailures.size() >= MAX_GLOBAL_FAILURES || (own != null && own.size() >= MAX_FAILURES)) {
+    public void assertAllowed(String key) {
+        Map<String, Integer> counts = store.counts(SCOPE, List.of(key), WINDOW);
+        if (counts.getOrDefault(AttemptStore.ANY, 0) >= MAX_GLOBAL_FAILURES
+                || counts.getOrDefault(key, 0) >= MAX_FAILURES) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
                     "Too many failed attempts. Please try again in a few minutes.");
         }
     }
 
-    public synchronized void recordFailure(String key) {
-        Instant now = clock.instant();
-        globalFailures.addLast(now);
-        if (failures.size() >= MAX_TRACKED_KEYS) {
-            failures.values().removeIf(q -> {
-                prune(q, now);
-                return q.isEmpty();
-            });
-        }
-        if (failures.size() < MAX_TRACKED_KEYS) {
-            failures.computeIfAbsent(key, k -> new ArrayDeque<>()).addLast(now);
-        }
+    public void recordFailure(String key) {
+        store.record(SCOPE, List.of(key));
     }
 
-    public synchronized void reset(String key) {
-        failures.remove(key);
-    }
-
-    private void prune(Deque<Instant> queue, Instant now) {
-        Instant limit = now.minus(WINDOW);
-        while (!queue.isEmpty() && queue.peekFirst().isBefore(limit)) {
-            queue.pollFirst();
-        }
+    public void reset(String key) {
+        store.clear(SCOPE, key);
     }
 }

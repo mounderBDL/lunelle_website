@@ -5,6 +5,7 @@ import com.lunelle.backend.catalog.CatalogDtos.LocalizedName;
 import com.lunelle.backend.common.PhoneUtil;
 import com.lunelle.backend.delivery.*;
 import com.lunelle.backend.order.OrderDtos.*;
+import com.lunelle.backend.common.CodedException;
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -65,16 +66,23 @@ public class CheckoutService {
     @Transactional
     public PlacedOrderDto place(CheckoutRequest r) {
         if (r.website() != null && !r.website().isBlank()) {
-            throw bad("Invalid request"); // honeypot filled: a bot
+            throw bad("INVALID_REQUEST", "Invalid request"); // honeypot filled: a bot
         }
         String phone = PhoneUtil.normalize(r.phone());
+        String key = blankToNull(r.idempotencyKey());
+        if (key != null) {
+            Optional<PlacedOrderDto> already = existing(key, phone);
+            if (already.isPresent()) {
+                return already.get(); // the first answer was lost on the way: give the same order back
+            }
+        }
         if (blockedPhones.existsById(phone)) {
-            throw bad("We cannot process this order online. Please contact us.");
+            throw bad("PHONE_BLOCKED", "We cannot process this order online. Please contact us.");
         }
         Instant now = Instant.now();
         if (orders.countByPhoneAndCreatedAtAfter(phone, now.minus(Duration.ofHours(1)))
                 >= MAX_ORDERS_PER_PHONE_PER_HOUR) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+            throw new CodedException(HttpStatus.TOO_MANY_REQUESTS, "TOO_MANY_ORDERS",
                     "Too many orders from this number. Please contact us.");
         }
 
@@ -89,6 +97,7 @@ public class CheckoutService {
 
         CustomerOrder order = new CustomerOrder();
         order.setCode(nextCode());
+        order.setIdempotencyKey(key);        
         order.setPublicToken(newToken());
         order.setStatus(OrderStatus.NEW);
         order.setCustomerName(r.customerName().trim().replaceAll("\\s+", " "));
@@ -131,13 +140,28 @@ public class CheckoutService {
             }
         } catch (ResponseStatusException ex) {
             if (ex.getStatusCode().value() == HttpStatus.CONFLICT.value()) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                throw new CodedException(HttpStatus.CONFLICT, "STOCK_RACE",
                         "Some items just went out of stock. Please review your cart.");
             }
             throw ex;
         }
         return new PlacedOrderDto(token, summary);
     }
+
+    /** The order already placed with this key, if any (also used after two identical requests collide). */
+    @Transactional(readOnly = true)
+    public Optional<PlacedOrderDto> findPlaced(String key, String rawPhone) {
+        return existing(key.trim(), PhoneUtil.normalize(rawPhone));
+    }
+
+    private Optional<PlacedOrderDto> existing(String key, String phone) {
+        return orders.findByIdempotencyKey(key).map(o -> {
+            if (!o.getPhone().equals(phone)) {
+                throw bad("KEY_REUSED", "This request was already used");
+            }
+            return new PlacedOrderDto(o.getPublicToken(), OrderMapper.summary(o));
+        });
+    }    
 
     // ───────────── pricing (also used by the admin order editor) ─────────────
 
@@ -180,7 +204,7 @@ public class CheckoutService {
         for (Map.Entry<LineKey, Integer> e : merged.entrySet()) {
             int qty = e.getValue();
             if (qty > MAX_QUANTITY_PER_ITEM) {
-                throw bad("Maximum " + MAX_QUANTITY_PER_ITEM + " per item");
+                throw new CodedException(HttpStatus.BAD_REQUEST, "MAX_PER_ITEM", "Maximum " + MAX_QUANTITY_PER_ITEM + " per item", Map.of("max", String.valueOf(MAX_QUANTITY_PER_ITEM)));
             }
             LineKey key = e.getKey();
             priced.add(key.type() == OrderItemType.VARIANT
@@ -189,7 +213,7 @@ public class CheckoutService {
         }
         long subtotal = priced.stream().mapToLong(PricedLine::lineTotal).sum();
         if (subtotal > MAX_SUBTOTAL) {
-            throw bad("This order is too large to place online. Please contact us.");
+            throw bad("ORDER_TOO_LARGE", "This order is too large to place online. Please contact us.");
         }
         return new PricedCart(priced, (int) subtotal);
     }
@@ -231,9 +255,9 @@ public class CheckoutService {
     }
 
     private PricedLine variantLine(UUID id, int qty, Instant now) {
-        ProductVariant v = variants.findById(id).orElseThrow(() -> bad("Unknown item in your cart"));
+        ProductVariant v = variants.findById(id).orElseThrow(() -> bad("UNKNOWN_ITEM", "Unknown item in your cart"));
         Product p = v.getProduct();
-        Category c = categories.findById(p.getCategoryId()).orElseThrow(() -> bad("Unknown item in your cart"));
+        Category c = categories.findById(p.getCategoryId()).orElseThrow(() -> bad("UNKNOWN_ITEM", "Unknown item in your cart"));
 
         PricedLine l = new PricedLine();
         l.setType(OrderItemType.VARIANT);
@@ -260,7 +284,7 @@ public class CheckoutService {
     }
 
     private PricedLine packLine(UUID id, int qty) {
-        Pack pk = packs.findById(id).orElseThrow(() -> bad("Unknown item in your cart"));
+        Pack pk = packs.findById(id).orElseThrow(() -> bad("UNKNOWN_ITEM", "Unknown item in your cart"));
 
         PricedLine l = new PricedLine();
         l.setType(OrderItemType.PACK);
@@ -292,8 +316,9 @@ public class CheckoutService {
                         + (l.getVariantLabel() == null ? "" : " (" + l.getVariantLabel() + ")"))
                 .toList();
         if (!names.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Some items are no longer available: " + String.join(", ", names));
+            throw new CodedException(HttpStatus.CONFLICT, "ITEMS_UNAVAILABLE",
+                    "Some items are no longer available: " + String.join(", ", names),
+                    Map.of("names", String.join(", ", names)));
         }
     }
 
@@ -313,22 +338,22 @@ public class CheckoutService {
             return new Destination(null, null, null, null, null);
         }
         if (wilayaId == null) {
-            throw bad("Please choose a wilaya");
+            throw bad("WILAYA_REQUIRED", "Please choose a wilaya");
         }
         Wilaya wilaya = wilayas.findById(wilayaId).filter(Wilaya::isActive)
-                .orElseThrow(() -> bad("This wilaya is not available"));
+                .orElseThrow(() -> bad("WILAYA_UNAVAILABLE", "This wilaya is not available"));
         if (communeId == null) {
-            throw bad("Please choose a commune");
+            throw bad("COMMUNE_REQUIRED", "Please choose a commune");
         }
         Commune commune = communes.findById(communeId)
                 .filter(c -> c.isActive() && c.getWilayaId().equals(wilaya.getId()))
-                .orElseThrow(() -> bad("Invalid commune for this wilaya"));
+                .orElseThrow(() -> bad("COMMUNE_INVALID", "Invalid commune for this wilaya"));
         String addr = blankToNull(address);
         if (method == DeliveryMethod.STOP_DESK && !commune.isHasOffice()) {
-            throw bad("There is no Yalidine office in this commune. Please choose another commune or home delivery.");
+            throw bad("NO_OFFICE", "There is no Yalidine office in this commune. Please choose another commune or home delivery.");
         }        
         if (method == DeliveryMethod.HOME && (addr == null || addr.length() < 5)) {
-            throw bad("Please enter your delivery address");
+            throw bad("ADDRESS_REQUIRED", "Please enter your delivery address");
         }
         return new Destination(wilaya.getId(), wilaya.getName(), commune.getId(), commune.getName(),
                 method == DeliveryMethod.HOME ? addr : null);
@@ -358,7 +383,7 @@ public class CheckoutService {
         return s == null || s.isBlank() ? null : s.trim();
     }
 
-    private static ResponseStatusException bad(String message) {
-        return new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+    private static ResponseStatusException bad(String code, String message) {
+        return new CodedException(HttpStatus.BAD_REQUEST, code, message);
     }
 }

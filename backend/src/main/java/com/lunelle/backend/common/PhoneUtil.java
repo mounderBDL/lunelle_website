@@ -50,6 +50,6 @@ public final class PhoneUtil {
     }
 
     private static ResponseStatusException invalid() {
-        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
+        return new CodedException(HttpStatus.BAD_REQUEST, "PHONE_INVALID", "Invalid phone number");
     }
 }

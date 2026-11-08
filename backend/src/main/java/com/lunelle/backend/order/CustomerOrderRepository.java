@@ -17,6 +17,8 @@ public interface CustomerOrderRepository
 
     Optional<CustomerOrder> findByPublicToken(String publicToken);
 
+    Optional<CustomerOrder> findByIdempotencyKey(String idempotencyKey);    
+
     Optional<CustomerOrder> findByCodeAndPhone(String code, String phone);
 
     long countByPhoneAndCreatedAtAfter(String phone, Instant since);

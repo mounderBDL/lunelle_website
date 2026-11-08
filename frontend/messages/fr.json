@@ -125,7 +125,26 @@
       "limit": "Trop de commandes depuis ce numéro. Veuillez nous contacter.",
       "invalid": "Nous n'avons pas pu enregistrer votre commande. Vérifiez vos informations et réessayez.",
       "generic": "Un problème est survenu. Veuillez réessayer."
-    }
+    },
+    "serverErrors": {
+      "INVALID_REQUEST": "Un problème est survenu avec le formulaire. Rechargez la page et réessayez.",
+      "PHONE_INVALID": "Veuillez saisir un numéro de mobile algérien valide.",
+      "PHONE_BLOCKED": "Nous ne pouvons pas traiter cette commande en ligne. Veuillez nous contacter.",
+      "TOO_MANY_ORDERS": "Trop de commandes depuis ce numéro. Veuillez nous contacter.",
+      "MAX_PER_ITEM": "Maximum {max} par article.",
+      "ORDER_TOO_LARGE": "Cette commande est trop importante pour être passée en ligne. Veuillez nous contacter.",
+      "UNKNOWN_ITEM": "Un article de votre panier n'existe plus. Veuillez vérifier votre panier.",
+      "ITEMS_UNAVAILABLE": "Certains articles ne sont plus disponibles : {names}",
+      "STOCK_RACE": "Certains articles viennent d'être épuisés. Veuillez vérifier votre panier.",
+      "WILAYA_REQUIRED": "Veuillez choisir une wilaya.",
+      "WILAYA_UNAVAILABLE": "Nous ne livrons pas encore dans cette wilaya.",
+      "COMMUNE_REQUIRED": "Veuillez choisir une commune.",
+      "COMMUNE_INVALID": "Cette commune n'appartient pas à la wilaya choisie.",
+      "NO_OFFICE": "Il n'y a pas de bureau Yalidine dans cette commune. Choisissez une autre commune ou la livraison à domicile.",
+      "ADDRESS_REQUIRED": "Veuillez saisir votre adresse de livraison.",
+      "DELIVERY_METHOD_NOT_ALLOWED": "Veuillez choisir la livraison à domicile ou un bureau Yalidine.",
+      "KEY_REUSED": "Cette demande de commande a déjà été utilisée. Rechargez la page et réessayez."
+    }    
   },
   "order": {
     "title": "Votre commande",

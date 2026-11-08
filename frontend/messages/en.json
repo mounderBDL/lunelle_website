@@ -125,7 +125,26 @@
       "limit": "Too many orders from this number. Please contact us.",
       "invalid": "We couldn't place your order. Please check your details and try again.",
       "generic": "Something went wrong. Please try again."
-    }
+    },
+    "serverErrors": {
+      "INVALID_REQUEST": "Something went wrong with the form. Please reload the page and try again.",
+      "PHONE_INVALID": "Please enter a valid Algerian mobile number.",
+      "PHONE_BLOCKED": "We cannot process this order online. Please contact us.",
+      "TOO_MANY_ORDERS": "Too many orders from this number. Please contact us.",
+      "MAX_PER_ITEM": "Maximum {max} per item.",
+      "ORDER_TOO_LARGE": "This order is too large to place online. Please contact us.",
+      "UNKNOWN_ITEM": "An item in your cart no longer exists. Please review your cart.",
+      "ITEMS_UNAVAILABLE": "Some items are no longer available: {names}",
+      "STOCK_RACE": "Some items just went out of stock. Please review your cart.",
+      "WILAYA_REQUIRED": "Please choose a wilaya.",
+      "WILAYA_UNAVAILABLE": "We don't deliver to this wilaya yet.",
+      "COMMUNE_REQUIRED": "Please choose a commune.",
+      "COMMUNE_INVALID": "This commune does not belong to the chosen wilaya.",
+      "NO_OFFICE": "There is no Yalidine office in this commune. Please choose another commune or home delivery.",
+      "ADDRESS_REQUIRED": "Please enter your delivery address.",
+      "DELIVERY_METHOD_NOT_ALLOWED": "Please choose home delivery or a Yalidine office.",
+      "KEY_REUSED": "This order request was already used. Please reload the page and try again."
+    }    
   },
   "order": {
     "title": "Your order",

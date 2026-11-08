@@ -27,6 +27,14 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", message));
     }
 
+    /** The same, with a stable code (and parameters) that the shop translates: {"message", "code", "params"}. */
+    @ExceptionHandler(CodedException.class)
+    public ResponseEntity<Map<String, Object>> coded(CodedException e) {
+        String message = e.getReason() != null ? e.getReason() : "Request failed";
+        return ResponseEntity.status(e.getStatusCode())
+                .body(Map.of("message", message, "code", e.getCode(), "params", e.getParams()));
+    }    
+
     /** Duplicate value, or deleting something still referenced (e.g. a size inside a pack). */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> conflict(DataIntegrityViolationException e) {

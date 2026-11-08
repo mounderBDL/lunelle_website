@@ -31,6 +31,10 @@ public class CustomerOrder {
     @Column(name = "public_token", nullable = false, unique = true, length = 64)
     private String publicToken;
 
+
+    @Column(name = "idempotency_key", length = 64)
+    private String idempotencyKey;    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private OrderStatus status = OrderStatus.NEW;

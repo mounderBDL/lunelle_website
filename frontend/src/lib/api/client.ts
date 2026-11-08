@@ -88,26 +88,73 @@ export type PlaceOrderPayload = {
 
 export type PlaceResult =
   | { kind: "created"; token: string }
-  | { kind: "stock"; message: string }
+  | { kind: "stock"; message: string; code?: string; params?: Record<string, string> }
   | { kind: "limit" }
-  | { kind: "invalid"; message: string }
+  | { kind: "invalid"; message: string; code?: string; params?: Record<string, string> }
   | { kind: "error" };
+
+const ATTEMPT_STORAGE = "lunelle_order_attempt";
+
+function randomKey(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes); // works on plain http too, unlike crypto.randomUUID()
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * One random key per order attempt. If the answer is lost and the customer taps again with the same cart and details,
+ * the same key goes out and the server hands back the first order instead of creating a second one.
+ * Changing anything in the order gives a new key.
+ */
+function attemptKey(payload: PlaceOrderPayload): string {
+  const fingerprint = JSON.stringify([
+    payload.customerName,
+    payload.phone,
+    payload.locale,
+    payload.deliveryMethod,
+    payload.wilayaId,
+    payload.communeId,
+    payload.address,
+    payload.note,
+    payload.items,
+  ]);
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(ATTEMPT_STORAGE) ?? "null") as { key: string; fp: string } | null;
+    if (saved && saved.fp === fingerprint && typeof saved.key === "string") return saved.key;
+    const key = randomKey();
+    sessionStorage.setItem(ATTEMPT_STORAGE, JSON.stringify({ key, fp: fingerprint }));
+    return key;
+  } catch {
+    return randomKey(); // storage blocked: still protects against a double tap on the same page
+  }
+}
+
+function forgetAttempt() {
+  try {
+    sessionStorage.removeItem(ATTEMPT_STORAGE);
+  } catch {
+    // nothing to forget
+  }
+}
 
 export async function placeOrder(payload: PlaceOrderPayload): Promise<PlaceResult> {
   try {
     const res = await fetch("/api/orders", {
       method: "POST",
       headers: JSON_HEADERS,
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, idempotencyKey: attemptKey(payload) }),
     });
     if (res.ok) {
+      forgetAttempt();
       const body = await readJson<{ publicToken?: string }>(res);
       return body?.publicToken ? { kind: "created", token: body.publicToken } : { kind: "error" };
     }
-    const message = (await readJson<{ message?: string }>(res))?.message ?? "";
-    if (res.status === 409) return { kind: "stock", message };
+    const err = await readJson<{ message?: string; code?: string; params?: Record<string, string> }>(res);
+    const message = err?.message ?? "";
+    const extra = { code: err?.code, params: err?.params };
+    if (res.status === 409) return { kind: "stock", message, ...extra };
     if (res.status === 429) return { kind: "limit" };
-    if (res.status === 400) return { kind: "invalid", message };
+    if (res.status === 400) return { kind: "invalid", message, ...extra };
     return { kind: "error" };
   } catch {
     return { kind: "error" };

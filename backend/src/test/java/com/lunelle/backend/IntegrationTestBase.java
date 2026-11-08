@@ -51,7 +51,8 @@ abstract class IntegrationTestBase {
                     + " (expected a URL ending in /lunelle_test)");
         }
         jdbc.sql("TRUNCATE TABLE stock_movement, order_status_history, order_item_component, order_item, "
-                + "orders, pack_item, pack, product_image, product_variant, product, category, blocked_phone CASCADE")
+                + "orders, pack_item, pack, product_image, product_variant, product, category, blocked_phone, "
+                + "attempt_failure CASCADE")
                 .update();
         jdbc.sql("ALTER SEQUENCE order_code_seq RESTART WITH 1").update();
         jdbc.sql("update commune set has_office = false").update();

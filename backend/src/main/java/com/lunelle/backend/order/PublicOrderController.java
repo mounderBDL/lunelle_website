@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.lunelle.backend.delivery.DeliveryMethod;
+import com.lunelle.backend.common.CodedException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Tag(name = "Checkout & orders (public)")
 @RestController
@@ -29,10 +31,19 @@ public class PublicOrderController {
     public PlacedOrderDto place(@Valid @RequestBody CheckoutRequest request) {
         // hand-to-hand is agreed by phone and set by the admin; customers can't pick it at checkout
         if (request.deliveryMethod() == DeliveryMethod.HAND_TO_HAND) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            throw new CodedException(HttpStatus.BAD_REQUEST, "DELIVERY_METHOD_NOT_ALLOWED",
                     "Please choose home delivery or a Yalidine office");
         }
-        return checkout.place(request);
+        try {
+            return checkout.place(request);
+        } catch (DataIntegrityViolationException e) {
+            // two identical requests arrived together: the database let one in, so answer the other with that order
+            String key = request.idempotencyKey();
+            if (key != null && !key.isBlank()) {
+                return checkout.findPlaced(key, request.phone()).orElseThrow(() -> e);
+            }
+            throw e;
+        }
     }
 
     @GetMapping("/orders/{token}")

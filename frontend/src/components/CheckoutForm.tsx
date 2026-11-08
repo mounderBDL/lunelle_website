@@ -547,9 +547,14 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
                       ? t("submitErrors.invalid")
                       : t("submitErrors.generic")}
               </p>
-              {(submitError.kind === "stock" || submitError.kind === "invalid") && submitError.message && (
-                <p className="mt-1 text-xs opacity-80">{submitError.message}</p>
-              )}
+              {(submitError.kind === "stock" || submitError.kind === "invalid") &&
+                (submitError.code || submitError.message) && (
+                  <p className="mt-1 text-xs opacity-80">
+                    {submitError.code && t.has(`serverErrors.${submitError.code}`)
+                      ? t(`serverErrors.${submitError.code}`, submitError.params ?? {})
+                      : submitError.message}
+                  </p>
+                )}
               {submitError.kind === "stock" && (
                 <Link href="/cart" className="mt-2 inline-block underline">
                   {t("reviewCart")}
