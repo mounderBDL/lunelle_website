@@ -3,7 +3,7 @@
   "stats": {
     "title": "Statistics",
     "subtitle": "How your shop is doing.",
-    "note": "Revenue counts the goods on delivered orders, dated by delivery day. Delivery fees belong to Yalidine and are never included. Profit is revenue minus what the bottles cost you.",
+    "note": "Gross profit is revenue minus what the bottles cost you. Net profit also removes your monthly costs (cards, boxes, bags…).",
     "period": "Period",
     "periods": {
       "7": "7 days",
@@ -29,8 +29,28 @@
       "profitHint": "{percent}% margin",
       "delivered": "Delivered orders",
       "average": "Average order",
+      "expenses": "Other costs",
+      "expensesHint": "Cards, boxes, bags… ot the month of this period",
+      "net": "Net profit",
+      "netHint": "Gross profit minus other costs",
       "vs": "vs the previous period",
       "noComparison": "Nothing to compare with yet"
+    },
+        "expenses": {
+      "open": "Monthly costs",
+      "title": "Monthly costs",
+      "intro": "Everything you spend besides the bottles: visit cards, delivery boxes, bags… Each month has its own list and starts empty.",
+      "previous": "Previous month",
+      "next": "Next month",
+      "amount": "Amount (DA)",
+      "kind": "What for (cards, boxes, bags…)",
+      "add": "Add cost",
+      "remove": "Remove {label}",
+      "total": "Total for the month",
+      "empty": "Nothing entered for this month yet.",
+      "hint": "In the statistics, a period counts in full the costs of every month it touches. Tip: enter the month's costs at the end of the month.",
+      "error": "That did not work, please try again.",
+      "suggestions": ["Visit cards", "Delivery boxes", "Bags", "Stickers", "Tissue paper", "Photos", "Ads"]
     },
     "uncosted": "{amount} of sales have no cost price yet, so they are left out of the profit.",
     "uncostedAction": "Add the missing cost prices",

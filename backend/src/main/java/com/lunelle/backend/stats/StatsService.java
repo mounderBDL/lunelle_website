@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.lunelle.backend.expense.ExpenseService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class StatsService {
             "coalesce(sum(case when oi.unit_cost is not null then oi.line_total - oi.unit_cost * oi.quantity end), 0)";
 
     private final JdbcClient jdbc;
+    private final ExpenseService expenses;
 
     private record Range(LocalDate from, LocalDate to) {
     }
@@ -83,9 +85,11 @@ public class StatsService {
         long costedRevenue = costs[0];
         long cost = costs[1];
         long profit = costedRevenue - cost;
+        long other = expenses.allocated(from, to);
         return new PeriodTotals(goods, fees, count,
                 count == 0 ? 0 : Math.round((double) goods / count),
-                cost, profit, percent(profit, costedRevenue), goods - costedRevenue);
+                cost, profit, percent(profit, costedRevenue), goods - costedRevenue,
+                other, profit - other);
     }
 
     private PipelineDto pipeline() {

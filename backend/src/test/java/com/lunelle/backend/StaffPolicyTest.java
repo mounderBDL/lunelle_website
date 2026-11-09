@@ -35,6 +35,9 @@ class StaffPolicyTest {
     @Test
     void everythingElseIsOwnerOnly() {
         assertThat(ok("GET", "/api/admin/team")).isFalse();
+        assertThat(ok("GET", "/api/admin/expenses")).isFalse();
+        assertThat(ok("POST", "/api/admin/expenses")).isFalse();
+        assertThat(ok("DELETE", "/api/admin/expenses/3fa85f64-5717-4562-b3fc-2c963f66afa6")).isFalse();        
         assertThat(ok("POST", "/api/admin/team")).isFalse();
         assertThat(ok("DELETE", "/api/admin/team/3fa85f64-5717-4562-b3fc-2c963f66afa6")).isFalse();
         assertThat(ok("GET", "/api/admin/stats/overview")).isFalse();

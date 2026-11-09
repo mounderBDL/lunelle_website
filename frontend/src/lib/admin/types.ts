@@ -40,6 +40,8 @@ export type PeriodTotals = {
   profit: number;
   marginPercent: number;
   uncostedRevenue: number;
+  expenses: number;
+  netProfit: number;
 };
 
 export type PipelineEntry = { orders: number; amount: number };

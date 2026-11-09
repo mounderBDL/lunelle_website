@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { PackageCheck, Receipt, Sparkles, TriangleAlert, Wallet } from "lucide-react";
+import { PackageCheck, Receipt, Sparkles, TriangleAlert, Wallet, Coins, HandCoins, PiggyBank} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -29,6 +29,7 @@ import type { OrderStatus } from "@/lib/api/types";
 import { formatMoney, localized } from "@/lib/format";
 import Card from "./Card";
 import { BarChart, BarList, StackedBar, type BarRow, type ChartSeries } from "./Charts";
+import ExpensesDialog from "./ExpensesDialog";
 import { INPUT } from "./FormBits";
 import { Kpi, Segmented, Trend, change } from "./StatBits";
 
@@ -98,7 +99,7 @@ export default function StatsView() {
   const gran: Granularity = granPick && granularityAllowed(granPick, days) ? granPick : autoGranularity(days);
   const [metric, setMetric] = useState<Metric>("revenue");
   const [sort, setSort] = useState<Sort>("units");
-
+  const [costsOpen, setCostsOpen] = useState(false);
   function go(params: URLSearchParams) {
     const qs = params.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
@@ -157,10 +158,22 @@ export default function StatsView() {
 
   return (
     <div>
-      <header>
-        <h1 className="text-4xl sm:text-5xl">{t("title")}</h1>
-        <p className="mt-1 text-cocoa/60">{t("subtitle")}</p>
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-4xl sm:text-5xl">{t("title")}</h1>
+          <p className="mt-1 text-cocoa/60">{t("subtitle")}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setCostsOpen(true)}
+          aria-label={t("expenses.open")}
+          title={t("expenses.open")}
+          className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-petal-300 bg-white/70 text-petal-700 transition-colors hover:bg-petal-100"
+        >
+          <HandCoins className="h-5 w-5" aria-hidden />
+        </button>
       </header>
+      {costsOpen && <ExpensesDialog onClose={() => setCostsOpen(false)} />}
 
       {/* ── period ── */}
       <div className="mt-6">
@@ -283,7 +296,7 @@ function KpiSection({ data }: { data: StatsOverviewFull }) {
 
   return (
     <div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <Kpi label={t("kpi.revenue")} value={formatMoney(cur.revenue, locale)} icon={Wallet} tone="revenue">
           {trend(cur.revenue, prev.revenue)}
         </Kpi>
@@ -291,6 +304,13 @@ function KpiSection({ data }: { data: StatsOverviewFull }) {
           <p className="text-cocoa/60">{t("kpi.profitHint", { percent: cur.marginPercent })}</p>
           <div className="mt-1">{trend(cur.profit, prev.profit)}</div>
         </Kpi>
+        <Kpi label={t("kpi.expenses")} value={formatMoney(cur.expenses, locale)} icon={Coins} tone="average">
+          <p className="text-cocoa/60">{t("kpi.expensesHint")}</p>
+        </Kpi>
+        <Kpi label={t("kpi.net")} value={formatMoney(cur.netProfit, locale)} icon={PiggyBank} tone="profit">
+          <p className="text-cocoa/60">{t("kpi.netHint")}</p>
+          <div className="mt-1">{trend(cur.netProfit, prev.netProfit)}</div>
+        </Kpi>        
         <Kpi label={t("kpi.delivered")} value={String(cur.deliveredOrders)} icon={PackageCheck} tone="delivered">
           {trend(cur.deliveredOrders, prev.deliveredOrders)}
         </Kpi>

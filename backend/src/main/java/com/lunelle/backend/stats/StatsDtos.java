@@ -15,11 +15,12 @@ public final class StatsDtos {
     }
 
     /**
-     * revenue = goods sold (delivery fees are Yalidine's, shown separately for information).
      * profit = gross profit on lines that have a cost; uncostedRevenue = sales without a cost price.
+     * expenses = the period's share of the monthly costs (cards, boxes, bags...); netProfit = profit - expenses.
      */
     public record PeriodTotals(long revenue, long deliveryFees, long deliveredOrders, long averageOrderValue,
-                               long cost, long profit, double marginPercent, long uncostedRevenue) {
+                               long cost, long profit, double marginPercent, long uncostedRevenue,
+                               long expenses, long netProfit) {
     }
 
     public record PipelineEntry(long orders, long amount) {

@@ -3,7 +3,7 @@
   "stats": {
     "title": "Statistiques",
     "subtitle": "Comment va votre boutique.",
-    "note": "Le chiffre d'affaires compte les marchandises des commandes livrées, à la date de livraison. Les frais de livraison reviennent à Yalidine et ne sont jamais inclus. Le bénéfice est le chiffre d'affaires moins le coût des flacons.",
+    "note": "Le bénéfice brut est le chiffre d'affaires moins le coût des flacons. Le bénéfice net retire aussi vos charges du mois (cartes, boîtes, sacs…).",
     "period": "Période",
     "periods": {
       "7": "7 jours",
@@ -29,8 +29,28 @@
       "profitHint": "{percent} % de marge",
       "delivered": "Commandes livrées",
       "average": "Panier moyen",
+      "expenses": "Autres charges",
+      "expensesHint": "Cartes, boîtes, sacs… des mois de cette période",
+      "net": "Bénéfice net",
+      "netHint": "Bénéfice brut moins les autres charges",
       "vs": "par rapport à la période précédente",
       "noComparison": "Rien à comparer pour l'instant"
+    },
+        "expenses": {
+      "open": "Charges du mois",
+      "title": "Charges du mois",
+      "intro": "Tout ce que vous dépensez en dehors des flacons : cartes de visite, boîtes d'envoi, sacs… Chaque mois a sa propre liste et commence vide.",
+      "previous": "Mois précédent",
+      "next": "Mois suivant",
+      "amount": "Montant (DA)",
+      "kind": "Pour quoi (cartes, boîtes, sacs…)",
+      "add": "Ajouter la charge",
+      "remove": "Supprimer {label}",
+      "total": "Total du mois",
+      "empty": "Rien d'enregistré pour ce mois.",
+      "hint": "Dans les statistiques, une période compte en entier les charges de chaque mois qu'elle touche. Astuce : saisissez les charges du mois en fin de mois.",
+      "error": "Cela n'a pas fonctionné, veuillez réessayer.",
+      "suggestions": ["Cartes de visite", "Boîtes d'envoi", "Sacs", "Autocollants", "Papier de soie", "Photos", "Publicité"]
     },
     "uncosted": "{amount} de ventes n'ont pas encore de prix de revient et sont exclues du bénéfice.",
     "uncostedAction": "Ajouter les prix de revient manquants",
