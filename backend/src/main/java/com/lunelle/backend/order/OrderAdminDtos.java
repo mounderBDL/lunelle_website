@@ -60,7 +60,7 @@ public final class OrderAdminDtos {
                Instant createdAt, Instant confirmedAt, Instant shippedAt, Instant deliveredAt, Instant cancelledAt,
                String customerName, String phone, String customerNote, String locale,
                DeliveryMethod deliveryMethod, Integer wilayaId, String wilayaName,
-               Integer communeId, String communeName, String address,
+               Integer communeId, String communeName, String address, Integer officeId,
                int deliveryFee, String handoverPlace, Instant handoverAt, String trackingNumber,
                int subtotal, int total, Integer cost, Integer profit, String adminNote,
                boolean editable, List<OrderStatus> allowedStatuses,
@@ -74,7 +74,7 @@ public final class OrderAdminDtos {
                        .toList();
                return new OrderDetailDto(id, code, status, createdAt, confirmedAt, shippedAt, deliveredAt, cancelledAt,
                        customerName, phone, customerNote, locale, deliveryMethod, wilayaId, wilayaName,
-                       communeId, communeName, address, deliveryFee, handoverPlace, handoverAt, trackingNumber,
+                       communeId, communeName, address, officeId, deliveryFee, handoverPlace, handoverAt, trackingNumber,
                        subtotal, total, null, null, adminNote, editable, allowedStatuses,
                        safeItems, history, restock);
            }
@@ -95,7 +95,14 @@ public final class OrderAdminDtos {
             Integer communeId,
             @Size(max = 300) String address,
             @Size(max = 500) String customerNote,
-            @NotEmpty @Size(max = 20) List<@Valid CartLineRequest> items) {
+            @NotEmpty @Size(max = 20) List<@Valid CartLineRequest> items,
+            Integer officeId) {
+
+        public EditOrderRequest(String customerName, String phone, DeliveryMethod deliveryMethod, Integer wilayaId,
+                                Integer communeId, String address, String customerNote,
+                                List<CartLineRequest> items) {
+            this(customerName, phone, deliveryMethod, wilayaId, communeId, address, customerNote, items, null);
+        }
     }
 
     /** Full replace of these four fields: send the current value for the ones you don't change. */

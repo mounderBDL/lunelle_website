@@ -108,6 +108,7 @@ export type OrderDetail = {
   communeId: number | null;
   communeName: string | null;
   address: string | null;
+  officeId: number | null;
   deliveryFee: number;
   handoverPlace: string | null;
   handoverAt: string | null;

@@ -1,5 +1,5 @@
 import type { CartLine } from "@/store/cart";
-import type { Commune, DeliveryMethod, OrderSummary, QuoteDto } from "./types";
+import type { Commune, DeliveryMethod, OrderSummary, QuoteDto, Office } from "./types";
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
 
@@ -71,6 +71,16 @@ export async function fetchCommunes(wilayaId: number, officeOnly: boolean): Prom
   }
 }
 
+/** The Yalidine offices of a commune. Returns null if the request failed. */
+export async function fetchOffices(communeId: number): Promise<Office[] | null> {
+  try {
+    const res = await fetch(`/api/delivery/communes/${communeId}/offices`);
+    return res.ok ? ((await res.json()) as Office[]) : null;
+  } catch {
+    return null;
+  }
+}
+
 // ───────────── placing an order ─────────────
 
 export type PlaceOrderPayload = {
@@ -81,6 +91,7 @@ export type PlaceOrderPayload = {
   wilayaId: number | null;
   communeId: number | null;
   address: string | null;
+  officeId: number | null;
   note: string | null;
   items: { type: "VARIANT" | "PACK"; id: string; quantity: number }[];
   website: string; // honeypot, always empty for real visitors

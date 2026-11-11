@@ -149,7 +149,7 @@
       "summary": {
         "wilayas": "{count} wilayas mises à jour",
         "communes": "Communes : {added} ajoutées, {updated} mises à jour, {closed} fermées",
-        "desks": "{count} communes avec un bureau",
+        "desks": "{count} communes avec un bureau, {offices} bureaux au total",
         "fees": "{count} tarifs modifiés",
         "skipped": "{count} wilayas sans tarifs chez Yalidine, laissées telles quelles"
       },

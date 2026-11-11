@@ -231,7 +231,6 @@
     "title": "Modifier la commande",
     "back": "Retour à la commande",
     "loadError": "Impossible de charger cette commande.",
-    "retry": "Réessayer",
     "notEditable": "Seules les nouvelles commandes peuvent être modifiées. Une commande confirmée est verrouillée.",
     "customer": "Cliente",
     "name": "Nom complet",
@@ -250,7 +249,12 @@
     "noOffice": "pas de bureau Yalidine",
     "unavailable": "indisponible",
     "noOfficeInWilaya": "Aucune commune de cette wilaya n'a de bureau Yalidine. Choisissez la livraison à domicile.",
-    "address": "Adresse de livraison",
+    "address": "Adresse postale",
+    "office": "Bureau Yalidine",
+    "selectOfficeChoice": "Choisissez un bureau",
+    "loadingOffices": "Chargement des bureaux…",
+    "officesError": "Impossible de charger les bureaux.",
+    "retry": "Réessayer",
     "note": "Remarque de la cliente",
     "items": "Articles",
     "keptPrice": "prix conservé",
@@ -277,9 +281,10 @@
       "phone": "Veuillez saisir un numéro de mobile algérien valide.",
       "wilaya": "Veuillez choisir une wilaya.",
       "commune": "Veuillez choisir une commune.",
-      "address": "Veuillez saisir l'adresse de livraison.",
+      "address": "Veuillez saisir l'adresse postale.",
       "items": "Une commande doit contenir au moins un article.",
-      "generic": "Un problème est survenu. Veuillez réessayer."
+      "generic": "Un problème est survenu. Veuillez réessayer.",
+      "office": "Veuillez choisir un bureau Yalidine."
     }
   }
 }

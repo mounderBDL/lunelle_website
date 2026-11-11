@@ -16,6 +16,7 @@ import { normalizePhone } from "@/lib/phone";
 import { MAX_PER_ITEM } from "@/store/cart";
 import Card, { Skeleton } from "./Card";
 import { useToast } from "./Toasts";
+import { useOffices } from "@/lib/useOffices";
 
 const METHODS: DeliveryMethod[] = ["HAND_TO_HAND", "HOME", "STOP_DESK"];
 const FIELD =
@@ -123,7 +124,8 @@ function EditForm({ order }: { order: OrderDetail }) {
   const [method, setMethod] = useState<DeliveryMethod>(order.deliveryMethod);
   const [wilayaId, setWilayaId] = useState(order.wilayaId === null ? "" : String(order.wilayaId));
   const [communeId, setCommuneId] = useState(order.communeId === null ? "" : String(order.communeId));
-  const [address, setAddress] = useState(order.address ?? "");
+  const [address, setAddress] = useState(order.deliveryMethod === "HOME" ? (order.address ?? "") : "");
+  const [officeId, setOfficeId] = useState(order.officeId === null ? "" : String(order.officeId));
   const [note, setNote] = useState(order.customerNote ?? "");
   const [lines, setLines] = useState<EditLine[]>(() =>
     order.items.map((item) => ({
@@ -217,10 +219,16 @@ function EditForm({ order }: { order: OrderDetail }) {
     };
   }, [communeKey, wilayaNum, method]);
 
+  const officeLookup = useOffices(method === "STOP_DESK" && communeId !== "" ? Number(communeId) : null);
+
   const communesReady = communeState !== null && communeState.key === communeKey;
   const communes = communesReady ? (communeState.list ?? []) : [];
   const communesFailed = communesReady && communeState.list === null;
   const noOfficeInWilaya = communesReady && !communesFailed && communes.length === 0 && method === "STOP_DESK";
+  const offices = officeLookup.offices;
+  const soleOffice = officeLookup.ready && offices.length === 1 ? offices[0] : null;
+  const needsOffice = officeLookup.ready && offices.length > 1;
+  const chosenOffice = soleOffice ?? offices.find((o) => String(o.id) === officeId) ?? null;
 
   // ── items ──
   const catalog = useMemo(
@@ -317,6 +325,7 @@ function EditForm({ order }: { order: OrderDetail }) {
     if (next === method) return;
     setMethod(next);
     setCommuneId("");
+    setOfficeId("");
     setErrors({});
     const current = wilayas.data?.find((w) => String(w.id) === wilayaId);
     if (current && !methodAvailable(current, next)) setWilayaId("");
@@ -329,6 +338,9 @@ function EditForm({ order }: { order: OrderDetail }) {
     if (method !== "HAND_TO_HAND") {
       if (!destinationReady) found.wilaya = t("errors.wilaya");
       else if (communeId === "") found.commune = t("errors.commune");
+      else if (method === "STOP_DESK" && (!officeLookup.ready || officeLookup.failed || (needsOffice && officeId === ""))) {
+        found.office = officeLookup.failed ? t("officesError") : t("errors.office");
+      }      
       if (method === "HOME" && address.trim().length < 5) found.address = t("errors.address");
     }
     if (keptLines.length === 0) found.items = t("errors.items");
@@ -353,6 +365,7 @@ function EditForm({ order }: { order: OrderDetail }) {
       wilayaId: hand ? null : wilayaNum,
       communeId: hand ? null : Number(communeId),
       address: method === "HOME" ? address.trim() : null,
+      officeId: method === "STOP_DESK" && chosenOffice ? chosenOffice.id : null,
       customerNote: note.trim() || null,
       items: keptLines.map((l) => ({ type: l.type, id: l.refId, quantity: l.quantity })),
     });
@@ -452,7 +465,8 @@ function EditForm({ order }: { order: OrderDetail }) {
                     onChange={(e) => {
                       setWilayaId(e.target.value);
                       setCommuneId("");
-                      setErrors((er) => ({ ...er, wilaya: "", commune: "" }));
+                      setOfficeId("");
+                      setErrors((er) => ({ ...er, wilaya: "", commune: "", office:"" }));
                     }}
                     aria-invalid={Boolean(errors.wilaya)}
                     className={fieldClass(errors.wilaya)}
@@ -474,7 +488,8 @@ function EditForm({ order }: { order: OrderDetail }) {
                     value={communeId}
                     onChange={(e) => {
                       setCommuneId(e.target.value);
-                      setErrors((er) => ({ ...er, commune: "" }));
+                      setOfficeId("");
+                      setErrors((er) => ({ ...er, commune: "", office:"" }));
                     }}
                     disabled={!destinationReady || !communesReady || communesFailed || noOfficeInWilaya}
                     aria-invalid={Boolean(errors.commune)}
@@ -498,6 +513,49 @@ function EditForm({ order }: { order: OrderDetail }) {
                   {errors.commune && <span className="mt-1 block text-sm text-red-700">{errors.commune}</span>}
                 </label>
               </div>
+
+              {method === "STOP_DESK" && communeId !== "" && (
+                <>
+                  {!officeLookup.ready && <p className="text-sm text-cocoa/60">{t("loadingOffices")}</p>}
+                  {officeLookup.failed && (
+                    <p className="text-sm text-red-700">
+                      {t("officesError")}{" "}
+                      <button type="button" onClick={officeLookup.retry} className="underline">
+                        {t("retry")}
+                      </button>
+                    </p>
+                  )}
+                  {soleOffice && (
+                    <p className="rounded-2xl bg-petal-50 px-4 py-3 text-sm">
+                      <span className="font-semibold">{soleOffice.name}</span>
+                      {soleOffice.address ? ` - ${soleOffice.address}` : ""}
+                    </p>
+                  )}
+                  {needsOffice && (
+                    <label className="block">
+                      <span className="mb-1.5 block text-sm font-semibold">{t("office")}</span>
+                      <select
+                        id="edit-office"
+                        value={officeId}
+                        onChange={(e) => {
+                          setOfficeId(e.target.value);
+                          setErrors((er) => ({ ...er, office: "" }));
+                        }}
+                        aria-invalid={Boolean(errors.office)}
+                        className={fieldClass(errors.office)}
+                      >
+                        <option value="">{t("selectOfficeChoice")}</option>
+                        {offices.map((o) => (
+                          <option key={o.id} value={String(o.id)}>
+                            {o.address ? `${o.name} - ${o.address}` : o.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+                  {errors.office && <p className="text-sm text-red-700">{errors.office}</p>}
+                </>
+              )}
 
               {communesFailed && <p className="text-sm text-red-700">{t("communesError")}</p>}
               {noOfficeInWilaya && <p className="text-sm text-red-700">{t("noOfficeInWilaya")}</p>}

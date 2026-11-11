@@ -75,6 +75,9 @@
     "phonePlaceholder": "05 51 23 45 67",
     "phoneHelp": "Nous vous appellerons sur ce numéro pour confirmer votre commande.",
     "delivery": "Comment souhaitez-vous recevoir votre commande ?",
+    "office": "Bureau Yalidine", 
+    "selectOffice": "Choisissez un bureau", 
+    "loadingOffices": "Chargement des bureaux…",
     "methods": {
       "HAND_TO_HAND": { "title": "Remise en main propre", "text": "Nous nous retrouvons et vous récupérez votre commande en personne. Gratuit." },
       "HOME": { "title": "Livraison à domicile", "text": "Livrée chez vous par Yalidine." },
@@ -94,7 +97,7 @@
     "unavailable": "indisponible",
     "officeHint": "Seules les communes avec un bureau Yalidine sont proposées.",
     "noOfficeInWilaya": "Aucune commune de cette wilaya n'a de bureau Yalidine. Veuillez choisir la livraison à domicile.",
-    "address": "Adresse de livraison",
+    "address": "Adresse postale",
     "addressPlaceholder": "Rue, bâtiment, point de repère…",
     "note": "Remarque (facultatif)",
     "notePlaceholder": "Quelque chose à nous signaler ?",
@@ -118,7 +121,9 @@
       "phone": "Veuillez saisir un numéro de mobile algérien valide (par exemple 0551 23 45 67).",
       "wilaya": "Veuillez choisir votre wilaya.",
       "commune": "Veuillez choisir votre commune.",
-      "address": "Veuillez saisir votre adresse de livraison."
+      "address": "Veuillez saisir votre adresse postale.",
+      "office": "Veuillez choisir un bureau Yalidine.",
+      "officesError": "Impossible de charger les bureaux."
     },
     "submitErrors": {
       "stock": "Certains articles ne sont plus disponibles. Veuillez vérifier votre panier.",

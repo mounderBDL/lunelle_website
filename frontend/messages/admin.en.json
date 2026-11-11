@@ -136,7 +136,7 @@
     "deliveryTitle": "Delivery",
     "method": { "HAND_TO_HAND": "Hand-to-hand", "HOME": "Home delivery", "STOP_DESK": "Yalidine office" },
     "destination": "Destination",
-    "address": "Address",
+    "address": "Postal address",
     "copyAddress": "Copy address",
     "meetingPlace": "Meeting place",
     "meetingPlacePlaceholder": "Where will you meet the customer?",
@@ -231,7 +231,6 @@
     "title": "Edit order",
     "back": "Back to the order",
     "loadError": "We couldn't load this order.",
-    "retry": "Try again",
     "notEditable": "Only new orders can be edited. Once an order is confirmed, it is locked.",
     "customer": "Customer",
     "name": "Full name",
@@ -250,7 +249,12 @@
     "noOffice": "no Yalidine office",
     "unavailable": "not available",
     "noOfficeInWilaya": "No commune of this wilaya has a Yalidine office. Choose home delivery instead.",
-    "address": "Home address",
+    "address": "Postal address",
+    "office": "Yalidine office",
+    "selectOfficeChoice": "Choose an office",
+    "loadingOffices": "Loading offices…",
+    "officesError": "We couldn't load the offices.",
+    "retry": "Try again",
     "note": "Customer note",
     "items": "Items",
     "keptPrice": "price kept",
@@ -277,9 +281,10 @@
       "phone": "Please enter a valid Algerian mobile number.",
       "wilaya": "Please select a wilaya.",
       "commune": "Please select a commune.",
-      "address": "Please enter the delivery address.",
+      "address": "Please enter the postal address.",
       "items": "An order needs at least one item.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "office": "Please choose a Yalidine office."
     }
   }
 }

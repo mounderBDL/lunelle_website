@@ -2,6 +2,7 @@ package com.lunelle.backend.delivery;
 
 import com.lunelle.backend.delivery.DeliveryDtos.CommuneDto;
 import com.lunelle.backend.delivery.DeliveryDtos.WilayaDeliveryDto;
+import com.lunelle.backend.delivery.DeliveryDtos.OfficeDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,4 +28,10 @@ public class DeliveryController {
                                      @RequestParam(defaultValue = "false") boolean officeOnly) {
         return service.communesOf(id, officeOnly);
     }
+ 
+    /** The Yalidine offices of a commune (a commune can have several). */
+    @GetMapping("/communes/{id}/offices")
+    public List<OfficeDto> offices(@PathVariable int id) {
+        return service.officesOf(id);
+    }    
 }

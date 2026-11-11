@@ -6,6 +6,7 @@ import com.lunelle.backend.common.PhoneUtil;
 import com.lunelle.backend.delivery.*;
 import com.lunelle.backend.order.OrderDtos.*;
 import com.lunelle.backend.common.CodedException;
+
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class CheckoutService {
     private final WilayaRepository wilayas;
     private final CommuneRepository communes;
     private final DeliveryService delivery;
+    private final CommuneOfficeRepository communeOffices;
     private final StockService stock;
     private final CustomerOrderRepository orders;
     private final OrderStatusHistoryRepository history;
@@ -90,7 +92,7 @@ public class CheckoutService {
         PricedCart cart = price(r.items(), now);
         requireAllAvailable(cart, locale);
 
-        Destination dest = destination(r.deliveryMethod(), r.wilayaId(), r.communeId(), r.address());
+        Destination dest = destination(r.deliveryMethod(), r.wilayaId(), r.communeId(), r.address(), r.officeId());
         int fee = r.deliveryMethod() == DeliveryMethod.HAND_TO_HAND
                 ? 0
                 : delivery.feeFor(dest.wilayaId(), r.deliveryMethod());
@@ -111,6 +113,7 @@ public class CheckoutService {
         order.setCommuneId(dest.communeId());
         order.setCommuneName(dest.communeName());
         order.setAddress(dest.address());
+        order.setOfficeId(dest.officeId());
         order.setSubtotal(cart.subtotal());
         order.setTotal(cart.subtotal() + fee);
 
@@ -330,12 +333,13 @@ public class CheckoutService {
     // ───────────── delivery destination ─────────────
 
     record Destination(Integer wilayaId, String wilayaName, Integer communeId,
-                       String communeName, String address) {
+                       String communeName, String address, Integer officeId) {
     }
 
-    Destination destination(DeliveryMethod method, Integer wilayaId, Integer communeId, String address) {
+        Destination destination(DeliveryMethod method, Integer wilayaId, Integer communeId, String address,
+                            Integer officeId) {
         if (method == DeliveryMethod.HAND_TO_HAND) {
-            return new Destination(null, null, null, null, null);
+            return new Destination(null, null, null, null, null, null);
         }
         if (wilayaId == null) {
             throw bad("WILAYA_REQUIRED", "Please choose a wilaya");
@@ -349,14 +353,28 @@ public class CheckoutService {
                 .filter(c -> c.isActive() && c.getWilayaId().equals(wilaya.getId()))
                 .orElseThrow(() -> bad("COMMUNE_INVALID", "Invalid commune for this wilaya"));
         String addr = blankToNull(address);
-        if (method == DeliveryMethod.STOP_DESK && !commune.isHasOffice()) {
-            throw bad("NO_OFFICE", "There is no Yalidine office in this commune. Please choose another commune or home delivery.");
-        }        
-        if (method == DeliveryMethod.HOME && (addr == null || addr.length() < 5)) {
+
+        if (method == DeliveryMethod.STOP_DESK) {
+            if (!commune.isHasOffice()) {
+                throw bad("NO_OFFICE", "There is no Yalidine office in this commune. Please choose another commune or home delivery.");
+            }
+            // one office: it is used without asking; several: the customer must have chosen one of them
+            List<CommuneOffice> offices = communeOffices.findByCommuneIdOrderByNameAsc(commune.getId());
+            CommuneOffice chosen = null;
+            if (offices.size() == 1) {
+                chosen = offices.get(0);
+            } else if (offices.size() > 1) {
+                chosen = offices.stream().filter(o -> o.getId().equals(officeId)).findFirst()
+                        .orElseThrow(() -> bad("OFFICE_REQUIRED", "Please choose a Yalidine office"));
+            }
+            return new Destination(wilaya.getId(), wilaya.getName(), commune.getId(), commune.getName(),
+                    chosen == null ? null : chosen.label(), chosen == null ? null : chosen.getId());
+        }
+
+        if (addr == null || addr.length() < 5) {
             throw bad("ADDRESS_REQUIRED", "Please enter your delivery address");
         }
-        return new Destination(wilaya.getId(), wilaya.getName(), commune.getId(), commune.getName(),
-                method == DeliveryMethod.HOME ? addr : null);
+        return new Destination(wilaya.getId(), wilaya.getName(), commune.getId(), commune.getName(), addr, null);
     }
 
     // ───────────── helpers ─────────────

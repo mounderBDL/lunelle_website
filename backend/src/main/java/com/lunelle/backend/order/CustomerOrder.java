@@ -66,6 +66,9 @@ public class CustomerOrder {
     @Column
     private String address;
 
+    @Column(name = "office_id")
+    private Integer officeId; // the Yalidine office chosen for a stop-desk delivery    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_method", nullable = false, length = 20)
     private DeliveryMethod deliveryMethod;

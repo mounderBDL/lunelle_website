@@ -110,6 +110,8 @@ export type DeliveryWilaya = {
 
 export type Commune = { id: number; name: string };
 
+export type Office = { id: number; name: string; address: string | null };
+
 // ───── orders ─────
 
 export type OrderStatus = "NEW" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "NO_ANSWER" | "RETURNED";

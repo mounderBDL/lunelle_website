@@ -45,7 +45,8 @@
       "noResults": "No result for “{query}”",
       "empty": "Nothing to choose from.",
       "clear": "Clear the search",
-      "close": "Close"
+      "close": "Close",
+      "searchOffice": "Search an office"
     }
   }
 }

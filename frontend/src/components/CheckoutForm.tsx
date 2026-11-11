@@ -13,6 +13,7 @@ import { useCart } from "@/store/cart";
 import DeliveryCards from "./DeliveryCards";
 import ImagePlaceholder from "./ImagePlaceholder";
 import Picker, { type PickerOption } from "./Picker";
+import { useOffices } from "@/lib/useOffices";
 
 const subscribe = () => () => {};
 const INPUT =
@@ -79,6 +80,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   const [wilayaId, setWilayaId] = useState("");
   const [communeId, setCommuneId] = useState("");
   const [address, setAddress] = useState("");
+  const [officeId, setOfficeId] = useState("");
   const [note, setNote] = useState("");
   const [trap, setTrap] = useState(""); // honeypot: real visitors never see or fill it
   const [errors, setErrors] = useState<Errors>({});
@@ -136,6 +138,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
     };
   }, [communeKey, wilayaNum, method]);
 
+  const officeLookup = useOffices(method === "STOP_DESK" && communeId !== "" ? Number(communeId) : null);
   // ── early states (all hooks are above) ──
   if (!mounted) {
     return <div className="mt-10 h-96 animate-pulse rounded-2xl bg-blush/50" aria-hidden />;
@@ -202,6 +205,11 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
     };
   });
   const communeOptions: PickerOption[] = communes.map((c) => ({ id: String(c.id), label: c.name }));
+  const offices = officeLookup.offices;
+  const soleOffice = officeLookup.ready && offices.length === 1 ? offices[0] : null;
+  const needsOffice = officeLookup.ready && offices.length > 1;
+  const chosenOffice = soleOffice ?? offices.find((o) => String(o.id) === officeId) ?? null;
+  const officeOptions: PickerOption[] = offices.map((o) => ({ id: String(o.id), label: o.name }));
   const noResults = (query: string) => (query ? t("picker.noResults", { query }) : t("picker.empty"));
 
   // ── handlers ──
@@ -209,6 +217,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
     if (next === method) return;
     setMethod(next);
     setCommuneId("");
+    setOfficeId("");
     setErrors({});
     setSubmitError(null);
     const current = wilayas.find((w) => String(w.id) === wilayaId);
@@ -220,6 +229,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   function chooseWilaya(value: string) {
     setWilayaId(value);
     setCommuneId("");
+    setOfficeId("");
     setErrors((e) => ({ ...e, wilaya: "", commune: "" }));
   }
 
@@ -230,6 +240,9 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
     if (method !== "HAND_TO_HAND") {
       if (!destinationReady) found.wilaya = t("errors.wilaya");
       else if (communeId === "") found.commune = t("errors.commune");
+      else if (method === "STOP_DESK" && (!officeLookup.ready || officeLookup.failed || (needsOffice && officeId === ""))) {
+        found.office = officeLookup.failed ? t("officesError") : t("errors.office");
+      }      
       if (method === "HOME" && address.trim().length < 5) found.address = t("errors.address");
     }
     return found;
@@ -258,6 +271,7 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
       wilayaId: hand ? null : wilayaNum,
       communeId: hand ? null : Number(communeId),
       address: method === "HOME" ? address.trim() : null,
+      officeId: method === "STOP_DESK" && chosenOffice ? chosenOffice.id : null,
       note: note.trim() || null,
       items: lines.map((l) => ({ type: l.type, id: l.id, quantity: l.quantity })),
       website: trap,
@@ -361,7 +375,8 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
                     options={communeOptions}
                     onChange={(value) => {
                       setCommuneId(value);
-                      setErrors((er) => ({ ...er, commune: "" }));
+                      setOfficeId("");
+                      setErrors((er) => ({ ...er, commune: "", office: "" }));
                     }}
                     placeholder={
                       !destinationReady
@@ -381,7 +396,51 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
                     describedBy={errors.commune ? "field-commune-error" : undefined}
                   />
                 </Field>
-
+                {method === "STOP_DESK" && communeId !== "" && (
+                  <>
+                    {!officeLookup.ready && <p className="text-sm text-cocoa/60">{t("loadingOffices")}</p>}
+                    {officeLookup.failed && (
+                      <p role="alert" className="text-sm text-red-700">
+                        {t("officesError")}{" "}
+                        <button type="button" onClick={officeLookup.retry} className="underline">
+                          {t("retry")}
+                        </button>
+                      </p>
+                    )}
+                    {soleOffice && (
+                      <p className="rounded-xl bg-rose/10 px-4 py-3 text-sm">
+                        <span className="font-medium">{soleOffice.name}</span>
+                        {soleOffice.address ? ` - ${soleOffice.address}` : ""}
+                      </p>
+                    )}
+                    {needsOffice && (
+                      <Field id="field-office" label={t("office")} error={errors.office} hint={chosenOffice?.address ?? undefined}>
+                        <Picker
+                          id="field-office"
+                          title={t("office")}
+                          value={officeId}
+                          options={officeOptions}
+                          onChange={(value) => {
+                            setOfficeId(value);
+                            setErrors((er) => ({ ...er, office: "" }));
+                          }}
+                          placeholder={t("selectOffice")}
+                          searchLabel={t("picker.searchOffice")}
+                          noResults={noResults}
+                          clearLabel={t("picker.clear")}
+                          closeLabel={t("picker.close")}
+                          invalid={Boolean(errors.office)}
+                          describedBy={errors.office ? "field-office-error" : undefined}
+                        />
+                      </Field>
+                    )}
+                    {errors.office && !needsOffice && (
+                      <p role="alert" className="text-sm text-red-700">
+                        {errors.office}
+                      </p>
+                    )}
+                  </>
+                )}
                 {communesFailed && (
                   <p role="alert" className="text-sm text-red-700">
                     {t("communesError")}{" "}

@@ -105,7 +105,7 @@ public class ShippingService {
             Optional<Commune> commune = o.getCommuneId() == null ? Optional.empty()
                     : communes.findById(o.getCommuneId());
             external = commune.map(c -> c.getExternalId()).orElse(null);
-            center = commune.map(c -> c.getCenterId()).orElse(null);
+            center = o.getOfficeId() != null ? o.getOfficeId() : commune.map(c -> c.getCenterId()).orElse(null);
             if (external == null && center == null) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT,
                         "This commune has no Yalidine id, so its office cannot be found");

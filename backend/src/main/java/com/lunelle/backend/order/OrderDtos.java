@@ -38,14 +38,23 @@ public final class OrderDtos {
             @Size(max = 500) String note,
             @NotEmpty @Size(max = 20) List<@Valid CartLineRequest> items,
             @Size(max = 100) String website, // honeypot: hidden field, humans never fill it
-            @Pattern(regexp = "[A-Za-z0-9-]{16,64}") String idempotencyKey) { // one random key per order attempt
+            @Pattern(regexp = "[A-Za-z0-9-]{16,64}") String idempotencyKey, // one random key per order attempt
+            Integer officeId) { // the Yalidine office, when the commune has several
 
-        /** The same request without a key: keeps the existing callers and tests as they are. */
+        /** The same request without a key or an office: keeps the existing callers and tests as they are. */
         public CheckoutRequest(String customerName, String phone, String locale, DeliveryMethod deliveryMethod,
                                Integer wilayaId, Integer communeId, String address, String note,
                                List<CartLineRequest> items, String website) {
             this(customerName, phone, locale, deliveryMethod, wilayaId, communeId, address, note, items, website,
-                    null);
+                    null, null);
+        }
+
+        /** The same request without an office: keeps the callers that pass a key (for example IdempotencyTest). */
+        public CheckoutRequest(String customerName, String phone, String locale, DeliveryMethod deliveryMethod,
+                               Integer wilayaId, Integer communeId, String address, String note,
+                               List<CartLineRequest> items, String website, String idempotencyKey) {
+            this(customerName, phone, locale, deliveryMethod, wilayaId, communeId, address, note, items, website,
+                    idempotencyKey, null);
         }
     }
 

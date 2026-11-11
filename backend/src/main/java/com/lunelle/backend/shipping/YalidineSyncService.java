@@ -1,6 +1,8 @@
 package com.lunelle.backend.shipping;
 
 import com.lunelle.backend.delivery.Commune;
+import com.lunelle.backend.delivery.CommuneOffice;
+import com.lunelle.backend.delivery.CommuneOfficeRepository;
 import com.lunelle.backend.delivery.CommuneRepository;
 import com.lunelle.backend.delivery.DeliveryMethod;
 import com.lunelle.backend.delivery.DeliveryRate;
@@ -47,7 +49,7 @@ public class YalidineSyncService {
     }
 
     public record Summary(int wilayas, int communesAdded, int communesUpdated, int communesClosed,
-                          int withStopDesk, int feesUpdated, int feesSkipped) {
+                          int withStopDesk, int offices, int feesUpdated, int feesSkipped) {
     }
 
     private record Fee(Integer home, Integer desk) {
@@ -56,6 +58,7 @@ public class YalidineSyncService {
     private final YalidineClient yalidine;
     private final WilayaRepository wilayas;
     private final CommuneRepository communes;
+    private final CommuneOfficeRepository offices;
     private final DeliveryRateRepository rates;
     private final TransactionTemplate tx;
 
@@ -311,6 +314,31 @@ public class YalidineSyncService {
         }
         communes.saveAll(toSave);
 
+        // ── every office of every commune: a commune can have several ──
+        Map<Integer, Commune> ourByExternal = new HashMap<>();
+        for (Commune c : seen) {
+            ourByExternal.put(c.getExternalId(), c);
+        }
+        List<CommuneOffice> officeRows = new ArrayList<>();
+        Set<Integer> centersSeen = new HashSet<>();
+        for (Map<String, Object> row : centerRows) {
+            Integer centerId = intOf(row.get("center_id"));
+            Integer communeExternal = intOf(row.get("commune_id"));
+            Commune c = communeExternal == null ? null : ourByExternal.get(communeExternal);
+            if (centerId == null || c == null || c.getId() == null || !centersSeen.add(centerId)) {
+                continue;
+            }
+            CommuneOffice office = new CommuneOffice();
+            office.setId(centerId);
+            office.setCommuneId(c.getId());
+            String officeName = text(row.get("name"));
+            office.setName(officeName == null ? "Yalidine office" : officeName);
+            office.setAddress(text(row.get("address")));
+            officeRows.add(office);
+        }
+        offices.deleteAllInBatch();
+        offices.saveAll(officeRows);
+
         Set<Integer> withDesk = new HashSet<>();
         int stopDesks = 0;
         for (Commune c : seen) {
@@ -337,7 +365,8 @@ public class YalidineSyncService {
             }
         }
 
-        return new Summary(wilayaCount, added, updated, closed, stopDesks, feesUpdated, feesSkipped);
+        return new Summary(wilayaCount, added, updated, closed, stopDesks, officeRows.size(), feesUpdated,
+                feesSkipped);
     }
 
     /** Returns whether the rate changed. A missing fee only switches the option off. */
@@ -374,6 +403,14 @@ public class YalidineSyncService {
     static String norm(String s) {
         return Normalizer.normalize(s == null ? "" : s, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
+    }
+
+    private static String text(Object value) {
+        if (value == null) {
+            return null;
+        }
+        String s = String.valueOf(value).trim();
+        return s.isEmpty() ? null : s;
     }
 
     static Integer intOf(Object value) {

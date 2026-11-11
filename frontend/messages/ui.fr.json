@@ -45,7 +45,8 @@
       "noResults": "Aucun résultat pour « {query} »",
       "empty": "Rien à choisir.",
       "clear": "Effacer la recherche",
-      "close": "Fermer"
+      "close": "Fermer",
+      "searchOffice": "Rechercher un bureau"
     }
   }
 }

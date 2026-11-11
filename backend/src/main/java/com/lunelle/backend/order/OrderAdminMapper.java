@@ -52,7 +52,7 @@ final class OrderAdminMapper {
                 o.getCreatedAt(), o.getConfirmedAt(), o.getShippedAt(), o.getDeliveredAt(), o.getCancelledAt(),
                 o.getCustomerName(), o.getPhone(), o.getCustomerNote(), o.getLocale(),
                 o.getDeliveryMethod(), o.getWilayaId(), o.getWilayaName(),
-                o.getCommuneId(), o.getCommuneName(), o.getAddress(),
+                o.getCommuneId(), o.getCommuneName(), o.getAddress(), o.getOfficeId(),
                 o.getDeliveryFee(), o.getHandoverPlace(), o.getHandoverAt(), o.getTrackingNumber(),
                 o.getSubtotal(), o.getTotal(), cost, profit, o.getAdminNote(),
                 o.getStatus() == OrderStatus.NEW, OrderWorkflow.allowed(o),

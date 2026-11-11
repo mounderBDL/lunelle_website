@@ -20,6 +20,7 @@ type SyncStatus = {
     communesUpdated: number;
     communesClosed: number;
     withStopDesk: number;
+    offices: number;
     feesUpdated: number;
     feesSkipped: number;
   } | null;
@@ -89,7 +90,7 @@ export default function YalidineSyncCard() {
                 closed: summary.communesClosed,
               })}
             </li>
-            <li>{t("summary.desks", { count: summary.withStopDesk })}</li>
+            <li>{t("summary.desks", { count: summary.withStopDesk, offices: summary.offices })}</li>
             <li>{t("summary.fees", { count: summary.feesUpdated })}</li>
             {summary.feesSkipped > 0 && <li>{t("summary.skipped", { count: summary.feesSkipped })}</li>}
           </ul>

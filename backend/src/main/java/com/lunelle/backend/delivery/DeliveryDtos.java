@@ -24,6 +24,10 @@ public final class DeliveryDtos {
     public record CommuneDto(int id, String name) {
     }
 
+    /** A Yalidine office (stop desk) in a commune. */
+    public record OfficeDto(int id, String name, String address) {
+    }    
+
     public record RateUpdate(
             @NotNull @Min(0) @Max(100000) Integer fee,
             @NotNull Boolean available) {

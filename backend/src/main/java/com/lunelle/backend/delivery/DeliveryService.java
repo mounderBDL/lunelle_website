@@ -20,7 +20,7 @@ public class DeliveryService {
     private final WilayaRepository wilayas;
     private final CommuneRepository communes;
     private final DeliveryRateRepository rates;
-
+    private final CommuneOfficeRepository offices;
     private record RateKey(int wilayaId, DeliveryMethod method) {
     }
 
@@ -46,6 +46,15 @@ public class DeliveryService {
                 .map(w -> toDto(w, byKey, offices, false))
                 .toList();
     }
+
+    /** The offices of a commune that has at least one (what the customer chooses from at checkout). */
+    @Transactional(readOnly = true)
+    public List<OfficeDto> officesOf(int communeId) {
+        communes.findById(communeId).filter(Commune::isActive).filter(Commune::isHasOffice)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown commune"));
+        return offices.findByCommuneIdOrderByNameAsc(communeId).stream()
+                .map(o -> new OfficeDto(o.getId(), o.getName(), o.getAddress())).toList();
+    }    
 
     @Transactional(readOnly = true)
     public List<CommuneDto> communesOf(int wilayaId, boolean officeOnly) {

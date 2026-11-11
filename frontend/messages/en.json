@@ -75,6 +75,9 @@
     "phonePlaceholder": "05 51 23 45 67",
     "phoneHelp": "We'll call you on this number to confirm your order.",
     "delivery": "How would you like to receive your order?",
+    "office": "Yalidine office", 
+    "selectOffice": "Choose an office", 
+    "loadingOffices": "Loading offices…",
     "methods": {
       "HAND_TO_HAND": { "title": "Hand-to-hand", "text": "We meet and you collect your order in person. Free." },
       "HOME": { "title": "Home delivery", "text": "Delivered to your door by Yalidine." },
@@ -94,7 +97,7 @@
     "unavailable": "not available",
     "officeHint": "Only communes with a Yalidine office are listed.",
     "noOfficeInWilaya": "No commune of this wilaya has a Yalidine office. Please choose home delivery.",
-    "address": "Home address",
+    "address": "Postal address",
     "addressPlaceholder": "Street, building, landmark…",
     "note": "Note (optional)",
     "notePlaceholder": "Anything we should know?",
@@ -113,16 +116,18 @@
     "quoteError": "We couldn't calculate your order.",
     "itemsProblem": "Some items in your cart are no longer available. Please review your cart.",
     "reviewCart": "Review my cart",
-    "errors": {
+      "errors": {
       "name": "Please enter your full name.",
       "phone": "Please enter a valid Algerian mobile number (for example 0551 23 45 67).",
       "wilaya": "Please select your wilaya.",
       "commune": "Please select your commune.",
-      "address": "Please enter your delivery address."
+      "address": "Please enter your postal address.",
+      "office": "Please choose a Yalidine office.",
+      "officesError": "We couldn't load the offices."
     },
     "submitErrors": {
       "stock": "Some items are no longer available. Please review your cart.",
-      "limit": "Too many orders from this number. Please contact us.",
+      "limit": "Too many orders from this number.",
       "invalid": "We couldn't place your order. Please check your details and try again.",
       "generic": "Something went wrong. Please try again."
     },

@@ -39,7 +39,7 @@ class YalidineSyncTest extends IntegrationTestBase {
     // The sync rewrites shared reference data, so every test puts it back as it was.
     @BeforeEach
     void snapshot() {
-        for (String table : List.of("wilaya", "commune", "delivery_rate")) {
+        for (String table : List.of("wilaya", "commune", "delivery_rate", "commune_office")) {
             jdbc.sql("drop table if exists bak_" + table).update();
             jdbc.sql("create table bak_" + table + " as select * from " + table).update();
         }
@@ -54,7 +54,9 @@ class YalidineSyncTest extends IntegrationTestBase {
                 + "from bak_commune b where c.id = b.id").update();
         jdbc.sql("update delivery_rate r set fee = b.fee, is_available = b.is_available "
                 + "from bak_delivery_rate b where r.id = b.id").update();
-        for (String table : List.of("wilaya", "commune", "delivery_rate")) {
+        jdbc.sql("delete from commune_office").update();
+        jdbc.sql("insert into commune_office select * from bak_commune_office").update();
+        for (String table : List.of("wilaya", "commune", "delivery_rate", "commune_office")) {
             jdbc.sql("drop table if exists bak_" + table).update();
         }
     }
@@ -69,8 +71,8 @@ class YalidineSyncTest extends IntegrationTestBase {
                 m("id", 99901, "name", "Zzz Test Commune", "wilaya_id", 16, "has_stop_desk", 1, "is_deliverable", 1),
                 m("id", 99902, "name", "Zzz Second", "wilaya_id", 16, "has_stop_desk", 0, "is_deliverable", 1)));
         when(yalidine.getAll("centers/")).thenReturn(List.of(
-                m("center_id", 160102, "commune_id", 99901),
-                m("center_id", 160101, "commune_id", 99901)));
+                m("center_id", 160102, "name", "Agence B", "address", "Rue B", "commune_id", 99901),
+                m("center_id", 160101, "name", "Agence A", "address", "Rue A", "commune_id", 99901)));
         when(yalidine.fees(5, 5)).thenReturn(m("per_commune", m()));
         when(yalidine.fees(5, 16)).thenReturn(m("per_commune", m(
                 "99901", m("express_home", 700, "express_desk", 450),
@@ -94,6 +96,12 @@ class YalidineSyncTest extends IntegrationTestBase {
         assertThat(desk).containsExactly(true, 160101, true);
         assertThat(jdbc.sql("select has_office from commune where external_id = 99902")
                 .query(Boolean.class).single()).isFalse();
+
+        // both offices of the commune are saved, with their names
+        assertThat(jdbc.sql("select name from commune_office where commune_id = "
+                + "(select id from commune where external_id = 99901) order by name").query(String.class).list())
+                .containsExactly("Agence A", "Agence B");
+        assertThat(summary.offices()).isEqualTo(2);
 
         // wilayas follow Yalidine: names and open/closed
         assertThat(jdbc.sql("select name from wilaya where id = 16").query(String.class).single()).isEqualTo("Alger");

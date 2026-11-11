@@ -203,7 +203,7 @@ public class OrderAdminService {
         UUID orderId = o.getId();
         String phone = PhoneUtil.normalize(r.phone());
         CheckoutService.Destination dest =
-                checkout.destination(r.deliveryMethod(), r.wilayaId(), r.communeId(), r.address());
+                checkout.destination(r.deliveryMethod(), r.wilayaId(), r.communeId(), r.address(), r.officeId());
 
         int fee;
         if (r.deliveryMethod() == DeliveryMethod.HAND_TO_HAND) {
@@ -273,6 +273,7 @@ public class OrderAdminService {
         o.setCommuneId(dest.communeId());
         o.setCommuneName(dest.communeName());
         o.setAddress(dest.address());
+        o.setOfficeId(dest.officeId());
         o.setDeliveryFee(fee);
         o.setSubtotal((int) subtotal);
         o.setTotal((int) subtotal + fee);

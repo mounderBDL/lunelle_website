@@ -149,7 +149,7 @@
       "summary": {
         "wilayas": "{count} wilayas updated",
         "communes": "Communes: {added} added, {updated} updated, {closed} closed",
-        "desks": "{count} communes with a stop desk",
+        "desks": "{count} communes with a stop desk, {offices} offices in total",
         "fees": "{count} fees changed",
         "skipped": "{count} wilayas had no fees from Yalidine and were left as they were"
       },
