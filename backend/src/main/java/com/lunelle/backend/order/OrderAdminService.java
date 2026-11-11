@@ -179,6 +179,13 @@ public class OrderAdminService {
         return detail(orderId);
     }
 
+    /** Marks a confirmed order as shipped by a carrier, with the tracking number the carrier gave. */
+    @Transactional
+    public OrderDetailDto shipWithCarrier(UUID id, String carrier, String tracking, UUID adminId) {
+        lock(id).setCarrier(carrier);
+        return changeStatus(id, new ChangeStatusRequest(OrderStatus.SHIPPED, "Sent to " + carrier, tracking), adminId);
+    }    
+
     private void validateForConfirmation(CustomerOrder o) {
         if (o.getDeliveryMethod() == DeliveryMethod.HAND_TO_HAND && isBlank(o.getHandoverPlace())) {
             throw bad("Set the hand-over place before confirming");

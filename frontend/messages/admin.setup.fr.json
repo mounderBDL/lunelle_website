@@ -127,6 +127,34 @@
       "apply": "Appliquer aux wilayas ouvertes",
       "error": "Saisissez au moins un nombre entier entre 0 et 100 000."
     },
+    "sync": {
+      "title": "Synchroniser avec Yalidine",
+      "text": "Copie ici les wilayas, communes, bureaux et tarifs de livraison de Yalidine en une seule fois. Cela prend une à deux minutes et remplace vos tarifs, wilayas ouvertes ou fermées et bureaux actuels par ceux de Yalidine.",
+      "button": "Synchroniser",
+      "running": "Synchronisation…",
+      "steps": {
+        "WILAYAS": "Lecture des wilayas…",
+        "COMMUNES": "Lecture des communes…",
+        "CENTERS": "Lecture des bureaux…",
+        "FEES": "Lecture des tarifs : {done} sur {total}",
+        "SAVING": "Enregistrement…"
+      },
+      "confirmTitle": "Synchroniser avec Yalidine ?",
+      "confirmText": "Vos tarifs de livraison, wilayas ouvertes ou fermées et bureaux seront remplacés par ceux de Yalidine. Les tarifs modifiés à la main seront écrasés.",
+      "confirm": "Lancer la synchronisation",
+      "cancel": "Annuler",
+      "starting": "Démarrage…",
+      "startError": "Impossible de lancer la synchronisation. Veuillez réessayer.",
+      "done": "Synchronisation terminée",
+      "summary": {
+        "wilayas": "{count} wilayas mises à jour",
+        "communes": "Communes : {added} ajoutées, {updated} mises à jour, {closed} fermées",
+        "desks": "{count} communes avec un bureau",
+        "fees": "{count} tarifs modifiés",
+        "skipped": "{count} wilayas sans tarifs chez Yalidine, laissées telles quelles"
+      },
+      "failed": "La synchronisation n'a pas abouti et rien n'a été modifié."
+    },    
     "tools": {
       "title": "Bureaux Yalidine",
       "text": "Téléchargez la liste des communes, tapez « yes » dans la colonne has_office pour chaque commune qui a un bureau Yalidine, puis renvoyez le fichier. Vous pouvez aussi cocher les communes wilaya par wilaya avec le bouton « modifier » à côté de chaque wilaya.",

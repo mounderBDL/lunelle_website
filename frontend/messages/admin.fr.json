@@ -208,6 +208,15 @@
         "confirm": "Marquer comme retournée"
       }
     },
+    "yalidine": {
+      "button": "Send to Yalidine",
+      "title": "Send to Yalidine?",
+      "text": "This creates the parcel at Yalidine for {code}, saves its tracking number here and marks the order as shipped.",
+      "confirm": "Send parcel",
+      "cancel": "Cancel",
+      "working": "Sending…",
+      "toast": "Parcel created for {code}. Tracking: {tracking}"
+    },    
     "toast": { "updated": "La commande {code} est maintenant « {status} »", "saved": "Enregistré" },
     "errors": { "generic": "Un problème est survenu. Veuillez réessayer." },
     "slip": {

@@ -53,3 +53,9 @@ app:
 
   telegram:
     bot-token: ${TELEGRAM_BOT_TOKEN:}
+    
+  yalidine:
+    api-id: ${YALIDINE_API_ID:}
+    api-token: ${YALIDINE_API_TOKEN:}
+    from-wilaya: ${YALIDINE_FROM_WILAYA:}
+    base-url: ${YALIDINE_BASE_URL:https://api.yalidine.app/v1}

@@ -30,4 +30,7 @@ public class Commune {
 
     @Column(name = "has_office", nullable = false)
     private boolean hasOffice;
+
+    @Column(name = "center_id")
+    private Integer centerId; // Yalidine office that serves this commune (stop-desk parcels)    
 }

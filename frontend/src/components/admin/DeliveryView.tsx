@@ -12,6 +12,7 @@ import Card, { Skeleton } from "./Card";
 import Dialog from "./Dialog";
 import { ErrorNote, INPUT, PRIMARY, SECONDARY } from "./FormBits";
 import OfficesDialog from "./OfficesDialog";
+import YalidineSyncCard from "./YalidineSyncCard";
 import Switch from "./Switch";
 import { useToast } from "./Toasts";
 
@@ -248,6 +249,10 @@ export default function DeliveryView() {
         <p className="mt-1 text-cocoa/60">{t("subtitle")}</p>
       </header>
 
+      <div className="mt-8">
+        <YalidineSyncCard />
+      </div>
+      
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Card title={t("quickFill.title")}>
           <p className="text-sm text-cocoa/70">{t("quickFill.text")}</p>

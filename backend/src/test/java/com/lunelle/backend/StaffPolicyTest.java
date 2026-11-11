@@ -21,6 +21,7 @@ class StaffPolicyTest {
         assertThat(ok("POST", id + "/status")).isTrue();
         assertThat(ok("PUT", id + "/details")).isTrue();
         assertThat(ok("POST", id + "/restock")).isTrue();
+        assertThat(ok("POST", id + "/yalidine")).isTrue();        
     }
 
     @Test
@@ -37,7 +38,9 @@ class StaffPolicyTest {
         assertThat(ok("GET", "/api/admin/team")).isFalse();
         assertThat(ok("GET", "/api/admin/expenses")).isFalse();
         assertThat(ok("POST", "/api/admin/expenses")).isFalse();
-        assertThat(ok("DELETE", "/api/admin/expenses/3fa85f64-5717-4562-b3fc-2c963f66afa6")).isFalse();        
+        assertThat(ok("DELETE", "/api/admin/expenses/3fa85f64-5717-4562-b3fc-2c963f66afa6")).isFalse();
+        assertThat(ok("GET", "/api/admin/delivery/yalidine-sync")).isFalse();
+        assertThat(ok("POST", "/api/admin/delivery/yalidine-sync")).isFalse();                
         assertThat(ok("POST", "/api/admin/team")).isFalse();
         assertThat(ok("DELETE", "/api/admin/team/3fa85f64-5717-4562-b3fc-2c963f66afa6")).isFalse();
         assertThat(ok("GET", "/api/admin/stats/overview")).isFalse();

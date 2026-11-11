@@ -127,6 +127,34 @@
       "apply": "Apply to all open wilayas",
       "error": "Enter at least one whole number between 0 and 100,000."
     },
+    "sync": {
+      "title": "Sync with Yalidine",
+      "text": "Copies Yalidine's wilayas, communes, offices and delivery fees here in one go. It takes one to two minutes and replaces your current fees, open and closed wilayas and offices with Yalidine's.",
+      "button": "Sync now",
+      "running": "Syncing…",
+      "steps": {
+        "WILAYAS": "Reading wilayas…",
+        "COMMUNES": "Reading communes…",
+        "CENTERS": "Reading offices…",
+        "FEES": "Reading fees: {done} of {total}",
+        "SAVING": "Saving…"
+      },
+      "confirmTitle": "Sync with Yalidine?",
+      "confirmText": "Your delivery fees, open and closed wilayas and offices will be replaced by Yalidine's. Fees you changed by hand will be overwritten.",
+      "confirm": "Start sync",
+      "cancel": "Cancel",
+      "starting": "Starting…",
+      "startError": "We couldn't start the sync. Please try again.",
+      "done": "Sync finished",
+      "summary": {
+        "wilayas": "{count} wilayas updated",
+        "communes": "Communes: {added} added, {updated} updated, {closed} closed",
+        "desks": "{count} communes with a stop desk",
+        "fees": "{count} fees changed",
+        "skipped": "{count} wilayas had no fees from Yalidine and were left as they were"
+      },
+      "failed": "The sync did not finish and nothing was changed."
+    },    
     "tools": {
       "title": "Yalidine offices",
       "text": "Download the list of communes, type “yes” in the has_office column for every commune that has a Yalidine office, and upload the file back. You can also tick the communes one wilaya at a time with the “edit” button next to each wilaya.",

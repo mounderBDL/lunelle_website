@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, MapPin, MessageCircle, Pencil, Phone, Printer } from "lucide-react";
+import { ArrowLeft, MapPin, MessageCircle, Pencil, Phone, Printer, Truck } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -13,6 +13,7 @@ import type { OrderStatus } from "@/lib/api/types";
 import { formatMoney, localized } from "@/lib/format";
 import CallDueBadge from "./CallDueBadge";
 import Card, { Skeleton } from "./Card";
+import ConfirmDialog from "./ConfirmDialog";
 import CopyButton from "./CopyButton";
 import OrderSlip from "./OrderSlip";
 import StatusChip from "./StatusChip";
@@ -48,7 +49,9 @@ export default function OrderDetailView({ id }: { id: string }) {
   const nowMs = useNow();
   const queryClient = useQueryClient();
   const toast = useToast();
+  const tc = useTranslations("admin.common");
   const [dialog, setDialog] = useState<OrderStatus | null>(null);
+  const [sendOpen, setSendOpen] = useState(false);
   const key = ["orders", "detail", id];
 
   const query = useQuery({
@@ -79,6 +82,16 @@ export default function OrderDetailView({ id }: { id: string }) {
       toast.push({ title: t("toast.saved") });
     },
   });
+
+  // creates the parcel at Yalidine; the server then marks the order shipped with the tracking number
+  const send = useMutation({
+    mutationFn: () => adminFetch<OrderDetail>(`/api/admin/orders/${id}/yalidine`, { method: "POST" }),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(key, updated);
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast.push({ title: t("yalidine.toast", { code: updated.code, tracking: updated.trackingNumber ?? "" }) });
+    },
+  });  
 
   const back = (
     <Link
@@ -126,6 +139,7 @@ export default function OrderDetailView({ id }: { id: string }) {
   const hand = order.deliveryMethod === "HAND_TO_HAND";
   const actions = ACTION_ORDER.filter((s) => order.allowedStatuses.includes(s));
   const needsMeeting = hand && !order.handoverPlace;
+  const canSend = !hand && order.status === "CONFIRMED" && !order.trackingNumber;
   const label = (s: OrderStatus) => t(`actions.${s === "DELIVERED" && hand ? "HANDED_OVER" : s}`);
 
   return (
@@ -166,6 +180,16 @@ export default function OrderDetailView({ id }: { id: string }) {
                 </button>
               );
             })}
+            {canSend && (
+              <button
+                type="button"
+                onClick={() => setSendOpen(true)}
+                className="inline-flex items-center gap-2 rounded-full bg-petal-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-cocoa"
+              >
+                <Truck className="h-4 w-4" aria-hidden />
+                {t("yalidine.button")}
+              </button>
+            )}            
             {order.editable && (
               <Link
                 href={`/admin/orders/${order.id}/edit`}
@@ -205,6 +229,19 @@ export default function OrderDetailView({ id }: { id: string }) {
 
       <OrderSlip order={order} />
       {dialog && <StatusDialog order={order} target={dialog} onClose={() => setDialog(null)} />}
+      {sendOpen && (
+        <ConfirmDialog
+          title={t("yalidine.title")}
+          text={t("yalidine.text", { code: order.code })}
+          confirmLabel={t("yalidine.confirm")}
+          cancelLabel={t("yalidine.cancel")}
+          closeLabel={tc("close")}
+          workingLabel={t("yalidine.working")}
+          errorFallback={t("errors.generic")}
+          onClose={() => setSendOpen(false)}
+          onConfirm={() => send.mutateAsync()}
+        />
+      )}        
     </>
   );
 }
