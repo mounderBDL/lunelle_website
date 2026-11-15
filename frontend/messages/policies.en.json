@@ -1,6 +1,5 @@
 {
   "footer": {
-    "deliveryReturns": "Delivery & returns",
     "privacy": "Privacy policy",
     "terms": "Terms of sale"
   },
@@ -15,54 +14,6 @@
     "contactSocial": "Or message us on social media: the links are at the bottom of every page.",
     "related": "Also read",
     "pages": {
-      "delivery": {
-        "title": "Delivery & returns",
-        "intro": "Everything you need to know about how your Lunelle order reaches you.",
-        "sections": {
-          "how": {
-            "title": "How an order works",
-            "p1": "Place your order on the site: no account is needed.",
-            "p2": "We call you within 24 hours to confirm it. Please keep your phone nearby and check that the number you entered is correct.",
-            "p3": "If you want to change something (an item, the address or the delivery method), tell us during the confirmation call."
-          },
-          "methods": {
-            "title": "Ways to receive your order",
-            "p1": "Home delivery: your order is delivered to your address. You choose your wilaya and commune and enter your address at checkout.",
-            "p2": "Yalidine office: you collect your order at the Yalidine office of the commune you choose. Only communes with an office are offered."
-          },
-          "fees": {
-            "title": "Delivery fees",
-            "p1": "For home and office delivery, the fee depends on your wilaya and on the delivery method.",
-            "p2": "The exact fee and your total are shown at checkout before you confirm your order."
-          },
-          "payment": {
-            "title": "Payment",
-            "p1": "You pay in cash, only when you receive your order: to the delivery person for home delivery, or at the Yalidine office when you collect it.",
-            "p2": "There is no online payment. The total to pay is the price of your products plus the delivery fee, if any.",
-            "p3": "We never ask for payment in advance."
-          },
-          "times": {
-            "title": "Delivery times",
-            "p1": "The delivery time depends on your wilaya and the delivery method.",
-            "p2": "We tell you the estimated time when we call to confirm your order."
-          },
-          "tracking": {
-            "title": "Following your order",
-            "p1": "After you order, you get a private page that shows where your order is.",
-            "p2": "You can also use “Track my order” at the bottom of any page, with your order number and the phone number you used."
-          },
-          "unreachable": {
-            "title": "If we can't reach you",
-            "p1": "If we are unable to reach you by phone, we can't confirm your order, and it may be cancelled."
-          },
-          "problems": {
-            "title": "Problems, returns and exchanges",
-            "p1": "Please check your parcel when you receive it.",
-            "p2": "If an item is damaged or isn't what you ordered, contact us as soon as possible with your order number: our phone number and social media are at the bottom of every page.",
-            "p3": "Our policy on returns and exchanges is being finalised and will be published here."
-          }
-        }
-      },
       "privacy": {
         "title": "Privacy policy",
         "intro": "This page explains what information we collect when you order from Lunelle, and how we use it.",
@@ -113,7 +64,7 @@
       },
       "terms": {
         "title": "Terms of sale",
-        "intro": "These terms apply to every order placed on this site.",
+        "intro": "These terms apply to every order placed on this site. They also explain how delivery, payment and returns work.",
         "sections": {
           "about": {
             "title": "About us",
@@ -123,8 +74,9 @@
           "orders": {
             "title": "Orders",
             "p1": "Placing an order is a request to buy. It is confirmed when we call you and agree the details together.",
-            "p2": "We may refuse or cancel an order, for example if an item is no longer available or if we cannot reach you.",
-            "p3": "You can ask for changes during the confirmation call."
+            "p2": "We call you within 24 hours to confirm it. Please keep your phone nearby and check that the number you entered is correct.",
+            "p3": "If you want to change something (an item, the address or the delivery method), tell us during the confirmation call.",
+            "p4": "We may refuse or cancel an order, for example if an item is no longer available or if we cannot reach you."
           },
           "prices": {
             "title": "Prices",
@@ -137,17 +89,37 @@
             "p1": "Our stock is limited. Products that are out of stock can't be ordered.",
             "p2": "You can order up to 10 of the same item in one order."
           },
+          "methods": {
+            "title": "Ways to receive your order",
+            "p1": "Home delivery: your order is delivered to your address. You choose your wilaya and commune and enter your address at checkout.",
+            "p2": "Yalidine office: you collect your order at the Yalidine office of the commune you choose. Only communes with an office are offered."
+          },
+          "fees": {
+            "title": "Delivery fees",
+            "p1": "For home and office delivery, the fee depends on your wilaya and on the delivery method.",
+            "p2": "The exact fee and your total are shown at checkout before you confirm your order."
+          },
           "payment": {
             "title": "Payment",
-            "p1": "Payment is in cash on receipt of your order. See “Delivery & returns” for details."
+            "p1": "You pay in cash, only when you receive your order: to the delivery person for home delivery, or at the Yalidine office when you collect it.",
+            "p2": "There is no online payment. The total to pay is the price of your products plus the delivery fee, if any.",
+            "p3": "We never ask for payment in advance."
           },
-          "delivery": {
-            "title": "Delivery",
-            "p1": "Delivery methods, fees and times are described on the “Delivery & returns” page."
+          "times": {
+            "title": "Delivery times",
+            "p1": "The delivery time depends on your wilaya and the delivery method.",
+            "p2": "We tell you the estimated time when we call to confirm your order."
+          },
+          "tracking": {
+            "title": "Following your order",
+            "p1": "After you order, you get a private page that shows where your order is.",
+            "p2": "You can also use “Track my order” at the bottom of any page, with your order number and the phone number you used."
           },
           "problems": {
-            "title": "Returns and exchanges",
-            "p1": "Our policy on returns and exchanges is being finalised. Meanwhile, if there is a problem with your order, contact us as soon as possible."
+            "title": "Problems, returns and exchanges",
+            "p1": "Please check your parcel when you receive it.",
+            "p2": "If an item is damaged or isn't what you ordered, contact us as soon as possible with your order number: our phone number and social media are at the bottom of every page.",
+            "p3": "Our policy on returns and exchanges is being finalised and will be published here."
           },
           "law": {
             "title": "Applicable law",

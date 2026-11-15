@@ -15,7 +15,9 @@ const nextConfig: NextConfig = {
     // the browser only ever talks to this site; /api/* is forwarded to the Spring Boot backend
     return [{ source: "/api/:path*", destination: `${backend}/api/:path*` }];
   },
-  devIndicators: false,
-};
+  async redirects() {
+    return [{ source: "/delivery-returns", destination: "/terms", permanent: true }];
+  },
+  devIndicators: false,};
 
 export default withNextIntl(nextConfig);

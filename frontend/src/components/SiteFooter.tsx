@@ -102,11 +102,6 @@ export default async function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/delivery-returns" className={LINK}>
-                  {t("deliveryReturns")}
-                </Link>
-              </li>
-              <li>
                 <Link href="/privacy" className={LINK}>
                   {t("privacy")}
                 </Link>

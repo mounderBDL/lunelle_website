@@ -2,8 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 
-type Item = { el: HTMLElement; mode: string; index: number; top: number; height: number; last: string };
-
+type Item = { el: HTMLElement; mode: string; index: number; top: number; height: number; last: string; peak: number };
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 const ease = (t: number) => t * t * (3 - 2 * t);
 
@@ -29,6 +28,7 @@ export default function ScrollScrub() {
       top: 0,
       height: 0,
       last: "",
+      peak: 0,
     }));
 
     let frame = 0;
@@ -62,7 +62,8 @@ export default function ScrollScrub() {
         } else {
           t = (vh * 0.94 - top) / (vh * 0.26);
         }
-        const value = ease(clamp(t)).toFixed(3);
+        item.peak = Math.max(item.peak, ease(clamp(t)));
+        const value = item.peak.toFixed(3);
         if (value !== item.last) {
           item.el.style.setProperty("--p", value);
           item.last = value;
