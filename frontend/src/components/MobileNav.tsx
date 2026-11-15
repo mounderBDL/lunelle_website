@@ -93,7 +93,7 @@ export default function MobileNav({ items, label }: { items: NavSection[]; label
         aria-controls={present ? panelId : undefined}
         onClick={() => (present && open ? closeMenu() : openMenu())}
         className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300 ${
-          open ? "bg-blush text-rose-dark" : "hover:bg-blush"
+          open ? "bg-blush text-rose-dark" : "bg-white shadow-sm shadow-cocoa/5 hover:bg-blush"
         }`}
       >
         <span className="mnav-burger" data-open={open} aria-hidden>

@@ -30,8 +30,8 @@ export default async function HomeHero({ hasPacks }: { hasPacks: boolean }) {
   const last = words.length - 1;
 
   return (
-    <section className="relative isolate overflow-hidden">
-      {/* ── the living backdrop ── */}
+    <section className="relative isolate -mt-16 overflow-hidden">      
+    {/* ── the living backdrop ── */}
       <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-b from-blush/60 via-cream to-cream" />
       <div aria-hidden className="hero-blob hero-blob-a" />
       <div aria-hidden className="hero-blob hero-blob-b" />
@@ -70,7 +70,7 @@ export default async function HomeHero({ hasPacks }: { hasPacks: boolean }) {
       </div>
 
       {/* ── the words ── */}
-      <div className="relative mx-auto flex min-h-[72svh] max-w-6xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
+      <div className="relative mx-auto flex min-h-[72svh] max-w-6xl flex-col items-center justify-center px-4 pb-20 pt-36 text-center sm:px-6">
         <p
           className="hero-fade text-xs uppercase tracking-[0.3em] text-rose-dark"
           style={css({ "--d": "100ms" })}

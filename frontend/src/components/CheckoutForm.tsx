@@ -182,11 +182,8 @@ export default function CheckoutForm({ wilayas }: { wilayas: DeliveryWilaya[] })
   };
   const homeFrom = cheapest((w) => w.home);
   const officeFrom = cheapest((w) => w.stopDesk);
-  const cardBadges: Record<DeliveryMethod, string | null> = {
-    HAND_TO_HAND: t("cards.free"),
-    HOME: homeFrom === null ? null : t("cards.from", { amount: formatMoney(homeFrom, locale) }),
-    STOP_DESK: officeFrom === null ? null : t("cards.from", { amount: formatMoney(officeFrom, locale) }),
-  };
+  // the cards show no price: the fee depends on the wilaya and appears in the order summary
+  const cardBadges: Record<DeliveryMethod, string | null> = { HAND_TO_HAND: null, HOME: null, STOP_DESK: null };
   const cardsOff: Record<DeliveryMethod, boolean> = {
     HAND_TO_HAND: false,
     HOME: homeFrom === null,

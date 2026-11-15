@@ -202,7 +202,6 @@ public class YalidineClient {
         sb.append("\"price\":").append(d.price()).append(',');
         sb.append("\"do_insurance\":false,");
         sb.append("\"declared_value\":").append(d.price()).append(',');
-        sb.append("\"length\":15,\"width\":15,\"height\":10,\"weight\":1,");
         sb.append("\"freeshipping\":false,");
         sb.append("\"is_stopdesk\":").append(d.stopDesk()).append(',');
         if (d.stopDesk() && stopDeskId != null) {

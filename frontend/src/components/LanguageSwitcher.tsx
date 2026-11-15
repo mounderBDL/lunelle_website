@@ -23,7 +23,7 @@ export default function LanguageSwitcher() {
     <div
       role="group"
       aria-label="Language"
-      className="flex items-center rounded-full border border-rose/30 p-0.5 text-xs font-medium"
+      className="flex items-center rounded-full bg-white p-1 text-xs font-medium shadow-sm shadow-cocoa/5"
     >
       {LOCALES.map((locale) => (
         <button
@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
           onClick={() => choose(locale)}
           aria-pressed={locale === current}
           disabled={pending}
-          className={`rounded-full px-2.5 py-1 uppercase transition-colors ${
+          className={`rounded-full px-2.5 py-2 uppercase transition-colors ${
             locale === current ? "bg-rose-dark text-white" : "text-cocoa/70 hover:text-rose-dark"
           }`}
         >

@@ -7,6 +7,7 @@ import CartButton from "./CartButton";
 import DesktopNav from "./DesktopNav";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobileNav from "./MobileNav";
+import HeaderTint from "./HeaderTint";
 
 export default async function SiteHeader() {
   const [t, categories, featured, packs, reviews] = await Promise.all([
@@ -28,8 +29,9 @@ export default async function SiteHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rose/20 bg-cream/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+    <header className="sticky top-0 z-40">
+     <HeaderTint />
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <Link href="/" aria-label="Lunelle">
           <Image
             src="/brand/logo.png"
@@ -43,7 +45,7 @@ export default async function SiteHeader() {
 
         <DesktopNav items={items} label={t("menu")} />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2">
           <LanguageSwitcher />
           <CartButton label={t("cart")} />
           <MobileNav items={items} label={t("menu")} />

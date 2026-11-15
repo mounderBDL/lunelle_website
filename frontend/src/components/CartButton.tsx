@@ -27,20 +27,16 @@ export default function CartButton({ label }: { label: string }) {
         event.preventDefault();
         openCart();
       }}
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-cocoa hover:bg-blush"
-    >
+      className="relative inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white px-3 text-sm font-medium text-cocoa shadow-sm shadow-cocoa/5 transition-colors hover:bg-blush sm:px-4"    
+      >
       {/* the prefixes keep the two keys different, whatever the numbers are */}
       <span key={`bump-${bumps}`} className={bumps > 0 ? "cart-bump" : undefined}>
         <ShoppingBag className="h-5 w-5" aria-hidden />
       </span>
-      {mounted && count > 0 && (
-        <span
-          key={`count-${count}`}
-          className="cart-pop absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-dark px-1 text-[11px] font-semibold text-white"
-        >
-          {count}
-        </span>
-      )}
+      <span className="hidden sm:inline">{label}</span>
+      <span key={`count-${count}`} className={`tabular-nums ${mounted && count > 0 ? "cart-pop" : ""}`}>
+        ({mounted ? count : 0})
+      </span>
     </Link>
   );
 }
