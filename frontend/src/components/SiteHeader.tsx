@@ -29,7 +29,7 @@ export default async function SiteHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-40">
+    <header className="site-header sticky top-0 z-40">
      <HeaderTint />
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <Link href="/" aria-label="Lunelle">

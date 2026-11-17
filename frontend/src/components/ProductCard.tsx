@@ -35,7 +35,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
             src={image}
             alt={name}
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 25vw, 50vw"
             className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
               product.inStock ? "" : "opacity-60 grayscale"
             }`}

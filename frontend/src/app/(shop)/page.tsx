@@ -2,7 +2,9 @@ import { getLocale, getTranslations } from "next-intl/server";
 import CardGrid from "@/components/CardGrid";
 import CollectionsGallery from "@/components/CollectionsGallery";
 import FaqSection from "@/components/FaqSection";
+import HeroVideo from "@/components/HeroVideo";
 import HomeHero from "@/components/HomeHero";
+import IntroCurtain from "@/components/IntroCurtain";
 import PackCard from "@/components/PackCard";
 import ProductCard from "@/components/ProductCard";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -35,7 +37,10 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomeHero hasPacks={packs.length > 0} />
+      <IntroCurtain />
+      {/* the film hero is on trial: to go back, use the line below instead */}
+      <HeroVideo hasPacks={packs.length > 0} />
+      {/* <HomeHero hasPacks={packs.length > 0} /> */}
 
       {nothingYet && (
         <p className="mx-auto max-w-xl px-4 py-16 text-center font-display text-2xl text-cocoa/70">

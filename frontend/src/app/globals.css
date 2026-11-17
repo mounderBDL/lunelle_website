@@ -325,12 +325,10 @@
   from {
     opacity: 0;
     transform: translateY(0.9em);
-    filter: blur(10px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: blur(0);
   }
 }
 @keyframes hero-fade {
@@ -363,11 +361,128 @@
   }
   .hero-word {
     animation: hero-rise 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--i, 0) * 120ms + 250ms);
+    animation-delay: calc(var(--intro, 0ms) + var(--i, 0) * 120ms + 250ms);
   }
   .hero-fade {
     animation: hero-fade 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: var(--d, 0ms);
+    animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms));
+  }
+}
+
+/* ── first-visit intro: the curtain ──
+   timeline (ms): 0-700 words fade in · 1200-2000 words split apart · 2000-2500 gold line grows
+   2600 line fades out and the curtain starts opening · 3500 curtain open · 3550 intro removed */
+.intro {
+  display: none;
+}
+html[data-intro="on"] {
+  --intro: 2900ms;
+}
+html[data-intro="on"] .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  animation: intro-gone 1ms linear 3550ms forwards;
+}
+.intro-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.2%;
+  background: var(--color-cocoa);
+  will-change: transform;
+}
+.intro-panel-l {
+  left: 0;
+  animation: intro-open-l 900ms cubic-bezier(0.76, 0, 0.24, 1) 2600ms forwards;
+}
+.intro-panel-r {
+  right: 0;
+  animation: intro-open-r 900ms cubic-bezier(0.76, 0, 0.24, 1) 2600ms forwards;
+}
+.intro-word {
+  position: relative;
+  padding-left: 0.4em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--color-cream);
+  animation: intro-in 700ms ease both;
+}
+.intro-up,
+.intro-down {
+  display: inline-block;
+}
+.intro-up {
+  animation: intro-up 800ms cubic-bezier(0.65, 0, 0.35, 1) 1200ms forwards;
+}
+.intro-down {
+  animation: intro-down 800ms cubic-bezier(0.65, 0, 0.35, 1) 1200ms forwards;
+}
+.intro-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-gold);
+  animation: intro-line 750ms ease 2000ms both;
+}
+html[data-intro="on"] .site-header {
+  animation: intro-fade 700ms ease 3300ms both;
+}
+@keyframes intro-open-l {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+@keyframes intro-open-r {
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes intro-gone {
+  to {
+    visibility: hidden;
+  }
+}
+@keyframes intro-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes intro-up {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -1.4em, 0);
+  }
+}
+@keyframes intro-down {
+  to {
+    opacity: 0;
+    transform: translate3d(0, 1.4em, 0);
+  }
+}
+@keyframes intro-line {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  67%,
+  80% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+@keyframes intro-fade {
+  from {
+    opacity: 0;
   }
 }
 
@@ -1118,5 +1233,12 @@
     transform-box: view-box;
     transform-origin: 200px 380px;
     animation: story-sway 8s ease-in-out infinite;
+  }
+}
+
+/* people who asked for less motion see the still first frame instead of the video */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
   }
 }

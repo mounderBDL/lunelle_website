@@ -43,6 +43,8 @@ export default function ScrollScrub() {
         item.height = box.height;
         item.last = "";
       }
+      // everything has played once: nothing left to follow, so stop listening
+      if (items.every((item) => item.peak >= 1)) stop();
     }
 
     function update() {
@@ -71,6 +73,11 @@ export default function ScrollScrub() {
       }
     }
 
+    function stop() {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", remeasure);
+      observer.disconnect();
+    }
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
@@ -86,7 +93,15 @@ export default function ScrollScrub() {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", remeasure);
     // the section changes height when a question opens, fonts load or the text wraps differently
-    const observer = new ResizeObserver(remeasure);
+    // the observer reports once as soon as it starts: that first report is not a change
+    let first = true;
+    const observer = new ResizeObserver(() => {
+      if (first) {
+        first = false;
+        return;
+      }
+      remeasure();
+    });
     observer.observe(root);
     void document.fonts?.ready.then(remeasure);
 

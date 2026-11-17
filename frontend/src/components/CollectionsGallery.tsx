@@ -57,6 +57,8 @@ export default function CollectionsGallery({ items, exploreLabel }: { items: Gal
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 30vw, 70vw"
+                  loading={i === 0 ? "eager" : undefined}
+                  fetchPriority={i === 0 ? "high" : undefined}
                   className="collection-photo object-cover"
                 />
               )}

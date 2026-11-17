@@ -1,0 +1,2 @@
+/** The address of the public site, without a trailing slash. Set SITE_URL in the environment when the site goes online. */
+export const SITE_URL = (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
