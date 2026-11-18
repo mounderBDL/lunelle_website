@@ -2,6 +2,7 @@ package com.lunelle.backend.order;
 
 import com.lunelle.backend.catalog.*;
 import com.lunelle.backend.catalog.CatalogDtos.LocalizedName;
+import com.lunelle.backend.common.ClientIps;
 import com.lunelle.backend.common.PhoneUtil;
 import com.lunelle.backend.delivery.*;
 import com.lunelle.backend.order.OrderDtos.*;
@@ -45,6 +46,8 @@ public class CheckoutService {
     private final BlockedPhoneRepository blockedPhones;
     private final ApplicationEventPublisher events;
     private final EntityManager em;
+    private final OrderRateLimiter orderLimits;
+    private final ClientIps clientIps;
 
     // ───────────── quote (cart / checkout page) ─────────────
 
@@ -65,8 +68,15 @@ public class CheckoutService {
 
     // ───────────── place the order ─────────────
 
+    /** Places an order for the client behind the current HTTP request (its IP is rate-limited). */
     @Transactional
     public PlacedOrderDto place(CheckoutRequest r) {
+        return place(r, clientIps.current());
+    }
+
+    /** @param clientIp the client's rate-limit key from ClientIps, or null if unknown */
+    @Transactional
+    public PlacedOrderDto place(CheckoutRequest r, String clientIp) {
         if (r.website() != null && !r.website().isBlank()) {
             throw bad("INVALID_REQUEST", "Invalid request"); // honeypot filled: a bot
         }
@@ -78,6 +88,7 @@ public class CheckoutService {
                 return already.get(); // the first answer was lost on the way: give the same order back
             }
         }
+        orderLimits.acquire(clientIp); // after the replay check: a retry of the same order isn't a new attempt
         if (blockedPhones.existsById(phone)) {
             throw bad("PHONE_BLOCKED", "We cannot process this order online. Please contact us.");
         }

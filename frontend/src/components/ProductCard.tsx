@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { PublicProduct } from "@/lib/api/types";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import ImagePlaceholder from "./ImagePlaceholder";
+import OutOfStockStamp from "./OutOfStockStamp";
 import TiltFrame from "./TiltFrame";
 import QuickAdd from "./QuickAdd";
 
@@ -36,9 +37,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
             alt={name}
             fill
             sizes="(min-width: 1024px) 25vw, 50vw"
-            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              product.inStock ? "" : "opacity-60 grayscale"
-            }`}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <ImagePlaceholder />
@@ -49,11 +48,9 @@ export default function ProductCard({ product, locale, labels }: Props) {
             {tag}
           </span>
         )}
-        {!product.inStock && (
-          <span className="absolute inset-x-0 bottom-4 mx-auto w-fit rounded-full bg-cocoa/85 px-4 py-1 text-xs uppercase tracking-wider text-white">
-            {labels.outOfStock}
-          </span>
-        )}
+          {!product.inStock && (
+            <OutOfStockStamp label={labels.outOfStock} className="absolute left-3 top-4" />
+          )}
       </TiltFrame>
 
       <div className="mt-4 text-center">

@@ -8,6 +8,7 @@ import PackPurchase from "@/components/PackPurchase";
 import { loadPack } from "@/lib/api/catalog";
 import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import PackFan from "@/components/PackFan";
+import OutOfStockStamp from "@/components/OutOfStockStamp";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PackPage({ params }: Props) {
   const { slug } = await params;
+  const tProduct = await getTranslations("product");
   const [t, tc, locale, pack] = await Promise.all([
     getTranslations("packs"),
     getTranslations("common"),
@@ -62,10 +64,13 @@ export default async function PackPage({ params }: Props) {
               fill
               priority
               sizes="(min-width: 768px) 50vw, 100vw"
-              className={`object-cover ${pack.inStock ? "" : "opacity-70 grayscale"}`}
+              className="object-cover"
             />
           ) : (
             <ImagePlaceholder />
+          )}
+          {!pack.inStock && (
+            <OutOfStockStamp large label={tProduct("outOfStock")} className="absolute left-4 top-5" />
           )}
         </div>
 

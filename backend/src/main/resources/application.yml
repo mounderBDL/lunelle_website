@@ -43,6 +43,15 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     ttl-hours: 12
+  # Where the real customer IP comes from, for the per-IP limits (login, order lookup, checkout).
+  # Leave the header empty until the site runs behind its HTTPS proxy: the per-IP limits then stay off.
+  #   Cloudflare:     CLIENT_IP_HEADER=CF-Connecting-IP  (and let only Cloudflare reach the server)
+  #   nginx / Caddy:  CLIENT_IP_HEADER=X-Real-IP         (the proxy must OVERWRITE it with the peer address)
+  # Next.js must not be reachable directly from the internet, or clients could set the header themselves.
+  # trusted-proxies = the address(es) the Next.js server calls this backend from.
+  client-ip:
+    header: ${CLIENT_IP_HEADER:}
+    trusted-proxies: ${TRUSTED_PROXIES:127.0.0.1,::1}
   cookie:
     name: lunelle_admin
     secure: false   # must be true in production (HTTPS)

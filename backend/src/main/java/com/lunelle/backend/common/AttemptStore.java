@@ -78,12 +78,15 @@ public class AttemptStore {
                 .update();
     }
 
-    /** Forgets the failures of one key (a successful login). The scope-wide count is left alone. */
+    /** Forgets the failures of these keys (a successful login). The scope-wide count is left alone. */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void clear(String scope, String key) {
-        jdbc.sql("delete from attempt_failure where scope = :scope and attempt_key = :key")
+    public void clear(String scope, Collection<String> keys) {
+        if (keys.isEmpty()) {
+            return;
+        }
+        jdbc.sql("delete from attempt_failure where scope = :scope and attempt_key in (:keys)")
                 .param("scope", scope)
-                .param("key", norm(key))
+                .param("keys", keys.stream().map(AttemptStore::norm).toList())
                 .update();
     }
 

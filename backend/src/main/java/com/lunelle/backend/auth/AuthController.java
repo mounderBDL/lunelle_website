@@ -2,6 +2,7 @@ package com.lunelle.backend.auth;
 
 import com.lunelle.backend.admin.AdminUser;
 import com.lunelle.backend.admin.AdminUserRepository;
+import com.lunelle.backend.common.ClientIps;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +37,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final LoginAttemptService attempts;
+    private final ClientIps clientIps;
 
     @Value("${app.cookie.name}")
     private String cookieName;
@@ -54,7 +56,8 @@ public class AuthController {
     @PostMapping("/login")
     public AdminDto login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         String key = request.email().trim().toLowerCase(Locale.ROOT);
-        attempts.assertAllowed(key);
+        String ip = clientIps.current();
+        attempts.assertAllowed(key, ip);
 
         AdminUser admin = admins.findByEmailIgnoreCase(request.email().trim())
                 .filter(AdminUser::isActive)
@@ -62,10 +65,10 @@ public class AuthController {
         String hash = admin != null ? admin.getPasswordHash() : dummyHash;
         boolean passwordOk = fitsBcrypt(request.password()) && passwordEncoder.matches(request.password(), hash);
         if (admin == null || !passwordOk) {
-            attempts.recordFailure(key);
+            attempts.recordFailure(key, ip);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
-        attempts.reset(key);
+        attempts.reset(key, ip);
         setCookie(response, jwtService.issue(admin), jwtService.ttl());
         return AdminDto.from(admin);
     }
@@ -89,14 +92,15 @@ public class AuthController {
                                    @AuthenticationPrincipal Jwt jwt, HttpServletResponse response) {
         UUID id = UUID.fromString(jwt.getSubject());
         String key = "pw:" + id;
-        attempts.assertAllowed(key);
+        String ip = clientIps.current();
+        attempts.assertAllowed(key, ip);
 
         AdminUser admin = admins.findById(id)
                 .filter(AdminUser::isActive)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         if (!fitsBcrypt(request.currentPassword())
                 || !passwordEncoder.matches(request.currentPassword(), admin.getPasswordHash())) {
-            attempts.recordFailure(key);
+            attempts.recordFailure(key, ip);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The current password is incorrect");
         }
         if (!fitsBcrypt(request.newPassword())) {
@@ -105,7 +109,7 @@ public class AuthController {
         if (request.newPassword().equals(request.currentPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The new password must be different");
         }
-        attempts.reset(key);
+        attempts.reset(key, ip);
 
         admin.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         admin.setPasswordChangedAt(Instant.now());
@@ -125,14 +129,15 @@ public class AuthController {
         String email = request.email().trim();
         if (!email.equalsIgnoreCase(admin.getEmail())) {
             String key = "pw:" + id;
-            attempts.assertAllowed(key);
+            String ip = clientIps.current();
+            attempts.assertAllowed(key, ip);
             String current = request.currentPassword();
             if (current == null || !fitsBcrypt(current)
                     || !passwordEncoder.matches(current, admin.getPasswordHash())) {
-                attempts.recordFailure(key);
+                attempts.recordFailure(key, ip);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The current password is incorrect");
             }
-            attempts.reset(key);
+            attempts.reset(key, ip);
             admins.findByEmailIgnoreCase(email)
                     .filter(other -> !other.getId().equals(id))
                     .ifPresent(other -> {

@@ -5,6 +5,7 @@ import { formatMoney, imageUrlOrNull, localized } from "@/lib/format";
 import PackFanMini from "./PackFanMini";
 import TiltFrame from "./TiltFrame";
 import QuickAdd from "./QuickAdd";
+import OutOfStockStamp from "./OutOfStockStamp";
 
 type Props = {
   pack: PublicPack;
@@ -30,21 +31,17 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
             alt={name}
             fill
             sizes="(min-width: 1024px) 33vw, 50vw"
-            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              pack.inStock ? "" : "opacity-60 grayscale"
-            }`}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <PackFanMini items={pack.items} />
         )}
-        <span className="absolute left-2 top-2 rounded-full bg-parchment px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-rose-dark sm:left-4 sm:top-4 sm:px-3 sm:py-1 sm:text-[11px]">
-          {labels.pack}
-        </span>
-        {!pack.inStock && (
-          <span className="absolute inset-x-0 bottom-3 mx-auto w-fit rounded-full bg-cocoa/85 px-3 py-1 text-[10px] uppercase tracking-wider text-white sm:bottom-4 sm:px-4 sm:text-xs">
-            {labels.outOfStock}
-          </span>
-        )}
+          <div className="absolute left-2 top-3 flex flex-col items-start gap-2 sm:left-4 sm:top-4">
+            {!pack.inStock && <OutOfStockStamp label={labels.outOfStock} />}
+            <span className="rounded-full bg-parchment px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-rose-dark sm:px-3 sm:py-1 sm:text-[11px]">
+              {labels.pack}
+            </span>
+          </div>
       </TiltFrame>
 
       <div className="mt-3 text-center sm:mt-4">

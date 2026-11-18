@@ -1,5 +1,6 @@
 package com.lunelle.backend.order;
 
+import com.lunelle.backend.common.ClientIps;
 import com.lunelle.backend.common.PhoneUtil;
 import com.lunelle.backend.order.OrderDtos.OrderSummaryDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class OrderQueryService {
 
     private final CustomerOrderRepository orders;
     private final LookupAttemptService attempts;
+    private final ClientIps clientIps;
 
     /** The private link given at checkout: whoever holds the token sees the whole order. */
     @Transactional(readOnly = true)
@@ -26,9 +28,15 @@ public class OrderQueryService {
                 .orElseThrow(OrderQueryService::notFound);
     }
 
-    /** Customer lookup: order code + phone number. Rate-limited; the street address is never returned. */
+    /** Customer lookup from the current HTTP request (its client IP is rate-limited too). */
     @Transactional(readOnly = true)
     public OrderSummaryDto lookup(String code, String phone) {
+        return lookup(code, phone, clientIps.current());
+    }
+
+    /** Customer lookup: order code + phone number. Rate-limited; the street address is never returned. */
+    @Transactional(readOnly = true)
+    public OrderSummaryDto lookup(String code, String phone, String clientIp) {
         String normalizedCode = code.trim().toUpperCase(Locale.ROOT);
         String normalizedPhone = null;
         try {
@@ -39,13 +47,13 @@ public class OrderQueryService {
         String[] keys = normalizedPhone == null
                 ? new String[]{"code:" + normalizedCode}
                 : new String[]{"code:" + normalizedCode, "phone:" + normalizedPhone};
-        attempts.assertAllowed(keys);
+        attempts.assertAllowed(clientIp, keys);
 
         Optional<CustomerOrder> found = normalizedPhone == null
                 ? Optional.empty()
                 : orders.findByCodeAndPhone(normalizedCode, normalizedPhone);
         if (found.isEmpty()) {
-            attempts.recordFailure(keys);
+            attempts.recordFailure(clientIp, keys);
             throw notFound();
         }
         return OrderMapper.summary(found.get(), false);
