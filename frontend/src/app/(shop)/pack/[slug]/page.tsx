@@ -70,7 +70,7 @@ export default async function PackPage({ params }: Props) {
             <ImagePlaceholder />
           )}
           {!pack.inStock && (
-            <OutOfStockStamp large label={tProduct("outOfStock")} className="absolute left-4 top-5" />
+            <OutOfStockStamp large label={tProduct("outOfStock")} />
           )}
         </div>
 

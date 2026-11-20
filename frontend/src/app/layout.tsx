@@ -32,13 +32,16 @@ export const metadata: Metadata = {
 };
 
 const INTRO_SCRIPT = `try{if(location.pathname==="/"&&!sessionStorage.getItem("lunelle-intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches){sessionStorage.setItem("lunelle-intro","1");document.documentElement.dataset.intro="on"}}catch(e){}`;
+// home page, before the first paint: the header starts over the dark hero, and the hero's scroll pin is on
+// (unless the visitor asked for less motion). HeroScroll keeps both up to date afterwards.
+const HERO_SCRIPT = `try{if(location.pathname==="/"){var d=document.documentElement;d.setAttribute("data-header-dark","");if(matchMedia("(prefers-reduced-motion: reduce)").matches)d.setAttribute("data-hero-full","");else d.dataset.heroMotion="on"}}catch(e){}`;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${display.variable} ${sans.variable} ${script.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT + HERO_SCRIPT }} />
       </head>
       <body className="min-h-screen">{children}</body>
     </html>

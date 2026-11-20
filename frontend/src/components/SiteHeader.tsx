@@ -39,7 +39,7 @@ export default async function SiteHeader() {
             width={200}
             height={70}
             priority
-            className="h-11 w-auto mix-blend-multiply"
+            className="site-logo h-11 w-auto mix-blend-multiply"
           />
         </Link>
 

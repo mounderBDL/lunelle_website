@@ -13,8 +13,12 @@ export type GalleryItem = {
   imageUrl: string | null;
 };
 
+/** How many colour tones the strips cycle through (the .collections-panel rules in globals.css). */
+const TONES = 6;
+
 /**
- * Computers: a compact row of equal strips. Only the one under the cursor (or focused) widens.
+ * Computers: a row of equal strips filling its column. Only the one under the cursor (or focused) widens,
+ * and the surrounding panel takes on that strip's tone (data-tone).
  * Phones and tablets: a swipeable carousel that snaps card by card.
  */
 export default function CollectionsGallery({ items, exploreLabel }: { items: GalleryItem[]; exploreLabel: string }) {
@@ -40,6 +44,7 @@ export default function CollectionsGallery({ items, exploreLabel }: { items: Gal
           <li
             key={item.id}
             data-active={isActive}
+            data-tone={i % TONES}
             style={{ "--grow": isActive ? 4 : 1 } as React.CSSProperties}
             className="collection-strip"
           >
@@ -64,6 +69,10 @@ export default function CollectionsGallery({ items, exploreLabel }: { items: Gal
               )}
               <div aria-hidden className="absolute inset-0 bg-linear-to-t from-cocoa/75 via-cocoa/10 to-transparent" />
               <div aria-hidden className="collection-dim absolute inset-0 bg-cocoa/25" />
+
+              <span aria-hidden className="absolute left-4 top-4 text-xs font-medium tracking-[0.25em] text-white/90">
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
               <span
                 aria-hidden

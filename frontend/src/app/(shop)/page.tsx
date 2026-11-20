@@ -2,8 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import CardGrid from "@/components/CardGrid";
 import CollectionsGallery from "@/components/CollectionsGallery";
 import FaqSection from "@/components/FaqSection";
-import HeroVideo from "@/components/HeroVideo";
-import HomeHero from "@/components/HomeHero";
+import NightHero from "@/components/NightHero";
 import IntroCurtain from "@/components/IntroCurtain";
 import PackCard from "@/components/PackCard";
 import ProductCard from "@/components/ProductCard";
@@ -38,9 +37,8 @@ export default async function HomePage() {
   return (
     <>
       <IntroCurtain />
-      {/* the film hero is on trial: to go back, use the line below instead */}
-      <HeroVideo hasPacks={packs.length > 0} />
-      {/* <HomeHero hasPacks={packs.length > 0} /> */}
+      {/* the night hero: a photo that opens on scroll */}
+      <NightHero hasPacks={packs.length > 0} />
 
       {nothingYet && (
         <p className="mx-auto max-w-xl px-4 py-16 text-center font-display text-2xl text-cocoa/70">
@@ -50,12 +48,28 @@ export default async function HomePage() {
 
       {/* 1. Collections */}
       {collections.length > 0 && (
-        <section id="collections" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
-          <h2 className="reveal text-center text-4xl">{t("collections")}</h2>
-          <div className="reveal mt-10">
-            <CollectionsGallery items={collections} exploreLabel={t("explore")} />
-          </div>
-        </section>
+        <div className="px-3 py-10 sm:px-6">
+          {/* a tinted panel: its colour follows the hovered collection (see .collections-panel in globals.css) */}
+          <section
+            id="collections"
+            className="collections-panel mx-auto max-w-7xl scroll-mt-20 rounded-4xl px-4 py-12 sm:px-8 lg:grid lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:items-center lg:gap-14 lg:px-12 lg:py-14"
+          >
+            <div className="reveal text-center lg:text-left">
+              <p className="collections-ink text-xs uppercase tracking-[0.3em]">
+                {t("collectionsCount", { count: collections.length })}
+              </p>
+              <h2 className="mt-4 text-4xl leading-tight sm:text-5xl">{t("collections")}</h2>
+              <span
+                aria-hidden
+                className="mx-auto mt-6 block h-px w-20 bg-linear-to-r from-gold/0 via-gold to-gold/0 lg:mx-0 lg:from-gold"
+              />
+              <p className="mx-auto mt-6 max-w-sm text-cocoa/75 lg:mx-0">{t("collectionsText")}</p>
+            </div>
+            <div className="reveal mt-10 lg:mt-0">
+              <CollectionsGallery items={collections} exploreLabel={t("explore")} />
+            </div>
+          </section>
+        </div>
       )}
 
       {/* 2. Best sellers */}

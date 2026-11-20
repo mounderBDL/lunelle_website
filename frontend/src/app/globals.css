@@ -9,6 +9,7 @@
   --color-cocoa: #3d2f2c;
   --color-gold: #b8924a;
   --color-sage: #8a9a78;
+  --color-night: #1d1219; /* the night hero: a deep plum */
 
   /* soft status colors, used by the admin */
   --color-lavender: #e8e2f3;
@@ -229,108 +230,8 @@
   opacity: 1;
 }
 
-/* ── shop: home hero ── */
-.hero-word {
-  display: inline-block;
-}
-.hero-blob {
-  position: absolute;
-  z-index: -10;
-  border-radius: 9999px;
-  pointer-events: none;
-  will-change: transform;
-}
-.hero-blob-a {
-  width: 46rem;
-  height: 46rem;
-  left: -14rem;
-  top: -16rem;
-  background: radial-gradient(circle, rgba(246, 228, 226, 0.95), rgba(246, 228, 226, 0) 68%);
-}
-.hero-blob-b {
-  width: 40rem;
-  height: 40rem;
-  right: -12rem;
-  top: 2rem;
-  background: radial-gradient(circle, rgba(239, 184, 193, 0.55), rgba(239, 184, 193, 0) 66%);
-}
-.hero-blob-c {
-  width: 34rem;
-  height: 34rem;
-  left: 30%;
-  bottom: -18rem;
-  background: radial-gradient(circle, rgba(232, 226, 243, 0.85), rgba(232, 226, 243, 0) 65%);
-}
-.hero-petal {
-  position: absolute;
-  top: 0;
-  display: none;
-  border-radius: 100% 0 100% 0;
-  opacity: 0;
-}
-
-@keyframes hero-drift-a {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(7%, 9%, 0) scale(1.14);
-  }
-}
-@keyframes hero-drift-b {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1.05);
-  }
-  50% {
-    transform: translate3d(-9%, 6%, 0) scale(0.92);
-  }
-}
-@keyframes hero-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(-6deg);
-  }
-  50% {
-    transform: translate3d(0, -14px, 0) rotate(-2deg);
-  }
-}
-@keyframes petal-fall {
-  0% {
-    transform: translate3d(0, -6svh, 0) rotate(0deg);
-    opacity: 0;
-  }
-  8% {
-    opacity: 0.85;
-  }
-  25% {
-    transform: translate3d(calc(var(--drift) * 0.8), 24svh, 0) rotate(110deg);
-  }
-  50% {
-    transform: translate3d(calc(var(--drift) * -0.3), 48svh, 0) rotate(230deg);
-  }
-  75% {
-    transform: translate3d(calc(var(--drift) * 0.6), 73svh, 0) rotate(330deg);
-  }
-  92% {
-    opacity: 0.85;
-  }
-  100% {
-    transform: translate3d(var(--drift), 98svh, 0) rotate(430deg);
-    opacity: 0;
-  }
-}
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.9em);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+/* ── shop: home hero entrance. The night hero's corner labels and giant word fade in after the intro curtain
+   (--intro, set while the curtain plays; --d, each element's own delay). The scroll part is further down. ── */
 @keyframes hero-fade {
   from {
     opacity: 0;
@@ -343,26 +244,6 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero-blob-a {
-    animation: hero-drift-a 22s ease-in-out infinite;
-  }
-  .hero-blob-b {
-    animation: hero-drift-b 27s ease-in-out infinite;
-  }
-  .hero-blob-c {
-    animation: hero-drift-a 31s ease-in-out infinite reverse;
-  }
-  .hero-moon {
-    animation: hero-float 9s ease-in-out infinite;
-  }
-  .hero-petal {
-    display: block;
-    animation: petal-fall var(--dur, 20s) linear var(--delay, 0s) infinite;
-  }
-  .hero-word {
-    animation: hero-rise 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--intro, 0ms) + var(--i, 0) * 120ms + 250ms);
-  }
   .hero-fade {
     animation: hero-fade 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms));
@@ -443,9 +324,14 @@ html[data-intro="on"] .site-header {
     transform: translate3d(100%, 0, 0);
   }
 }
+/* Both ends hold the final values: with only a "to", Chrome interpolates visibility from "visible" and
+   leaves the finished curtain visible, so the invisible layer kept catching every hover and click.
+   pointer-events is a second guard: even if it stays painted, the mouse goes through to the page. */
 @keyframes intro-gone {
+  from,
   to {
     visibility: hidden;
+    pointer-events: none;
   }
 }
 @keyframes intro-in {
@@ -486,6 +372,45 @@ html[data-intro="on"] .site-header {
   }
 }
 
+/* ── shop: collections panel ──
+   A softly tinted panel; while a strip is hovered or focused, the panel and its accent text take on that
+   strip's tone (data-tone, 0-5, set by CollectionsGallery). Pure CSS: :has() reads which strip is active. */
+.collections-panel {
+  --tone-bg: color-mix(in srgb, var(--color-blush) 35%, var(--color-cream));
+  --tone-ink: var(--color-rose-dark);
+  background-color: var(--tone-bg);
+  transition: background-color 700ms ease;
+}
+/* each tone = its soft colour deepened with a little of its dark one, so neighbours are clearly different */
+.collections-panel:has([data-active="true"][data-tone="0"]) {
+  --tone-bg: var(--color-petal-200);
+  --tone-ink: var(--color-petal-700);
+}
+.collections-panel:has([data-active="true"][data-tone="1"]) {
+  --tone-bg: color-mix(in srgb, var(--color-amber-soft) 86%, var(--color-amber-dark));
+  --tone-ink: var(--color-amber-dark);
+}
+.collections-panel:has([data-active="true"][data-tone="2"]) {
+  --tone-bg: color-mix(in srgb, var(--color-terracotta-soft) 84%, var(--color-terracotta-dark));
+  --tone-ink: var(--color-terracotta-dark);
+}
+.collections-panel:has([data-active="true"][data-tone="3"]) {
+  --tone-bg: color-mix(in srgb, var(--color-lavender) 86%, var(--color-lavender-dark));
+  --tone-ink: var(--color-lavender-dark);
+}
+.collections-panel:has([data-active="true"][data-tone="4"]) {
+  --tone-bg: color-mix(in srgb, var(--color-sage-soft) 86%, var(--color-sage-dark));
+  --tone-ink: var(--color-sage-dark);
+}
+.collections-panel:has([data-active="true"][data-tone="5"]) {
+  --tone-bg: color-mix(in srgb, var(--color-stone-soft) 86%, var(--color-stone-dark));
+  --tone-ink: var(--color-stone-dark);
+}
+.collections-ink {
+  color: var(--tone-ink);
+  transition: color 700ms ease;
+}
+
 /* ── shop: collections gallery ── */
 .collections-row {
   scrollbar-width: none;
@@ -514,11 +439,12 @@ html[data-intro="on"] .site-header {
 }
 @media (min-width: 1024px) {
   .collections-row {
-    height: 30rem;
+    /* fills its column beside the title; never taller than most of the screen, so a whole card stays in view */
+    height: clamp(22rem, 70vh, 32rem);
     gap: 0.75rem;
-    /* always the same width: one open strip (20rem) + the others at their narrowest (5rem + gap) */
-    width: min(100%, calc(20rem + (var(--n, 4) - 1) * 5.75rem));
-    margin-inline: auto;
+  }
+  .collection-strip[data-active="true"] {
+    min-width: 20rem; /* room for the details, even with many collections */
   }
   .collection-strip {
     height: 100%;
@@ -1177,33 +1103,7 @@ html[data-intro="on"] .site-header {
   }
 }
 
-/* ── vintage plants: hero clouds, hero plants, the story bouquet ── */
-@keyframes cloud-drift {
-  from {
-    transform: translateX(calc(-1 * var(--x, 0px) - 26rem));
-  }
-  to {
-    transform: translateX(calc(100vw - var(--x, 0px) + 4rem));
-  }
-}
-@keyframes vine-draw {
-  from {
-    stroke-dashoffset: 1;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes vine-pop {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+/* ── the story bouquet: a slow sway ── */
 @keyframes story-sway {
   0%,
   100% {
@@ -1214,21 +1114,6 @@ html[data-intro="on"] .site-header {
   }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .hero-cloud {
-    animation: cloud-drift var(--dur, 150s) linear var(--delay, 0s) infinite;
-  }
-  .vine-stem {
-    stroke-dasharray: 1;
-    animation: vine-draw 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
-  }
-  .vine-pop {
-    transform-box: fill-box;
-    transform-origin: 0 50%;
-    animation: vine-pop 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 1s) both;
-  }
-  .vine-pop-c {
-    transform-origin: 50% 50%;
-  }
   .story-sway {
     transform-box: view-box;
     transform-origin: 200px 380px;
@@ -1236,9 +1121,135 @@ html[data-intro="on"] .site-header {
   }
 }
 
-/* people who asked for less motion see the still first frame instead of the video */
-@media (prefers-reduced-motion: reduce) {
-  .hero-video {
-    display: none;
+/* ── home hero: the night pin ──
+   HeroScroll sets --hp on .hero-pin: 0 when the pin starts, 1 when the window is open and the page moves on.
+   Without the script (or for reduced motion) --hp stays 1: the opened hero, no pin.
+   html[data-hero-motion] is set before the first paint (layout.tsx), so the closed state never flashes. */
+.hero-pin {
+  --hp: 1;
+}
+html[data-hero-motion] .hero-pin {
+  --hp: 0;
+  height: 300svh; /* the stage is held for 2 screens of scrolling */
+}
+@media (max-width: 767px) {
+  html[data-hero-motion] .hero-pin {
+    height: 240svh;
   }
+}
+.hero-stage {
+  /* the window starts opening at 15% of the pin, slowly at first (squared), and is fully open at 77%:
+     during the first half the word does the travelling, then the film takes over. Then the title types in. */
+  --lin: clamp(0, calc((var(--hp) - 0.15) / 0.62), 1);
+  --open: calc(var(--lin) * var(--lin));
+  --shut: calc(1 - var(--open));
+  --fin: clamp(0, calc((var(--hp) - 0.74) * 4.5), 1);
+  /* where the closed window sits (share of the screen cut away on each side).
+     The top never rises above the corner labels (they end about 11rem down), whatever the screen height. */
+  --win-top: max(22%, 12.5rem);
+  --win-bottom: 18%;
+  --win-x: 29%;
+}
+@media (max-width: 767px) {
+  .hero-stage {
+    /* narrower than the word, so the name overflows the window as on large screens */
+    --win-top: max(27%, 11rem);
+    --win-bottom: 23%;
+    --win-x: 15%;
+  }
+}
+.hero-grid {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgb(154 85 96 / 0.28), transparent 70%),
+    linear-gradient(rgb(184 146 74 / 0.06) 1px, transparent 1px) 0 0 / 6rem 6rem,
+    linear-gradient(90deg, rgb(184 146 74 / 0.06) 1px, transparent 1px) 0 0 / 6rem 6rem;
+}
+.hero-corners {
+  /* gone (by ~40% of the pin) before the growing window reaches them: they are drawn above it */
+  opacity: clamp(0, calc(1.7 - var(--hp) * 4.2), 1);
+}
+.hero-window,
+.hero-mark-clip {
+  clip-path: inset(
+    calc(var(--shut) * var(--win-top)) calc(var(--shut) * var(--win-x)) calc(var(--shut) * var(--win-bottom))
+      calc(var(--shut) * var(--win-x)) round calc(var(--shut) * 1.75rem)
+  );
+}
+.hero-media {
+  transform: scale(calc(1 + var(--shut) * 0.15)); /* the film settles as the window opens */
+}
+.hero-wash {
+  opacity: clamp(0, calc(1 - var(--open) / 0.9), 1); /* fades with the opening, fully gone at 90% open */
+}
+.hero-mark {
+  /* the word does its travelling first: by mid-pin it has risen to the top edge, still clearly there
+     (about 75%), then it leaves the screen and fades while the film fills it */
+  transform: translateY(calc(var(--hp) * -84svh));
+  filter: blur(calc(min(var(--hp), 0.6) / 0.6 * 10px)); /* a re-blur of two huge layers every frame: kept modest */
+  opacity: clamp(0, calc(1.9 - var(--hp) * 2.3), 1);
+  will-change: transform, filter, opacity;
+}
+.hero-mark-word {
+  font-family: var(--font-script); /* Niconne, the logo's script: written in normal case, not capitals */
+  font-weight: 400;
+  font-size: clamp(5.5rem, 26vw, 22rem);
+  line-height: 1.15;
+  padding-inline: 0.1em; /* the script's swashes reach past the letters: keep them inside the text box */
+}
+@media (max-width: 767px) {
+  .hero-mark-word {
+    font-size: 32vw; /* bigger on phones, still inside the screen width */
+  }
+}
+/* inside the window, the letters are cut out of the hero photo (--hero-image, set by NightHero) */
+.hero-mark-film {
+  background: var(--hero-image) 58% 50% / cover;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* deeper than the photo around them, so the letters read against the light window (no dark layer on it) */
+  filter: brightness(0.78) saturate(1.45) contrast(1.1);
+}
+.hero-final {
+  opacity: var(--fin);
+  transform: translateY(calc((1 - var(--fin)) * 2rem));
+}
+html[data-hero-motion] .hero-pin:not([data-hero-open]) .hero-final {
+  pointer-events: none;
+}
+/* the title types in: HeroScroll marks each letter on/off and puts the caret after the last one */
+.hero-ch {
+  position: relative;
+}
+.hero-ch[data-on="false"] {
+  opacity: 0;
+}
+.hero-ch[data-caret]::after {
+  content: "";
+  position: absolute;
+  right: -0.08em;
+  top: 0.12em;
+  bottom: 0.06em;
+  width: 2px;
+  background: var(--color-rose-dark);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+/* the header over the night hero: no cream tint. The logo is light while the window is closed (dark stage),
+   and back to its own pink once the film fills the screen (data-hero-full, set by HeroScroll) */
+html[data-header-dark] .header-tint {
+  opacity: 0 !important;
+}
+.site-logo {
+  transition: filter 400ms ease;
+}
+html[data-header-dark] .site-logo {
+  mix-blend-mode: normal;
+}
+html[data-header-dark]:not([data-hero-full]) .site-logo {
+  filter: brightness(0) invert(0.94) sepia(0.2);
 }

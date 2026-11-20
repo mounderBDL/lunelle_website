@@ -6,7 +6,14 @@
     "faq": "FAQ"
   },
   "footer": { "shop": "Boutique", "faq": "FAQ", "call": "Appelez-nous", "tagline": "The poetry of scent", "write": "Écrivez-nous" },
-  "home": { "bestSellers": "Meilleures ventes" },
+  "home": {
+    "bestSellers": "Meilleures ventes",
+    "heroWorldsLabel": "Nos univers",
+    "heroScrollLabel": "Découvrir",
+    "heroScrollText": "Défilez pour entrer",
+    "collectionsCount": "{count, plural, one {# collection} other {# collections}}",
+    "collectionsText": "Brumes légères, muscs profonds et parfums intemporels. Trouvez l'univers qui vous ressemble."
+  },
   "story": {
     "eyebrow": "Notre histoire",
     "title": "Un parfum raconté comme un poème",

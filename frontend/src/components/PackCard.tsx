@@ -31,17 +31,15 @@ export default function PackCard({ pack, locale, saveLabel, labels }: Props) {
             alt={name}
             fill
             sizes="(min-width: 1024px) 33vw, 50vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <PackFanMini items={pack.items} />
         )}
-          <div className="absolute left-2 top-3 flex flex-col items-start gap-2 sm:left-4 sm:top-4">
-            {!pack.inStock && <OutOfStockStamp label={labels.outOfStock} />}
-            <span className="rounded-full bg-parchment px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-rose-dark sm:px-3 sm:py-1 sm:text-[11px]">
-              {labels.pack}
-            </span>
-          </div>
+        <span className="absolute left-2 top-2 rounded-full bg-parchment px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-rose-dark sm:left-4 sm:top-4 sm:px-3 sm:py-1 sm:text-[11px]">
+          {labels.pack}
+        </span>
+        {!pack.inStock && <OutOfStockStamp label={labels.outOfStock} />}
       </TiltFrame>
 
       <div className="mt-3 text-center sm:mt-4">

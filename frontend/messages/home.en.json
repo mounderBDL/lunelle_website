@@ -6,7 +6,14 @@
     "faq": "FAQ"
   },
   "footer": { "shop": "Shop", "faq": "FAQ", "call": "Call us", "write": "Write to us"},
-  "home": { "bestSellers": "Best sellers" },
+  "home": {
+    "bestSellers": "Best sellers",
+    "heroWorldsLabel": "Our worlds",
+    "heroScrollLabel": "Discover",
+    "heroScrollText": "Scroll to enter",
+    "collectionsCount": "{count, plural, one {# collection} other {# collections}}",
+    "collectionsText": "Soft mists, deep musks and timeless perfumes. Find the world that feels like you."
+  },
   "story": {
     "eyebrow": "Our story",
     "title": "Scent, told like a poem",

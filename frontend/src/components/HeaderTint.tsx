@@ -14,7 +14,7 @@ export default function HeaderTint() {
   return (
     <div
       aria-hidden
-      className={`absolute inset-0 -z-10 bg-cream/90 backdrop-blur transition-opacity duration-300 ${
+      className={`header-tint absolute inset-0 -z-10 bg-cream/90 backdrop-blur transition-opacity duration-300 ${
         scrolled ? "opacity-100" : "opacity-0"
       }`}
     />

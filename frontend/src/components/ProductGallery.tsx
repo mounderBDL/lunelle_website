@@ -141,14 +141,15 @@ export default function ProductGallery({ images, alt, inStock }: Props) {
                   priority={i === 0}
                   draggable={false}
                   sizes="(min-width: 768px) 50vw, 100vw"
-                  className="object-cover"                />
+                  className="object-cover"
+                />
               </div>
             );
           })}
         </div>
 
         {!inStock && (
-          <OutOfStockStamp large label={tp("outOfStock")} className="absolute left-4 top-5 z-10" />
+          <OutOfStockStamp large label={tp("outOfStock")} className="z-10" />
         )}
 
         {count > 1 && (

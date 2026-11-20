@@ -37,7 +37,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
             alt={name}
             fill
             sizes="(min-width: 1024px) 25vw, 50vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <ImagePlaceholder />
@@ -48,9 +48,7 @@ export default function ProductCard({ product, locale, labels }: Props) {
             {tag}
           </span>
         )}
-          {!product.inStock && (
-            <OutOfStockStamp label={labels.outOfStock} className="absolute left-3 top-4" />
-          )}
+        {!product.inStock && <OutOfStockStamp label={labels.outOfStock} />}
       </TiltFrame>
 
       <div className="mt-4 text-center">
